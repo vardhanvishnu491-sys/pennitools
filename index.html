@@ -104,18 +104,65 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
   margin-top:14px;
 }
 </style>
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  document.querySelectorAll(".category-toggle").forEach(function (button) {
-    button.addEventListener("click", function () {
-      const content = button.nextElementSibling;
-      const open = button.getAttribute("aria-expanded") === "true";
-      button.setAttribute("aria-expanded", String(!open));
-      content.hidden = open;
-    });
-  });
-});
-</script>
+
+
+
+<style>
+.category-drop{
+  margin:18px 0;
+  border:1px solid #e2e8f0;
+  border-radius:24px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+  overflow:hidden;
+}
+.category-drop summary{
+  list-style:none;
+  cursor:pointer;
+  min-height:82px;
+  padding:20px 22px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:linear-gradient(135deg,#ffffff,#f7faff);
+}
+.category-drop summary::-webkit-details-marker{display:none}
+.cat-icon{
+  width:48px;height:48px;flex:0 0 48px;
+  display:grid;place-items:center;
+  border-radius:15px;background:#eef4ff;font-size:25px;
+}
+.category-drop summary span:nth-child(2){flex:1}
+.category-drop summary strong{
+  display:block;font-size:23px;line-height:1.2;
+  letter-spacing:-.4px;color:#0b1220;
+}
+.category-drop summary small{
+  display:block;margin-top:4px;color:#667085;font-size:14px;
+}
+.cat-arrow{
+  width:38px;height:38px;display:grid;place-items:center;
+  border-radius:50%;background:#eef4ff;color:#2563eb;
+  font-size:24px;transition:transform .2s ease;
+}
+.category-drop[open] .cat-arrow{transform:rotate(180deg);background:#2563eb;color:#fff}
+.category-tools{
+  padding:8px 18px 20px;
+  border-top:1px solid #edf1f6;
+}
+.category-tools .tool{
+  width:100%;
+  margin:12px 0 0;
+  min-height:0;
+}
+@media(max-width:620px){
+  .category-drop summary{padding:17px 15px;min-height:74px}
+  .cat-icon{width:42px;height:42px;flex-basis:42px;font-size:22px}
+  .category-drop summary strong{font-size:19px}
+  .category-drop summary small{font-size:13px}
+  .category-tools{padding:7px 10px 15px}
+}
+</style>
 
 </head>
 <body>
