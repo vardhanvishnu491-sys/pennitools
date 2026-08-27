@@ -40,7 +40,7 @@ footer{padding:30px 0;background:#101828;color:#d0d5dd}.empty{padding:30px;text-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script>
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
-const cats=['All','Money & Finance','Document & Image','Vehicle','Job','Everyday'];
+const cats=['All','Money & Finance','Document & Image','Vehicle','Job','Everyday','Health & Fitness','Education'];
 const tools=[
 ['Money & Finance','CTC → In-Hand Salary','Estimate monthly take-home salary.','ctc'],
 ['Money & Finance','EMI Calculator','Calculate EMI, interest and repayment.','emi'],
@@ -104,6 +104,46 @@ const tools=[
 ['Everyday','BMI Calculator','Calculate BMI from height and weight.','bmi'],
 ['Everyday','Tip Calculator','Calculate tip and split the bill.','tip'],
 ['Everyday','Time Zone Converter','Convert a time between common time zones.','timezone']
+['Money & Finance','Loan Interest Calculator','Calculate total interest and repayment.','loaninterest']
+['Money & Finance','Monthly Budget Calculator','Plan monthly income, savings and expenses.','budget']
+['Money & Finance','Net Worth Calculator','Estimate assets minus liabilities.','networth']
+['Money & Finance','Emergency Fund Calculator','Estimate months of expenses covered by savings.','emergency']
+['Money & Finance','Simple ROI Calculator','Calculate return on an investment.','roi']
+['Money & Finance','Markup Calculator','Calculate selling price from cost and markup.','markup']
+['Money & Finance','Margin Calculator','Calculate profit margin from cost and selling price.','margin']
+['Money & Finance','GST Split Calculator','Calculate taxable value and GST from a total price.','gstsplit']
+['Money & Finance','Salary to Monthly Calculator','Convert annual salary to monthly salary.','annualmonthly']
+['Money & Finance','Salary to Annual Calculator','Convert monthly salary to annual salary.','monthlyannual']
+['Vehicle','Mileage Calculator','Calculate vehicle mileage from fuel used.','mileagecalc']
+['Vehicle','Fuel Required Calculator','Calculate fuel needed for a trip.','fuelrequired']
+['Vehicle','Road Trip Cost Splitter','Split trip cost between passengers.','tripsplit']
+['Vehicle','EMI vs Cash Calculator','Compare vehicle loan cost with cash purchase.','emivscash']
+['Vehicle','Car Loan Interest Calculator','Estimate total interest on a car loan.','carinterest']
+['Vehicle','EV Charging Cost Calculator','Estimate the cost of charging an EV.','evcharge']
+['Vehicle','EV Range Calculator','Estimate range from battery capacity and efficiency.','evrange']
+['Vehicle','Toll Cost Per Person','Split toll cost among passengers.','tollsplit']
+['Everyday','Age in Days Calculator','Estimate age in total days.','agedays']
+['Everyday','Leap Year Checker','Check whether a year is a leap year.','leap']
+['Everyday','Days in Month','Find the number of days in a month.','monthdays']
+['Everyday','Week Number Calculator','Find the ISO week number for a date.','weeknum']
+['Everyday','Countdown Calculator','Calculate time remaining until a date/time.','countdown']
+['Everyday','Time Duration Calculator','Add hours and minutes.','duration']
+['Everyday','Random Number Generator','Generate random numbers in a chosen range.','randomnum']
+['Everyday','Number to Words (India)','Convert an amount into Indian number words.','numwords']
+['Everyday','Percentage of Total','Find what percentage one number is of another.','pcttotal']
+['Everyday','Ratio Calculator','Simplify and compare two ratios.','ratio']
+['Everyday','LCM & HCF Calculator','Find LCM and HCF of two numbers.','lcmhcf']
+['Everyday','Unit Price by Weight','Compare price per gram or kilogram.','priceweight']
+['Job','Notice Period Calculator','Find your last working date from a notice period.','noticecalc']
+['Job','Experience Calculator','Calculate years and months of experience.','experiencecalc']
+['Job','Overtime Pay Calculator','Estimate overtime pay from hourly salary.','otpay']
+['Job','Leave Balance Calculator','Calculate remaining leave balance.','leavebalance']
+['Health & Fitness','Calorie Deficit Calculator','Estimate a daily calorie target from maintenance calories.','caldeficit']
+['Health & Fitness','Water Intake Calculator','Estimate daily water intake from body weight.','water']
+['Health & Fitness','Body Fat Estimate','Estimate body-fat percentage using BMI inputs.','bodyfat']
+['Education','Percentage to CGPA','Convert percentage to CGPA using a common 10-point formula.','pctcgpa']
+['Education','Marks Percentage Calculator','Calculate percentage from marks obtained and maximum marks.','markspercent']
+['Education','GPA Calculator','Calculate weighted GPA from grades and credits.','gpa']
 ];
 
 function render(){
@@ -182,6 +222,66 @@ case'overtime':return f(inp('salary','Monthly salary',30000)+inp('days','Working
 case'bmi':return f(inp('weight','Weight (kg)',70)+inp('height','Height (cm)',170));
 case'tip':return f(inp('bill','Bill amount',1000)+inp('tip','Tip %',10)+inp('people','People',2));
 case'timezone':return `<div class="row">${inp('time','Time','','time')}<div><label>From</label><select id="tzfrom"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div><div><label>To</label><select id="tzto"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div></div><button class="btn" id="calc">Convert Time</button><div id="out"></div>`;
+case'percentage':return f(inp('value','Value',100)+inp('pct','Percentage',10));
+case'discount':return f(inp('price','Original price',1000)+inp('discount','Discount %',10));
+case'breakeven':return f(inp('fixed','Fixed costs',100000)+inp('price','Selling price/unit',1000)+inp('variable','Variable cost/unit',600));
+case'savingsgoal':return f(inp('target','Savings target',100000)+inp('saved','Already saved',10000)+inp('months','Months',12));
+case'prepay':return `<div class="row">${inp('p','Outstanding loan',1000000)+inp('r','Annual interest %',10)+inp('n','Remaining months',48)+inp('extra','Extra payment now',100000)}</div><button class="btn" id="calc">Estimate Saving</button><div id="out"></div>`;
+case'fuelmonthly':return f(inp('km','Monthly distance (km)',1500)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',105));
+case'unitprice':return `<div class="row">${inp('p1','Product A price',100)+inp('q1','Product A quantity',1)+inp('p2','Product B price',120)+inp('q2','Product B quantity',1)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'traveltime':return f(inp('distance','Distance (km)',100)+inp('speed','Average speed (km/h)',50));
+case'tollfuel':return `<div class="row">${inp('distance','Distance (km)',500)+inp('mileage','Mileage (km/l)',15)+inp('fuelprice','Fuel price/litre',105)+inp('toll','Tolls',500)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'runningcost':return `<div class="row">${inp('km','Monthly distance (km)',1500)+inp('fuelcost','Fuel cost/month',8000)+inp('service','Service & maintenance/month',2500)+inp('insurance','Insurance/month',1500)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'age':return `<div class="row">${inp('dob','Date of birth','','date')}<div><label>Calculate on</label><input id="asof" type="date"></div></div><button class="btn" id="calc">Calculate Age</button><div id="out"></div>`;
+case'datediff2':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><button class="btn" id="calc">Calculate Difference</button><div id="out"></div>`;
+case'daysuntil':return `<div>${inp('date','Target date','','date')}</div><button class="btn" id="calc">Count Days</button><div id="out"></div>`;
+case'pctchange':return f(inp('old','Old value',100)+inp('newv','New value',120));
+case'average':return `<label>Numbers</label><textarea id="values" placeholder="10, 20, 30, 40"></textarea><button class="btn" id="calc">Calculate Average</button><div id="out"></div>`;
+case'textcounter':return `<label>Text</label><textarea id="text" placeholder="Paste or type text here"></textarea><button class="btn" id="calc">Count</button><div id="out"></div>`;
+case'caseconvert':return `<label>Text</label><textarea id="text" placeholder="Type text here"></textarea><div class="row"><button class="btn" id="upper">UPPERCASE</button><button class="btn" id="lower">lowercase</button><button class="btn" id="title">Title Case</button></div><div id="out"></div>`;
+case'password':return `<div class="row">${inp('len','Password length',16)}</div><label><input id="symbols" type="checkbox" checked> Include symbols</label><button class="btn" id="calc">Generate Password</button><div id="out"></div>`;
+case'splitbill':return f(inp('bill','Bill amount',1000)+inp('tip','Tip %',10)+inp('people','People',4));
+case'hourlysalary':return `<div class="row">${inp('salary','Salary amount',600000)+inp('months','Months covered',12)+inp('days','Working days/month',26)+inp('hours','Hours/day',8)}</div><button class="btn" id="calc">Calculate Hourly Rate</button><div id="out"></div>`;
+case'loaninterest':return f(inp('p','Loan amount',1000000)+inp('r','Annual interest %',10)+inp('n','Tenure (months)',60));
+case'budget':return f(inp('income','Monthly income',60000)+inp('savings','Savings target',10000)+inp('expenses','Monthly expenses',35000));
+case'networth':return f(inp('assets','Total assets',1000000)+inp('liabilities','Total liabilities',300000));
+case'emergency':return f(inp('savings','Emergency savings',100000)+inp('expenses','Monthly essential expenses',25000));
+case'roi':return f(inp('invested','Amount invested',100000)+inp('returned','Amount received',125000));
+case'markup':return f(inp('cost','Cost price',1000)+inp('markup','Markup %',20));
+case'margin':return f(inp('cost','Cost price',800)+inp('sale','Selling price',1000));
+case'gstsplit':return f(inp('total','Total price including GST',1180)+inp('rate','GST %',18));
+case'annualmonthly':return f(inp('annual','Annual salary',600000));
+case'monthlyannual':return f(inp('monthly','Monthly salary',50000));
+case'mileagecalc':return f(inp('distance','Distance travelled (km)',300)+inp('fuel','Fuel used (litres)',20));
+case'fuelrequired':return f(inp('distance','Trip distance (km)',500)+inp('mileage','Mileage (km/l)',15));
+case'tripsplit':return f(inp('fuel','Fuel cost',2000)+inp('toll','Toll cost',500)+inp('people','Passengers',4));
+case'emivscash':return f(inp('price','Vehicle price',1000000)+inp('down','Down payment',200000)+inp('rate','Loan interest %',9)+inp('months','Tenure (months)',60));
+case'carinterest':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
+case'evcharge':return f(inp('battery','Battery capacity (kWh)',40)+inp('rate','Electricity rate/kWh',10)+inp('loss','Charging loss %',10));
+case'evrange':return f(inp('battery','Battery capacity (kWh)',40)+inp('eff','Efficiency (km/kWh)',6));
+case'tollsplit':return f(inp('toll','Toll amount',500)+inp('people','People',4));
+case'agedays':return `<div class="row">${inp('dob','Date of birth','','date')+inp('asof','Calculate on','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'leap':return f(inp('year','Year',2028));
+case'monthdays':return `<div class="row">${inp('year','Year',2026)}<div><label>Month</label><select id="month">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div></div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'weeknum':return `<div>${inp('date','Date','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'countdown':return `<div>${inp('date','Target date/time','','datetime-local')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'duration':return f(inp('h1','Hours 1',1)+inp('m1','Minutes 1',30)+inp('h2','Hours 2',2)+inp('m2','Minutes 2',45));
+case'randomnum':return f(inp('min','Minimum',1)+inp('max','Maximum',100));
+case'numwords':return f(inp('amount','Amount',125000));
+case'pcttotal':return f(inp('part','Part',25)+inp('total','Total',100));
+case'ratio':return f(inp('a','First value',20)+inp('b','Second value',30));
+case'lcmhcf':return f(inp('a','First number',12)+inp('b','Second number',18));
+case'priceweight':return f(inp('price','Price',200)+inp('grams','Weight in grams',500));
+case'noticecalc':return `<div class="row">${inp('start','Notice start date','','date')+inp('days','Notice period (days)',30)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'experiencecalc':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'otpay':return f(inp('monthly','Monthly salary',50000)+inp('hours','Overtime hours',10)+inp('mult','Overtime multiplier',2));
+case'leavebalance':return f(inp('allocated','Allocated leave',24)+inp('used','Leave used',8));
+case'caldeficit':return f(inp('maintenance','Maintenance calories',2200)+inp('deficit','Deficit %',15));
+case'water':return f(inp('weight','Weight (kg)',70)+inp('ml','ml per kg',35));
+case'bodyfat':return f(inp('bmi','BMI',25)+inp('age','Age',30));
+case'pctcgpa':return f(inp('percentage','Percentage',80));
+case'markspercent':return f(inp('obtained','Marks obtained',80)+inp('maximum','Maximum marks',100));
+case'gpa':return `<label>Grades and credits</label><textarea id="grades" placeholder="8,3&#10;9,4&#10;7,3"></textarea><p class="small">One grade and credit per line, e.g. 8,3</p><button class="btn" id="calc">Calculate GPA</button><div id="out"></div>`;
 case'currency':return `<div class="row">${inp('amt','Amount',1)}<div><label>From</label><select id="from"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div><div><label>To</label><select id="to"><option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div></div><button class="btn" id="calc">Get Rate</button><div id="out"></div>`;
 }
 }
@@ -190,11 +290,28 @@ function imageTool(title,id){return fileBox('img','Choose image',title)+'<button
 
 function bindTool(id){
  if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
+ if(id==='caseconvert'){
+ $('#upper').onclick=()=>out(`<pre>${$('#text').value.toUpperCase()}</pre>`);
+ $('#lower').onclick=()=>out(`<pre>${$('#text').value.toLowerCase()}</pre>`);
+ $('#title').onclick=()=>out(`<pre>${$('#text').value.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}</pre>`);
+}
+
  if(id==='signature') initSig();
  $('#calc')?.addEventListener('click',()=>calculate(id));
 }
 function updateUnits(){
  const cat=$('#uc').value, maps={Length:['m','km','cm','ft','in'],Weight:['kg','g','lb','oz'],Temperature:['C','F','K']}, a=maps[cat]; $('#uf').innerHTML=a.map(x=>`<option>${x}</option>`).join(''); $('#ut').innerHTML=a.map(x=>`<option>${x}</option>`).join('');
+}
+function hcf(a,b){a=Math.abs(Math.trunc(a));b=Math.abs(Math.trunc(b));while(b){let t=a%b;a=b;b=t}return a||1}
+function indianWords(n){
+ n=Math.trunc(n); if(n===0)return 'Zero';
+ const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+ const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+ function two(x){return x<20?ones[x]:tens[Math.floor(x/10)]+(x%10?' '+ones[x%10]:'')}
+ function part(x){let s='';if(x>=100){s+=ones[Math.floor(x/100)]+' Hundred';x%=100;if(x)s+=' '}if(x)s+=two(x);return s}
+ let out=''; const groups=[[1e9,'Crore'],[1e5,'Lakh'],[1e3,'Thousand'],[1e2,'Hundred']];
+ for(const [v,name] of groups){if(n>=v){let q=Math.floor(n/v);out+=(out?' ':'')+part(q)+' '+name;n%=v}}
+ if(n)out+=(out?' ':'')+part(n); return out;
 }
 function annuity(P,annual,months){let r=annual/1200,n=months;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
 function parsePages(s,max){let out=[];(s||'').split(',').forEach(x=>{x=x.trim();if(x.includes('-')){let [a,b]=x.split('-').map(Number);for(let i=a;i<=b;i++)out.push(i)}else{let n=Number(x);if(n)out.push(n)}});return [...new Set(out)].filter(n=>n>=1&&(!max||n<=max))}
@@ -245,6 +362,65 @@ case'overtime':{let s=num($('#salary').value),d=num($('#days').value),h=num($('#
 case'bmi':{let w=num($('#weight').value),h=num($('#height').value)/100,b=w/(h*h),cat=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obesity';out(`BMI: <strong>${b.toFixed(1)}</strong><br>Category: <strong>${cat}</strong>`);break}
 case'tip':{let b=num($('#bill').value),p=num($('#tip').value),n=Math.max(1,num($('#people').value)),t=b*p/100;out(`Tip: <strong>${money(t)}</strong><br>Total bill: <strong>${money(b+t)}</strong><br>Per person: <strong>${money((b+t)/n)}</strong>`);break}
 case'timezone':{let t=$('#time').value;if(!t)throw Error('Choose a time');let [hh,mm]=t.split(':').map(Number),now=new Date();now.setHours(hh,mm,0,0);let opts={hour:'2-digit',minute:'2-digit',hour12:true,timeZone:$('#tzto').value,timeZoneName:'short'};out(`Converted time: <strong>${new Intl.DateTimeFormat('en-IN',opts).format(now)}</strong><br><span class="small">Conversion uses your device's current date.</span>`);break}
+case'percentage':{let v=num($('#value').value),p=num($('#pct').value);out(`${p}% of ${money(v)} = <strong>${money(v*p/100)}</strong>`);break}
+case'discount':{let p=num($('#price').value),d=num($('#discount').value),x=p*d/100;out(`Discount: <strong>${money(x)}</strong><br>Final price: <strong>${money(p-x)}</strong>`);break}
+case'breakeven':{let f=num($('#fixed').value),p=num($('#price').value),v=num($('#variable').value),u=p-v;out(u<=0?'Selling price must be greater than variable cost.':`Break-even units: <strong>${Math.ceil(f/u)}</strong><br>Contribution/unit: ${money(u)}`);break}
+case'savingsgoal':{let t=num($('#target').value),s=num($('#saved').value),m=num($('#months').value),need=Math.max(0,t-s);out(`Monthly saving needed: <strong>${money(need/Math.max(1,m))}</strong><br>Remaining target: ${money(need)}`);break}
+case'prepay':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),x=Math.min(p,Math.max(0,num($('#extra').value))),e=annuity(p,r,n),oldInt=e*n-p,rem=p-x,newE=annuity(rem,r,n),newInt=newE*n-rem,saved=oldInt-newInt;out(`Current EMI: <strong>${money(e)}</strong><br>After extra payment, estimated EMI: <strong>${money(newE)}</strong><br>Estimated interest saving: <strong>${money(saved)}</strong>`);break}
+case'fuelmonthly':{let km=num($('#km').value),m=num($('#mileage').value),p=num($('#price').value),c=km/m*p;out(`Monthly fuel needed: ${(km/m).toFixed(2)} L<br>Monthly fuel cost: <strong>${money(c)}</strong>`);break}
+case'unitprice':{let a=num($('#p1').value)/num($('#q1').value),b=num($('#p2').value)/num($('#q2').value);out(`Product A: <strong>${money(a)}</strong> per unit<br>Product B: <strong>${money(b)}</strong> per unit<br>Better value: <strong>${a<b?'Product A':'Product B'}</strong>`);break}
+case'traveltime':{let d=num($('#distance').value),s=num($('#speed').value),h=d/s,hrs=Math.floor(h),mins=Math.round((h-hrs)*60);out(`Estimated travel time: <strong>${hrs}h ${mins}m</strong>`);break}
+case'tollfuel':{let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),t=num($('#toll').value),fuel=d/m*fp;out(`Fuel cost: ${money(fuel)}<br>Tolls: ${money(t)}<br>Total trip cost: <strong>${money(fuel+t)}</strong>`);break}
+case'runningcost':{let c=num($('#fuelcost').value)+num($('#service').value)+num($('#insurance').value);out(`Estimated monthly running cost: <strong>${money(c)}</strong><br>Estimated annual cost: ${money(c*12)}`);break}
+case'age':{let d=new Date($('#dob').value),a=new Date($('#asof').value||Date.now());if(isNaN(d)||isNaN(a)||a<d)throw Error('Check the dates');let y=a.getFullYear()-d.getFullYear(),m=a.getMonth()-d.getMonth(),day=a.getDate()-d.getDate();if(day<0){m--;day+=new Date(a.getFullYear(),a.getMonth(),0).getDate()}if(m<0){y--;m+=12}out(`Age: <strong>${y} years, ${m} months, ${day} days</strong>`);break}
+case'datediff2':{let a=new Date($('#start').value),b=new Date($('#end').value),d=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${d} days</strong>`);break}
+case'daysuntil':{let d=new Date($('#date').value);let a=new Date();a.setHours(0,0,0,0);let x=Math.ceil((d-a)/86400000);out(x<0?`That date was <strong>${Math.abs(x)} days ago</strong>`:`Days remaining: <strong>${x}</strong>`);break}
+case'pctchange':{let a=num($('#old').value),b=num($('#newv').value);if(a===0)throw Error('Old value cannot be zero');out(`Percentage change: <strong>${((b-a)/a*100).toFixed(2)}%</strong>`);break}
+case'average':{let a=($('#values').value.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);if(!a.length)throw Error('Enter numbers');let s=a.reduce((x,y)=>x+y,0);out(`Average: <strong>${(s/a.length).toFixed(2)}</strong><br>Numbers counted: ${a.length}`);break}
+case'textcounter':{let t=$('#text').value,w=(t.trim().match(/\S+/g)||[]).length,c=[...t].length,l=t? t.split(/\r?\n/).length:0;out(`Words: <strong>${w}</strong><br>Characters: <strong>${c}</strong><br>Lines: <strong>${l}</strong>`);break}
+case'password':{let n=Math.max(4,Math.min(128,Math.floor(num($('#len').value)||16))),chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'+($('#symbols').checked?'!@#$%^&*_-+=?':'');let a=new Uint32Array(n);crypto.getRandomValues(a);let pw=[...a].map(x=>chars[x%chars.length]).join('');out(`<code>${pw}</code><br><button class="btn" onclick="navigator.clipboard?.writeText('${pw}')">Copy</button>`);break}
+case'splitbill':{let b=num($('#bill').value),t=b*num($('#tip').value)/100,n=Math.max(1,num($('#people').value)),total=b+t;out(`Total: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/n)}</strong>`);break}
+case'hourlysalary':{let s=num($('#salary').value),months=num($('#months').value),days=num($('#days').value),hours=num($('#hours').value),h=s/(months*days*hours);out(`Estimated hourly salary: <strong>${money(h)}</strong><br>Estimated daily salary: ${money(h*hours)}`);break}
+case'loaninterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`EMI: <strong>${money(e)}</strong><br>Total repayment: ${money(e*n)}<br>Total interest: <strong>${money(e*n-p)}</strong>`);break}
+case'budget':{let i=num($('#income').value),s=num($('#savings').value),e=num($('#expenses').value);out(`Unallocated amount: <strong>${money(i-s-e)}</strong><br>Savings rate: ${i?((s/i)*100).toFixed(1):0}%`);break}
+case'networth':{let a=num($('#assets').value),l=num($('#liabilities').value);out(`Estimated net worth: <strong>${money(a-l)}</strong>`);break}
+case'emergency':{let s=num($('#savings').value),e=num($('#expenses').value);out(`Emergency fund coverage: <strong>${(s/e).toFixed(1)} months</strong>`);break}
+case'roi':{let a=num($('#invested').value),b=num($('#returned').value);out(`Profit/loss: <strong>${money(b-a)}</strong><br>ROI: <strong>${a?((b-a)/a*100).toFixed(2):0}%</strong>`);break}
+case'markup':{let c=num($('#cost').value),p=num($('#markup').value);out(`Selling price: <strong>${money(c*(1+p/100))}</strong>`);break}
+case'margin':{let c=num($('#cost').value),s=num($('#sale').value);out(`Profit: ${money(s-c)}<br>Profit margin: <strong>${s?((s-c)/s*100).toFixed(2):0}%</strong>`);break}
+case'gstsplit':{let t=num($('#total').value),r=num($('#rate').value),base=t/(1+r/100);out(`Taxable value: <strong>${money(base)}</strong><br>GST: ${money(t-base)}`);break}
+case'annualmonthly':out(`Monthly salary: <strong>${money(num($('#annual').value)/12)}</strong>`);break
+case'monthlyannual':out(`Annual salary: <strong>${money(num($('#monthly').value)*12)}</strong>`);break
+case'mileagecalc':{let d=num($('#distance').value),f=num($('#fuel').value);out(`Mileage: <strong>${(d/f).toFixed(2)} km/l</strong>`);break}
+case'fuelrequired':{let d=num($('#distance').value),m=num($('#mileage').value);out(`Fuel required: <strong>${(d/m).toFixed(2)} litres</strong>`);break}
+case'tripsplit':{let x=num($('#fuel').value)+num($('#toll').value),n=Math.max(1,num($('#people').value));out(`Total trip cost: ${money(x)}<br>Per person: <strong>${money(x/n)}</strong>`);break}
+case'emivscash':{let price=num($('#price').value),down=num($('#down').value),r=num($('#rate').value),n=num($('#months').value),p=price-down,e=annuity(p,r,n);out(`Loan amount: ${money(p)}<br>EMI: <strong>${money(e)}</strong><br>Total loan repayment: ${money(e*n)}<br>Cash purchase: ${money(price)}`);break}
+case'carinterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`Total interest: <strong>${money(e*n-p)}</strong>`);break}
+case'evcharge':{let b=num($('#battery').value),r=num($('#rate').value),l=num($('#loss').value),cost=b*(1+l/100)*r;out(`Estimated charging cost: <strong>${money(cost)}</strong>`);break}
+case'evrange':{let b=num($('#battery').value),e=num($('#eff').value);out(`Estimated range: <strong>${(b*e).toFixed(0)} km</strong>`);break}
+case'tollsplit':{let t=num($('#toll').value),n=Math.max(1,num($('#people').value));out(`Per person toll: <strong>${money(t/n)}</strong>`);break}
+case'agedays':{let d=new Date($('#dob').value),a=new Date($('#asof').value||Date.now());out(`Approximate age: <strong>${Math.floor((a-d)/86400000).toLocaleString('en-IN')} days</strong>`);break}
+case'leap':{let y=Math.floor(num($('#year').value));out(`${y} is <strong>${(y%4===0&&y%100!==0)||y%400===0?'a leap year':'not a leap year'}</strong>.`);break}
+case'monthdays':{let y=num($('#year').value),m=num($('#month').value);out(`<strong>${new Date(y,m,0).getDate()} days</strong> in month ${m}.`);break}
+case'weeknum':{let d=new Date($('#date').value);let x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));let day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);let y=new Date(Date.UTC(x.getUTCFullYear(),0,1));let w=Math.ceil((((x-y)/86400000)+1)/7);out(`ISO week: <strong>${w}</strong>`);break}
+case'countdown':{let d=new Date($('#date').value),ms=d-Date.now();if(ms<0){out('The target time has passed.');break}let days=Math.floor(ms/86400000);ms%=86400000;let h=Math.floor(ms/3600000);ms%=3600000;let mi=Math.floor(ms/60000);out(`Time remaining: <strong>${days}d ${h}h ${mi}m</strong>`);break}
+case'duration':{let x=num($('#h1').value)*60+num($('#m1').value)+num($('#h2').value)*60+num($('#m2').value);out(`Total duration: <strong>${Math.floor(x/60)}h ${x%60}m</strong>`);break}
+case'randomnum':{let a=Math.ceil(num($('#min').value)),b=Math.floor(num($('#max').value));if(b<a)throw Error('Maximum must be greater than minimum');out(`Random number: <strong>${Math.floor(Math.random()*(b-a+1))+a}</strong>`);break}
+case'numwords':{let n=Math.floor(num($('#amount').value));if(n<0||n>999999999999)throw Error('Enter 0 to 999,999,999,999');out(`<strong>${indianWords(n)}</strong>`);break}
+case'pcttotal':{let a=num($('#part').value),b=num($('#total').value);out(`<strong>${b?((a/b)*100).toFixed(2):0}%</strong>`);break}
+case'ratio':{let a=Math.abs(Math.round(num($('#a').value))),b=Math.abs(Math.round(num($('#b').value)));let g=hcf(a,b);out(`Simplified ratio: <strong>${a/g}:${b/g}</strong>`);break}
+case'lcmhcf':{let a=Math.round(num($('#a').value)),b=Math.round(num($('#b').value)),g=hcf(a,b),l=Math.abs(a*b)/g;out(`HCF: <strong>${g}</strong><br>LCM: <strong>${l}</strong>`);break}
+case'priceweight':{let p=num($('#price').value),g=num($('#grams').value);out(`Price per 100g: <strong>${money(p/g*100)}</strong><br>Price per kg: ${money(p/g*1000)}`);break}
+case'noticecalc':{let d=new Date($('#start').value),n=num($('#days').value);d.setDate(d.getDate()+n);out(`Estimated last working date: <strong>${d.toLocaleDateString('en-IN')}</strong>`);break}
+case'experiencecalc':{let a=new Date($('#start').value),b=new Date($('#end').value),months=(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth()-(b.getDate()<a.getDate()?1:0);out(`Experience: <strong>${Math.floor(months/12)} years, ${months%12} months</strong>`);break}
+case'otpay':{let s=num($('#monthly').value),h=num($('#hours').value),mult=num($('#mult').value),rate=s/(26*8);out(`Overtime pay: <strong>${money(rate*h*mult)}</strong>`);break}
+case'leavebalance':{let a=num($('#allocated').value),u=num($('#used').value);out(`Remaining leave: <strong>${Math.max(0,a-u)}</strong> days`);break}
+case'caldeficit':{let m=num($('#maintenance').value),d=num($('#deficit').value);out(`Suggested calorie target: <strong>${Math.round(m*(1-d/100))} kcal/day</strong>`);break}
+case'water':{let w=num($('#weight').value),ml=num($('#ml').value);out(`Estimated daily water: <strong>${(w*ml/1000).toFixed(2)} litres</strong>`);break}
+case'bodyfat':{let bmi=num($('#bmi').value),age=num($('#age').value);out(`BMI-based estimate: <strong>${(1.2*bmi+0.23*age-10.8-5.4).toFixed(1)}%</strong><br><span class="small">Very rough estimate; formulas vary by sex and method.</span>`);break}
+case'pctcgpa':{let p=num($('#percentage').value);out(`Estimated CGPA: <strong>${(p/9.5).toFixed(2)}</strong>`);break}
+case'markspercent':{let a=num($('#obtained').value),m=num($('#maximum').value);out(`Percentage: <strong>${m?(a/m*100).toFixed(2):0}%</strong>`);break}
+case'gpa':{let rows=$('#grades').value.trim().split(/\n/).map(x=>x.split(/[,\s]+/).map(Number)).filter(x=>x.length>=2&&!isNaN(x[0])&&!isNaN(x[1]));let cr=rows.reduce((s,x)=>s+x[1],0),pts=rows.reduce((s,x)=>s+x[0]*x[1],0);if(!cr)throw Error('Enter grade,credit pairs');out(`Weighted GPA: <strong>${(pts/cr).toFixed(2)}</strong><br>Credits: ${cr}`);break}
 case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
  case'wordpdf':{const {jsPDF}=window.jspdf;let pdf=new jsPDF();let lines=pdf.splitTextToSize($('#text').value,180);let y=15;lines.forEach(line=>{if(y>280){pdf.addPage();y=15}pdf.text(line,15,y);y+=7});pdf.save('pennitools-document.pdf');out('PDF created and downloaded.');break}
  case'jpgpdf':await jpgToPdf();break;
