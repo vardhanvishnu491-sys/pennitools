@@ -48,6 +48,75 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 @media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:620px){.wrap{width:min(100% - 22px,1160px)}header{padding:25px 0 70px}.tag{font-size:16px}.selector-wrap{width:calc(100% - 22px);margin:-18px auto 10px;display:block}.selector-title{display:block;margin-bottom:8px}.tool-select{width:100%}.grid{grid-template-columns:1fr}.card{min-height:180px}.row{grid-template-columns:1fr}.panel{padding:22px}.chip{padding:8px 11px;font-size:13px}}
 </style>
+
+<style>
+.category-dropdown{
+  margin:18px 0;
+  background:#fff;
+  border:1px solid #e5eaf3;
+  border-radius:20px;
+  box-shadow:0 7px 24px rgba(15,23,42,.06);
+  overflow:hidden;
+}
+.category-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px;
+  border:0;
+  background:linear-gradient(180deg,#fff,#f9fbff);
+  color:#0b1220;
+  cursor:pointer;
+  text-align:left;
+}
+.category-title{
+  font-size:clamp(21px,4vw,29px);
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+.category-chevron{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#eef4ff;
+  color:#2563eb;
+  font-size:25px;
+  line-height:1;
+  transition:transform .2s ease,background .2s ease;
+}
+.category-toggle[aria-expanded="true"] .category-chevron{
+  transform:rotate(180deg);
+  background:#2563eb;
+  color:#fff;
+}
+.category-content{
+  padding:0 20px 20px;
+  border-top:1px solid #edf0f5;
+}
+.category-content > p{
+  padding-top:16px;
+}
+.category-content .tool{
+  margin-top:14px;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.querySelectorAll(".category-toggle").forEach(function (button) {
+    button.addEventListener("click", function () {
+      const content = button.nextElementSibling;
+      const open = button.getAttribute("aria-expanded") === "true";
+      button.setAttribute("aria-expanded", String(!open));
+      content.hidden = open;
+    });
+  });
+});
+</script>
+
 </head>
 <body>
 <header>
