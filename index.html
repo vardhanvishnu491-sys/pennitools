@@ -353,6 +353,7 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
 const cats=['All','Money & Finance','Document & Image','Audio & AI','Vehicle','Job','Everyday','Carpenter & Construction','Health & Fitness','Education'];
@@ -1136,27 +1137,63 @@ if(c==='Temperature'){let C=a==='C'?v:a==='F'?(v-32)*5/9:v-273.15;return b==='C'
 const base={Length:{m:1,km:1000,cm:.01,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495231}};return v*base[c][a]/base[c][b]
 }
 function initSig(){const c=$('#sig'),x=c.getContext('2d');x.lineWidth=3;x.lineCap='round';let on=false;c.addEventListener('pointerdown',e=>{on=true;x.beginPath();x.moveTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight)});c.addEventListener('pointermove',e=>{if(!on)return;x.lineTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight);x.stroke()});window.addEventListener('pointerup',()=>on=false)}
-async function jpgToPdf(){let fs=[...$('#img').files];if(!fs.length)throw Error('Choose at least one image');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
+async function jpgToPdf(){let fs=[...$('#img').files];if(!fs.length)throw Error('Choose at least one image');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,(fs[i].type||'image/jpeg').includes('png')?'PNG':'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
 async function fileData(f){return await new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
 async function pdfDoc(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');return await PDFLib.PDFDocument.load(await f.arrayBuffer())}
 async function pdfToBytes(doc){return await doc.save({useObjectStreams:true})}
 async function mergePdfs(){let fs=[...$('#pdfs').files];if(fs.length<1)throw Error('Choose PDFs');let outdoc=await PDFLib.PDFDocument.create();for(const f of fs){let d=await PDFLib.PDFDocument.load(await f.arrayBuffer()),pages=await outdoc.copyPages(d,d.getPageIndices());pages.forEach(p=>outdoc.addPage(p))}dl(new Blob([await outdoc.save()],{type:'application/pdf'}),'pennitools-merged.pdf');out('Merged successfully.')}
 async function pdfPages(remove){let d=await pdfDoc(),max=d.getPageCount(),sel=parsePages($('#pages').value,max);let keep=[...Array(max).keys()].filter(i=>remove?!sel.includes(i+1):sel.includes(i+1));if(!keep.length)throw Error('No pages left');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,keep);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-pages.pdf');out('PDF created.')}
 async function reorderPdf(){let d=await pdfDoc(),order=parsePages($('#order').value,d.getPageCount()).map(n=>n-1);if(order.length!==d.getPageCount())throw Error('Enter every page exactly once');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,order);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-reordered.pdf');out('PDF reordered.')}
-async function copyPdf(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');dl(new Blob([await f.arrayBuffer()],{type:'application/pdf'}),'pennitools-copy.pdf');out('A browser-safe copy was downloaded. True lossless PDF compression/password encryption generally requires more specialized processing.')}
-async function pdfToText(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');out('This lightweight browser version cannot guarantee text extraction from every PDF. For text PDFs, select the PDF and use your browser/PDF reader to copy text.')}
-async function pdfToJpg(){
+async function copyPdf(){
  let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const original=await f.arrayBuffer();
+ const d=await PDFLib.PDFDocument.load(original,{updateMetadata:false});
+ const bytes=await d.save({useObjectStreams:true,addDefaultPage:false,updateFieldAppearances:false});
+ dl(new Blob([bytes],{type:'application/pdf'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-compressed.pdf');
+ const before=original.byteLength,after=bytes.byteLength,pct=before?((1-after/before)*100):0;
+ out(`<strong>PDF processed successfully.</strong><br>Original: ${(before/1024/1024).toFixed(2)} MB · Output: ${(after/1024/1024).toFixed(2)} MB · ${pct>=0?pct.toFixed(1)+'% smaller':'output is '+(-pct).toFixed(1)+'% larger'}<br><span class="small">Image-heavy scanned PDFs may not shrink much without lossy image compression.</span>`);
+}
+
+async function loadPdfJs(){
  const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
  pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ return pdfjs;
+}
+async function pdfToText(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const pdfjs=await loadPdfJs();
  const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ let text=[];
+ for(let i=1;i<=pdf.numPages;i++){
+   const page=await pdf.getPage(i);
+   const content=await page.getTextContent();
+   const line=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();
+   text.push(`--- Page ${i} ---\n${line}`);
+ }
+ const body=text.join('\n\n');
+ if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
+ const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+ const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title></head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
+ dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
+ out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
+}
+async function pdfToJpg(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const pdfjs=await loadPdfJs();
+ const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ if(typeof JSZip==='undefined')throw Error('JPG packaging library failed to load. Refresh and try again.');
+ const zip=new JSZip();
  for(let i=1;i<=pdf.numPages;i++){
    const page=await pdf.getPage(i),v=page.getViewport({scale:1.6});
-   const c=document.createElement('canvas'); c.width=v.width;c.height=v.height;
+   const c=document.createElement('canvas'); c.width=Math.ceil(v.width); c.height=Math.ceil(v.height);
    await page.render({canvasContext:c.getContext('2d'),viewport:v}).promise;
-   c.toBlob(b=>dl(b,`pennitools-page-${i}.jpg`),'image/jpeg',.92);
+   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
+   if(!blob)throw Error(`Could not render page ${i}.`);
+   zip.file(`page-${i}.jpg`,await blob.arrayBuffer());
  }
- out(`${pdf.numPages} JPG page(s) created.`);
+ const zipped=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+ dl(zipped,(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-jpg.zip');
+ out(`<strong>PDF converted to JPG successfully.</strong><br>${pdf.numPages} JPG page(s) are inside the downloaded ZIP.`);
 }
 
 let pdfEditorBytes=null;
@@ -1245,6 +1282,8 @@ async function rotatePdf(){
 }
 async function imageDownload(mode){
 let f=$('#img').files[0];if(!f)throw Error('Choose an image');let src=await fileData(f),im=new Image();await new Promise(r=>{im.onload=r;im.src=src});let c=document.createElement('canvas'),ctx=c.getContext('2d');
-if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='crop'){let x=Math.max(0,num($('#x').value)),y=Math.max(0,num($('#y').value)),w=Math.min(num($('#cw').value)||im.width,im.width-x),h=Math.min(num($('#ch').value)||im.height,im.height-y);c.width=w;c.height=h;ctx.drawImage(im,x,y,w,h,0,0,w,h)}else{c.width=im.width;c.height=im.height;ctx.drawImage(im,0,0,c.width,c.height)}let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'?num($('#quality').value):mode==='resize'?num($('#quality').value):.9;c.toBlob(b=>dl(b,mode==='convert'&&type==='image/png'?'pennitools.png':'pennitools.jpg'),type,q);out('Image downloaded.')}
+if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='crop'){let x=Math.max(0,num($('#x').value)),y=Math.max(0,num($('#y').value)),w=Math.min(num($('#cw').value)||im.width,im.width-x),h=Math.min(num($('#ch').value)||im.height,im.height-y);c.width=w;c.height=h;ctx.drawImage(im,x,y,w,h,0,0,w,h)}else{c.width=im.width;c.height=im.height;ctx.drawImage(im,0,0,c.width,c.height)}let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'||mode==='resize'?Math.max(.1,Math.min(1,num($('#quality').value)||.9)):.92;
+await new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(Error('Your browser could not create the output image.'));const ext=type==='image/png'?'png':'jpg';dl(b,`pennitools-${mode}.${ext}`);resolve()},type,q));
+out(`<strong>Image ${mode==='convert'?'converted':'processed'} successfully.</strong><br>Downloaded as ${type==='image/png'?'PNG':'JPG'}.`)}
 </script>
 </body></html>
