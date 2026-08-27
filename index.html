@@ -322,6 +322,12 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .app-intro{margin:30px 0 8px}
 .app-intro h2{margin:0;font-size:clamp(25px,4vw,34px);letter-spacing:-1px}
 .app-intro p{margin:5px 0 0;color:var(--muted)}
+
+.pdf-editor .notice{margin-bottom:15px}
+.pdf-editor .drop{margin-bottom:15px}
+.pdf-editor input[type=color]{cursor:pointer}
+.pdf-editor .secondary{background:#eef2f7;color:#1d2939;border:1px solid #d0d5dd}
+
 </style>
 </head>
 <body>
@@ -373,6 +379,7 @@ const tools=[
 ['Document & Image','Merge PDF','Merge multiple PDFs into one.','mergepdf'],
 ['Document & Image','Split PDF','Extract selected PDF pages.','splitpdf'],
 ['Document & Image','PDF Page Remover','Remove selected pages from a PDF.','removePages'],
+['Document & Image','PDF Editor','Edit a PDF in your browser: add text, rotate pages, remove pages and add watermarks.','pdfeditor'],
 ['Document & Image','PDF Page Reorder','Reorder PDF pages.','reorder'],
 ['Document & Image','PDF Lock / Unlock','Create a copy or export a PDF.','pdflock'],
 ['Document & Image','Image Cropper','Crop an image and download it.','crop'],
@@ -524,6 +531,45 @@ case'home':return f(inp('p','Home loan amount',5000000)+inp('r','Annual interest
 case'carloan':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
 case'wordpdf':return `<label>Document text</label><textarea id="text">Type or paste your document here.</textarea><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'transcribe':return `<div class="audio-transcriber"><div class="notice">🔒 <strong>Unlimited local transcription:</strong> upload as many files as you want. Each individual file must be <strong>under 100 MB</strong>. Audio is processed in your browser and is not sent to a PenniTools server.</div><div class="audio-drop" id="audioDrop"><div class="audio-icon">🎙️</div><h3>Audio → Accurate Transcript</h3><p>MP3, WAV, M4A, OGG, WebM, AAC and other browser-supported audio.</p><input id="audioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.webm,.aac"><label class="btn" for="audioFile">Choose audio</label><div id="audioName" class="small"></div></div><div class="audio-options row"><div><label>Spoken language</label><select id="audioLang"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="te">Telugu</option><option value="ta">Tamil</option><option value="kn">Kannada</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="bn">Bengali</option><option value="gu">Gujarati</option><option value="pa">Punjabi</option><option value="ur">Urdu</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ar">Arabic</option><option value="zh">Chinese</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></div><div><label>Accuracy</label><select id="audioModel"><option value="Xenova/whisper-tiny">Fast — Tiny</option><option value="Xenova/whisper-small">Balanced — Small</option><option value="onnx-community/whisper-large-v3-turbo" selected>High accuracy — Large v3 Turbo</option></select></div></div><div class="audio-options row"><div><label>Speaker mode</label><select id="speakerMode"><option value="mixed">Mixed audio — best-effort transcript</option><option value="stereo">Call recording — Caller / Receiver from stereo channels</option></select></div><div><label>Transcript detail</label><select id="transcriptDetail"><option value="segments" selected>Timestamped segments</option><option value="plain">Plain transcript</option></select></div></div><button class="btn" id="startTranscribe" disabled>Start high-accuracy transcription</button><div id="audioStatus" class="small"></div><div id="callNotice" class="notice" style="display:none"></div><textarea id="transcriptOut" placeholder="Your transcript will appear here…"></textarea><div id="analysisOut" class="analysis-box" style="display:none"></div><div class="audio-actions"><button class="btn secondary" id="copyTranscript" disabled>Copy transcript</button><button class="btn secondary" id="downloadTranscript" disabled>Download TXT</button><button class="btn secondary" id="downloadSrt" disabled>Download SRT</button><button class="btn secondary" id="analyzeTranscript" disabled>Analyze transcript</button></div><p class="small"><strong>Accuracy note:</strong> no speech-to-text system can guarantee 100% accuracy. Speaker labels are reliable when a call recording has separate stereo channels; if both people are mixed into one mono track, true caller/receiver separation requires a dedicated diarization model/server.</p></div>`;
+case'pdfeditor':return `<div class="pdf-editor">
+  <div class="notice">📝 <strong>PDF Editor</strong> — edit a copy of your PDF directly in your browser. You can add text, rotate a page, remove pages, or add a watermark. Your original file is not changed.</div>
+  <div class="drop">
+    <b>Choose PDF</b>
+    <p class="small">For privacy, this editor processes the selected PDF in your browser.</p>
+    <input id="pdfEditorFile" type="file" accept=".pdf,application/pdf" onchange="pdfEditorInfo(this)">
+    <div id="pdfEditorInfo" class="small"></div>
+  </div>
+  <div class="row">
+    <div><label>Action</label><select id="pdfEditorAction">
+      <option value="text">Add text</option>
+      <option value="rotate">Rotate page</option>
+      <option value="delete">Delete pages</option>
+      <option value="watermark">Add watermark</option>
+    </select></div>
+    <div><label>Page number</label><input id="pdfEditorPage" type="number" min="1" value="1"></div>
+  </div>
+  <div id="pdfEditorFields">
+    <div class="row">
+      <div><label>Text</label><input id="pdfEditorText" type="text" placeholder="Enter text to add"></div>
+      <div><label>Font size</label><input id="pdfEditorSize" type="number" min="6" max="96" value="18"></div>
+    </div>
+    <div class="row">
+      <div><label>X position (from left)</label><input id="pdfEditorX" type="number" min="0" value="50"></div>
+      <div><label>Y position (from bottom)</label><input id="pdfEditorY" type="number" min="0" value="50"></div>
+    </div>
+    <div><label>Text colour</label><input id="pdfEditorColor" type="color" value="#111827" style="height:44px;width:100%;padding:4px"></div>
+  </div>
+  <div id="pdfEditorRotate" style="display:none">
+    <label>Rotation</label><select id="pdfEditorAngle"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">270° clockwise</option></select>
+  </div>
+  <div id="pdfEditorDelete" style="display:none">
+    <label>Pages to delete</label><input id="pdfEditorPages" type="text" placeholder="Example: 2,4-6">
+    <p class="small">You can remove multiple pages. Example: <strong>2,4-6</strong>.</p>
+  </div>
+  <button class="btn" id="calc">Apply &amp; Download PDF</button>
+  <button class="btn secondary" type="button" onclick="resetPdfEditor()">Reset editor</button>
+  <div id="out"></div>
+</div>`;
 case'pdfword':return fileBox('pdf','Choose PDF','Extract readable text into a .txt file');
 case'pdfjpg':return fileBox('pdf','Choose PDF','Render pages to JPG (first page in this version)');
 case'jpgpdf':return fileBox('img','Choose images','Create a PDF from selected images');
@@ -781,6 +827,16 @@ if(id==='callanalysis'){
  $('#analyzecall').onclick=()=>{try{const t=$('#analysistext').value.trim();if(!t)throw Error('Paste a transcript first.');let lines=t.split(/\n+/).filter(Boolean),s={};lines.forEach(x=>{let m=x.match(/^\s*([^:]{1,40}):\s*(.*)$/);if(m)(s[m[1].trim()]??=[]).push(m[2].trim())});let sh=Object.entries(s).map(([k,v])=>`<li><strong>${k}</strong>: ${v.length} utterance(s)</li>`).join('');$('#analysisout').innerHTML=`<div class="trip-result"><h3>Conversation Analysis</h3><p>Segments: <strong>${lines.length}</strong></p><ul>${sh||'<li>No explicit speaker labels detected.</li>'}</ul><p class="small">Structural analysis only; no speaker identities are invented.</p></div>`}catch(e){$('#analysisout').innerHTML='<p class="error">'+e.message+'</p>'}};
 }
 
+if(id==='pdfeditor'){
+ const sync=()=>{
+   const a=$('#pdfEditorAction').value;
+   $('#pdfEditorFields').style.display=(a==='text'||a==='watermark')?'block':'none';
+   $('#pdfEditorRotate').style.display=a==='rotate'?'block':'none';
+   $('#pdfEditorDelete').style.display=a==='delete'?'block':'none';
+   $('#pdfEditorPage').disabled=a==='delete';
+ };
+ $('#pdfEditorAction').onchange=sync; sync();
+}
 if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
  if(id==='caseconvert'){
  $('#upper').onclick=()=>out(`<pre>${$('#text').value.toUpperCase()}</pre>`);
@@ -845,6 +901,7 @@ case'inflation':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t')
 case'cagr':{let s=num($('#startv').value),e=num($('#endv').value),y=num($('#years').value),c=(Math.pow(e/s,1/y)-1)*100;out(`CAGR: <strong>${c.toFixed(2)}%</strong>`);break}
 case'loancompare':{let a=annuity(num($('#p1').value),num($('#r1').value),num($('#n1').value)),b=annuity(num($('#p2').value),num($('#r2').value),num($('#n2').value)),ta=a*num($('#n1').value),tb=b*num($('#n2').value);out(`Loan A EMI: <strong>${money(a)}</strong> · Interest: ${money(ta-num($('#p1').value))}<br>Loan B EMI: <strong>${money(b)}</strong> · Interest: ${money(tb-num($('#p2').value))}<br><strong>${ta<tb?'Loan A':'Loan B'}</strong> has the lower total repayment.`);break}
 case'salarybreak':{let a=num($('#annual').value),m=a/12,p=m*num($('#pf').value)/100,t=num($('#tax').value),o=num($('#other').value);out(`Monthly gross: <strong>${money(m)}</strong><br>PF: ${money(p)} · Tax: ${money(t)} · Other: ${money(o)}<br>Estimated in-hand: <strong>${money(m-p-t-o)}</strong>`);break}
+case'pdfeditor':await editPdf();break;
 case'pagenumber':await pageNumberPdf();break;
 case'rotatepdf':await rotatePdf();break;
 case'petroldiesel':{let d=num($('#distance').value),pc=d/num($('#petrolm').value)*num($('#petrolp').value),dc=d/num($('#dieselm').value)*num($('#dieselp').value);out(`Petrol monthly cost: <strong>${money(pc)}</strong><br>Diesel monthly cost: <strong>${money(dc)}</strong><br>Estimated saving: <strong>${money(Math.abs(pc-dc))}</strong>`);break}
@@ -986,6 +1043,81 @@ async function pdfToJpg(){
  }
  out(`${pdf.numPages} JPG page(s) created.`);
 }
+
+let pdfEditorBytes=null;
+let pdfEditorOriginalName='pennitools-edited.pdf';
+
+async function pdfEditorLoad(){
+  const f=$('#pdfEditorFile')?.files?.[0];
+  if(!pdfEditorBytes){
+    if(!f)throw Error('Choose a PDF first.');
+    if(f.size>50*1024*1024)throw Error('For the browser editor, please use a PDF up to 50 MB.');
+    pdfEditorBytes=new Uint8Array(await f.arrayBuffer());
+    pdfEditorOriginalName=(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-edited.pdf';
+  }
+  return PDFLib.PDFDocument.load(pdfEditorBytes);
+}
+function pdfEditorInfo(input){
+  pdfEditorBytes=null;
+  const f=input.files[0], box=$('#pdfEditorInfo');
+  if(!f){box.textContent='';return}
+  if(f.size>50*1024*1024){box.textContent='File is over the 50 MB browser-editor limit.';return}
+  box.textContent=`Selected: ${f.name} · ${(f.size/1024/1024).toFixed(2)} MB`;
+}
+function hexRgb(hex){
+  const h=(hex||'#111827').replace('#','');
+  const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
+  return PDFLib.rgb(((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255);
+}
+async function editPdf(){
+  const action=$('#pdfEditorAction').value;
+  const d=await pdfEditorLoad();
+  const max=d.getPageCount();
+  if(!max)throw Error('The PDF has no pages.');
+  if(action==='delete'){
+    const sel=parsePages($('#pdfEditorPages').value,max);
+    if(!sel.length)throw Error('Enter at least one page to delete.');
+    if(sel.length>=max)throw Error('At least one page must remain.');
+    sel.sort((a,b)=>b-a).forEach(n=>d.removePage(n-1));
+    const bytes=new Uint8Array(await d.save());
+    pdfEditorBytes=bytes;
+    dl(new Blob([bytes],{type:'application/pdf'}),pdfEditorOriginalName);
+    out(`Deleted ${sel.length} page(s). Remaining pages: <strong>${d.getPageCount()}</strong>.`);
+    return;
+  }
+  const pageNo=Math.max(1,Math.min(max,Number($('#pdfEditorPage').value)||1));
+  const page=d.getPage(pageNo-1);
+  if(action==='rotate'){
+    const angle=Number($('#pdfEditorAngle').value);
+    page.setRotation(PDFLib.degrees((page.getRotation().angle+angle)%360));
+  }else{
+    const text=$('#pdfEditorText').value.trim();
+    if(!text)throw Error('Enter the text you want to add.');
+    const size=Math.max(6,Math.min(96,Number($('#pdfEditorSize').value)||18));
+    const x=Math.max(0,Number($('#pdfEditorX').value)||0);
+    const y=Math.max(0,Number($('#pdfEditorY').value)||0);
+    const color=hexRgb($('#pdfEditorColor').value);
+    if(action==='watermark'){
+      const {width,height}=page.getSize();
+      page.drawText(text,{x:Math.max(10,width*.18),y:height*.48,size:Math.max(18,size*2.2),color,opacity:.22,rotate:PDFLib.degrees(35)});
+    }else{
+      page.drawText(text,{x,y,size,color});
+    }
+  }
+  const bytes=new Uint8Array(await d.save());
+  pdfEditorBytes=bytes;
+  dl(new Blob([bytes],{type:'application/pdf'}),pdfEditorOriginalName);
+  out(`PDF updated successfully. <strong>${d.getPageCount()}</strong> page(s) in the edited PDF.`);
+}
+function resetPdfEditor(){
+  pdfEditorBytes=null;
+  const f=$('#pdfEditorFile'); if(f)f.value='';
+  const i=$('#pdfEditorInfo'); if(i)i.textContent='';
+  if($('#pdfEditorText'))$('#pdfEditorText').value='';
+  if($('#pdfEditorPages'))$('#pdfEditorPages').value='';
+  if($('#out'))$('#out').innerHTML='';
+}
+
 async function pageNumberPdf(){
  let d=await pdfDoc(),pages=d.getPages();
  pages.forEach((p,i)=>{let s=p.getSize();p.drawText(String(i+1),{x:s.width/2-5,y:15,size:10})});
