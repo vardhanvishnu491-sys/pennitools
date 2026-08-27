@@ -453,6 +453,7 @@ const tools=[
 ['Everyday','Unit Price by Weight','Compare price per gram or kilogram.','priceweight'],
 
 ['Carpenter & Construction','Feet & Inches Calculator','Convert feet/inches, calculate decimal feet and total length.','feetinch'],
+['Carpenter & Construction','Carpenter Area / Square Feet Calculator','Calculate square feet from length × width measurements, including multiple pieces.','carpenterarea'],
 ['Carpenter & Construction','Board Foot Calculator','Calculate lumber volume in board feet and estimate quantity.','boardfoot'],
 ['Carpenter & Construction','Wood / Lumber Cost Calculator','Estimate total wood cost from size, quantity and price per unit.','woodcost'],
 ['Carpenter & Construction','Cut List Calculator','Calculate total material length and estimated waste from a simple cut list.','cutlist'],
@@ -690,6 +691,16 @@ case'pcttotal':return f(inp('part','Part',25)+inp('total','Total',100));
 case'ratio':return f(inp('a','First value',20)+inp('b','Second value',30));
 case'lcmhcf':return f(inp('a','First number',12)+inp('b','Second number',18));
 case'priceweight':return f(inp('price','Price',200)+inp('grams','Weight in grams',500));
+case'carpenterarea':return `<div class="notice">📏 <strong>Carpenter Area Calculator</strong><br>For example: 77 in × 33 in = 2,541 sq in ÷ 144 = 17.646 sq ft.</div>
+<div class="row">
+  ${inp('caLength','Length',77)}
+  ${inp('caWidth','Width',33)}
+  <div><label>Measurement unit</label><select id="caUnit"><option value="in">Inches</option><option value="ft">Feet</option><option value="cm">Centimetres</option><option value="mm">Millimetres</option></select></div>
+  ${inp('caQty','Quantity / pieces',1)}
+</div>
+<button class="btn" id="calc">Calculate Square Feet</button>
+<div id="out"></div>
+<p class="small">Formula: area in square feet = length × width converted to feet. For inch measurements, divide square inches by 144.</p>`;
 case'feetinch':return `<div class="notice">📏 Enter measurements in feet and inches. The calculator also shows decimal feet and total inches.</div>
 <div class="row">${inp('fiFeet','Feet',8)}${inp('fiInches','Inches',6)}</div>
 <button class="btn" id="calc">Calculate Length</button><div id="out"></div>`;
@@ -970,7 +981,21 @@ case'pdflock':{
  case'ev':{let k=num($('#battery').value),pct=Math.max(0,num($('#to').value)-num($('#from').value))/100,cost=k*pct*num($('#tariff').value);out(`Energy used: <strong>${(k*pct).toFixed(2)} kWh</strong><br>Charging cost: <strong>${money(cost)}</strong>`);break}
  case'trip':{let l=num($('#distance').value)/num($('#mileage').value),total=l*num($('#fuelprice').value)+num($('#toll').value),people=Math.max(1,num($('#people').value));out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
  case'insurance':{let idv=num($('#idv').value),prem=idv*num($('#rate').value)/100,tot=prem*(1+num($('#gst').value)/100);out(`Estimated premium: <strong>${money(tot)}</strong><br>Base premium: ${money(prem)}<br>GST: ${money(tot-prem)}`);break}
- case'feetinch':{
+ case'carpenterarea':{
+   const L=num($('#caLength').value), W=num($('#caWidth').value), Q=Math.max(1,Math.floor(num($('#caQty').value)||1)), unit=$('#caUnit').value;
+   if(L<=0||W<=0) throw Error('Enter positive length and width.');
+   const factor={in:1/12,ft:1,cm:1/30.48,mm:1/304.8}[unit];
+   const lft=L*factor, wft=W*factor, oneSqFt=lft*wft, totalSqFt=oneSqFt*Q;
+   const oneSqIn=oneSqFt*144, totalSqIn=oneSqIn*Q;
+   out(`<div class="trip-result"><h3>Square Feet Result</h3>
+   <p><strong>${L} ${unit} × ${W} ${unit}</strong></p>
+   <p>Area per piece: <strong>${oneSqIn.toFixed(3)} sq in ÷ 144 = ${oneSqFt.toFixed(3)} sq ft</strong></p>
+   <p>Quantity: <strong>${Q}</strong></p>
+   <p>Total area: <strong>${totalSqFt.toFixed(3)} sq ft</strong></p>
+   <p class="small">Rounded: <strong>${totalSqFt.toFixed(2)} sq ft</strong></p>
+   </div>`);
+   break}
+case'feetinch':{
    let ft=num($('#fiFeet').value), inches=num($('#fiInches').value);
    let totalIn=ft*12+inches, dec=totalIn/12;
    out(`Total length: <strong>${Math.floor(totalIn/12)} ft ${ (totalIn%12).toFixed(2) } in</strong><br>Decimal feet: <strong>${dec.toFixed(3)} ft</strong><br>Total inches: <strong>${totalIn.toFixed(2)} in</strong>`);
