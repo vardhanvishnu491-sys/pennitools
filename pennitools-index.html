@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PenniTools - free online tools for everyday India">
+<title>PenniTools — Free Tools for India</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f6f8fc;color:#111827}
+header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:5}.nav{max-width:1100px;margin:auto;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:30px;font-weight:800}.logo span{color:#2563eb}
+nav a{margin-left:15px;text-decoration:none;color:#344054;font-weight:600;font-size:14px}.hero{max-width:1100px;margin:auto;text-align:center;padding:40px 20px 15px}.hero h1{font-size:40px;margin:0 0 8px}.hero p{color:#667085;font-size:18px}.search{width:100%;max-width:650px;padding:15px;border:1px solid #d0d5dd;border-radius:13px;font-size:16px}
+main{max-width:1100px;margin:auto;padding:10px 20px 60px}.section{margin-top:38px}.section h2{font-size:29px;margin:0}.section>p{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:24px;box-shadow:0 3px 15px #1018280a}.icon{font-size:34px}.card h3{font-size:22px;margin:12px 0 8px}.card p{color:#667085;min-height:42px}.btn{border:0;background:#2563eb;color:#fff;border-radius:11px;padding:13px 18px;font-size:15px;font-weight:700;cursor:pointer}.badge{display:inline-block;background:#eef4ff;color:#2563eb;padding:6px 10px;border-radius:99px;font-size:13px;font-weight:700}
+.tool{display:none;background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:22px;margin-top:18px}.tool.active{display:block}.form{display:grid;gap:12px;max-width:600px}.form label{font-weight:700;font-size:14px}.form input{display:block;width:100%;margin-top:6px;padding:13px;border:1px solid #d0d5dd;border-radius:10px;font-size:16px}.result{margin-top:15px;background:#eef4ff;border-radius:11px;padding:15px;font-weight:700}.drop{border:2px dashed #b8c5dd;border-radius:15px;padding:25px;text-align:center}.small{font-size:13px;color:#667085}
+footer{background:#111827;color:#d1d5db;text-align:center;padding:28px}
+@media(max-width:700px){.hero h1{font-size:31px}nav{display:none}}
+</style>
+</head>
+<body>
+<header><div class="nav"><div class="logo"><span>Penni</span>Tools</div><nav><a href="#money">Money</a><a href="#images">Images</a><a href="#documents">Documents</a><a href="#jobs">Jobs</a><a href="#vehicles">Vehicles</a></nav></div></header>
+<section class="hero"><h1>Free & Simple Tools for India 🇮🇳</h1><p>Useful calculators and file tools that work directly in your browser.</p><input id="search" class="search" placeholder="Search tools…"></section>
+<main>
+
+<section id="money" class="section"><h2>💰 Money Tools</h2><p>Salary, loan and savings calculators.</p><div class="grid">
+<article class="card" data-name="ctc in hand salary"><span class="badge">Popular</span><div class="icon">💼</div><h3>CTC → In-Hand Salary</h3><p>Estimate monthly take-home salary.</p><button class="btn" onclick="openTool('ctc')">Use tool</button></article>
+<article class="card" data-name="emi calculator"><span class="badge">Popular</span><div class="icon">🏦</div><h3>EMI Calculator</h3><p>Calculate EMI, interest and repayment.</p><button class="btn" onclick="openTool('emi')">Use tool</button></article>
+<article class="card" data-name="pf calculator"><div class="icon">🧾</div><h3>PF Calculator</h3><p>Estimate employee and employer PF contributions.</p><button class="btn" onclick="openTool('pf')">Use tool</button></article>
+</div>
+<div id="ctc" class="tool"><h2>💼 CTC → In-Hand Salary</h2><div class="form"><label>Annual CTC (₹)<input id="ctcV" type="number" placeholder="600000"></label><label>Annual deductions (₹)<input id="ctcD" type="number" placeholder="60000"></label><button class="btn" onclick="ctcCalc()">Calculate</button></div><div id="ctcR" class="result">Enter your figures.</div><p class="small">Estimate only; actual take-home depends on salary structure, tax and benefits.</p></div>
+<div id="emi" class="tool"><h2>🏦 EMI Calculator</h2><div class="form"><label>Loan amount (₹)<input id="loan" type="number" placeholder="1000000"></label><label>Annual interest rate (%)<input id="rate" type="number" step="0.01" placeholder="10"></label><label>Tenure (years)<input id="tenure" type="number" step="0.5" placeholder="5"></label><button class="btn" onclick="emiCalc()">Calculate EMI</button></div><div id="emiR" class="result">Enter loan details.</div></div>
+<div id="pf" class="tool"><h2>🧾 PF Calculator</h2><div class="form"><label>Basic salary per month (₹)<input id="basic" type="number" placeholder="25000"></label><button class="btn" onclick="pfCalc()">Calculate</button></div><div id="pfR" class="result">Enter basic salary.</div><p class="small">Illustrative 12% employee contribution. Actual contributions may vary.</p></div>
+</section>
+
+<section id="images" class="section"><h2>🖼️ Image Tools</h2><p>Convert, compress and resize images in your browser.</p><div class="grid">
+<article class="card" data-name="image compressor"><span class="badge">Popular</span><div class="icon">🗜️</div><h3>Image Compressor</h3><p>Reduce JPG image size.</p><button class="btn" onclick="openTool('compress')">Use tool</button></article>
+<article class="card" data-name="jpg png converter"><div class="icon">🔄</div><h3>JPG ↔ PNG</h3><p>Convert image formats locally.</p><button class="btn" onclick="openTool('convert')">Use tool</button></article>
+<article class="card" data-name="image resizer"><div class="icon">📐</div><h3>Image Resizer</h3><p>Resize an image to your dimensions.</p><button class="btn" onclick="openTool('resize')">Use tool</button></article>
+</div>
+<div id="compress" class="tool"><h2>🗜️ Image Compressor</h2><div class="drop"><input id="compFile" type="file" accept="image/*"><br><br><label>Quality <input id="quality" type="range" min=".2" max="1" value=".7" step=".05"></label><br><br><button class="btn" onclick="compress()">Compress & Download</button><p id="compMsg" class="small"></p></div></div>
+<div id="convert" class="tool"><h2>🔄 JPG ↔ PNG</h2><div class="drop"><input id="convFile" type="file" accept="image/*"><br><br><select id="convType"><option value="image/png">Convert to PNG</option><option value="image/jpeg">Convert to JPG</option></select><br><br><button class="btn" onclick="convert()">Convert & Download</button><p id="convMsg" class="small"></p></div></div>
+<div id="resize" class="tool"><h2>📐 Image Resizer</h2><div class="form"><input id="resizeFile" type="file" accept="image/*"><label>Width (px)<input id="rw" type="number" placeholder="1200"></label><label>Height (px)<input id="rh" type="number" placeholder="800"></label><button class="btn" onclick="resize()">Resize & Download</button></div><p id="resizeMsg" class="small"></p></div>
+</section>
+
+<section id="documents" class="section"><h2>📄 Document Tools</h2><p>PDF utilities.</p><div class="grid">
+<article class="card" data-name="jpg pdf"><div class="icon">🧾</div><h3>JPG → PDF</h3><p>Turn an image into a PDF.</p><button class="btn" onclick="openTool('jpgpdf')">Use tool</button></article>
+<article class="card" data-name="pdf compressor"><div class="icon">📦</div><h3>PDF Compressor</h3><p>Reduce PDF file size.</p><button class="btn" onclick="alert('We will add this next.')">Next</button></article>
+<article class="card" data-name="merge split pdf"><div class="icon">📚</div><h3>Merge / Split PDF</h3><p>Manage PDF files and pages.</p><button class="btn" onclick="alert('We will add this next.')">Next</button></article>
+</div>
+<div id="jpgpdf" class="tool"><h2>🧾 JPG → PDF</h2><p>PDF creation will be added in the next build. This tool card is ready.</p></div>
+</section>
+
+<section id="jobs" class="section"><h2>💼 Job Tools</h2><p>Helpful tools for employees and job seekers.</p><div class="grid"><article class="card" data-name="increment calculator salary"><div class="icon">📈</div><h3>Increment Calculator</h3><p>Calculate revised salary after an increment.</p><button class="btn" onclick="openTool('increment')">Use tool</button></article></div>
+<div id="increment" class="tool"><h2>📈 Increment Calculator</h2><div class="form"><label>Current salary (₹)<input id="incS" type="number" placeholder="50000"></label><label>Increment (%)<input id="incP" type="number" placeholder="10"></label><button class="btn" onclick="incCalc()">Calculate</button></div><div id="incR" class="result">Enter salary and increment.</div></div></section>
+
+<section id="vehicles" class="section"><h2>🚗 Vehicle Tools</h2><p>Plan travel and running costs.</p><div class="grid"><article class="card" data-name="fuel cost calculator"><span class="badge">Popular</span><div class="icon">⛽</div><h3>Fuel Cost Calculator</h3><p>Estimate fuel required and trip cost.</p><button class="btn" onclick="openTool('fuel')">Use tool</button></article></div>
+<div id="fuel" class="tool"><h2>⛽ Fuel Cost Calculator</h2><div class="form"><label>Distance (km)<input id="dist" type="number" placeholder="200"></label><label>Mileage (km/l)<input id="mileage" type="number" placeholder="18"></label><label>Fuel price (₹/litre)<input id="fuelPrice" type="number" placeholder="100"></label><button class="btn" onclick="fuelCalc()">Calculate</button></div><div id="fuelR" class="result">Enter trip details.</div></div></section>
+
+</main>
+<footer><strong>PenniTools</strong><br>Free & simple tools for everyday India.<br><span class="small">Calculations are estimates; verify official rules where applicable.</span></footer>
+<script>
+const rupee=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
+function openTool(id){document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));let e=document.getElementById(id);e.classList.add('active');e.scrollIntoView({behavior:'smooth',block:'start'})}
+function ctcCalc(){let c=+ctcV.value||0,d=+ctcD.value||0;ctcR.textContent='Estimated monthly in-hand: '+rupee(Math.max(0,c-d)/12)}
+function emiCalc(){let p=+loan.value||0,r=(+rate.value||0)/1200,n=(+tenure.value||0)*12;if(!p||!n){emiR.textContent='Enter valid loan details.';return}let e=r?p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):p/n;emiR.textContent='Monthly EMI: '+rupee(e)+' | Total repayment: '+rupee(e*n)+' | Interest: '+rupee(e*n-p)}
+function pfCalc(){let b=+basic.value||0,e=b*.12;pfR.textContent='Employee PF (12%): '+rupee(e)+' | Employee + employer: '+rupee(e*2)}
+function incCalc(){let s=+incS.value||0,p=+incP.value||0,n=s*(1+p/100);incR.textContent='Revised salary: '+rupee(n)+' | Increase: '+rupee(n-s)}
+function fuelCalc(){let d=+dist.value||0,m=+mileage.value||0,p=+fuelPrice.value||0;if(!d||!m){fuelR.textContent='Enter valid details.';return}let l=d/m;fuelR.textContent='Fuel required: '+l.toFixed(2)+' L | Trip cost: '+rupee(l*p)}
+function img(file,cb){if(!file){cb(null);return}let i=new Image();i.onload=()=>cb(i);i.src=URL.createObjectURL(file)}
+function save(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function makeCanvas(i,w,h){let c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);return c}
+function compress(){let f=compFile.files[0];if(!f){compMsg.textContent='Choose an image first.';return}img(f,i=>{makeCanvas(i,i.naturalWidth,i.naturalHeight).toBlob(b=>{save(b,'pennitools-compressed.jpg');compMsg.textContent='Done — downloaded.'},'image/jpeg',+quality.value)})}
+function convert(){let f=convFile.files[0];if(!f){convMsg.textContent='Choose an image first.';return}let t=convType.value;img(f,i=>{let ext=t==='image/png'?'png':'jpg';makeCanvas(i,i.naturalWidth,i.naturalHeight).toBlob(b=>{save(b,'pennitools-converted.'+ext);convMsg.textContent='Done — downloaded.'},t,.92)})}
+function resize(){let f=resizeFile.files[0],w=+rw.value,h=+rh.value;if(!f||!w||!h){resizeMsg.textContent='Choose an image and enter dimensions.';return}img(f,i=>{makeCanvas(i,w,h).toBlob(b=>{save(b,'pennitools-resized.jpg');resizeMsg.textContent='Done — downloaded.'},'image/jpeg',.92)})}
+document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLowerCase();document.querySelectorAll('.card').forEach(c=>c.style.display=!q||c.dataset.name.includes(q)?'block':'none')})
+</script>
+</body>
+</html>
