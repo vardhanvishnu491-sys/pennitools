@@ -7,18 +7,164 @@
 <meta name="theme-color" content="#155eef">
 <title>PenniTools — Everyday Calculators & Tools</title>
 <style>
-:root{--b:#155eef;--ink:#101828;--muted:#667085;--bg:#f7f9fc;--card:#fff;--line:#e4e7ec;--ok:#067647;--danger:#b42318}
-*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
-header{background:linear-gradient(135deg,#155eef,#0040c1);color:white;padding:28px 16px 22px;position:sticky;top:0;z-index:10;box-shadow:0 3px 15px #0002}
-.wrap{max-width:1100px;margin:auto;padding:0 14px}.brand{font-size:32px;font-weight:900}.brand span{color:#9dbaff}.tag{opacity:.9;margin-top:4px}
-.search{width:100%;margin-top:18px;border:0;border-radius:14px;padding:14px 16px;font-size:16px;outline:0}
-nav{display:flex;gap:8px;overflow:auto;padding:12px 0}.chip{border:1px solid #ffffff55;color:#fff;background:#ffffff18;border-radius:999px;padding:8px 13px;white-space:nowrap;cursor:pointer}
-main{padding:24px 0 60px}.section{margin:26px 0}.section h2{font-size:24px;margin:0 0 4px}.section p{color:var(--muted);margin:0 0 14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 2px 8px #1018280a}.card h3{margin:0 0 7px;font-size:18px}.card p{min-height:40px;color:var(--muted);font-size:14px}.btn{background:var(--b);color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.btn.alt{background:#eef4ff;color:#174ea6}.hidden{display:none!important}
-.modal{position:fixed;inset:0;background:#10182899;display:none;align-items:flex-end;justify-content:center;z-index:30}.modal.show{display:flex}.panel{background:white;width:min(760px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:22px}.close{float:right;border:0;background:#eef2f6;border-radius:50%;width:38px;height:38px;font-size:20px}
-label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:10px;font-size:15px;background:#fff}textarea{min-height:130px}
-.row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.result{margin-top:15px;padding:14px;border-radius:12px;background:#f2f4f7}.result strong{font-size:22px}.small{font-size:12px;color:var(--muted)}.drop{border:2px dashed #98a2b3;padding:25px;text-align:center;border-radius:14px;margin-top:10px}.list{padding-left:20px}.notice{background:#fffaeb;border:1px solid #fedf89;padding:12px;border-radius:10px;color:#7a2e0e;font-size:13px}
-footer{padding:30px 0;background:#101828;color:#d0d5dd}.empty{padding:30px;text-align:center;color:var(--muted)}
+:root{
+  --ink:#0b1220;
+  --muted:#667085;
+  --blue:#2563eb;
+  --blue2:#1d4ed8;
+  --cyan:#06b6d4;
+  --bg:#f5f7fb;
+  --card:#ffffff;
+  --line:#e7ebf2;
+  --shadow:0 12px 35px rgba(15,23,42,.08);
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  color:var(--ink);
+  background:var(--bg);
+  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  line-height:1.55;
+}
+body:before{
+  content:"";
+  position:fixed; inset:0; pointer-events:none; z-index:-1;
+  background:
+    radial-gradient(circle at 8% 8%,rgba(37,99,235,.08),transparent 25%),
+    radial-gradient(circle at 92% 18%,rgba(6,182,212,.07),transparent 22%);
+}
+header{
+  position:relative;
+  overflow:hidden;
+  color:#fff;
+  padding:58px 22px 76px;
+  background:
+    radial-gradient(circle at 85% 15%,rgba(255,255,255,.16),transparent 25%),
+    radial-gradient(circle at 10% 80%,rgba(6,182,212,.18),transparent 30%),
+    linear-gradient(135deg,#0b1f4d 0%,#123a8f 48%,#2563eb 100%);
+  box-shadow:0 10px 30px rgba(15,23,42,.15);
+}
+header:after{
+  content:"";
+  position:absolute; left:-5%; right:-5%; bottom:-70px; height:130px;
+  background:var(--bg);
+  border-radius:50% 50% 0 0/55% 55% 0 0;
+}
+header .nav, header > div, header > h1, header > p, header input{
+  position:relative; z-index:2;
+}
+header h1{
+  margin:0 auto 8px; max-width:1120px;
+  font-size:clamp(42px,8vw,76px);
+  line-height:1;
+  letter-spacing:-3px;
+  font-weight:850;
+}
+header h1::first-letter{color:#8ec5ff}
+header p{
+  max-width:1120px; margin:0 auto 28px;
+  color:rgba(255,255,255,.86);
+  font-size:clamp(17px,2.5vw,22px);
+}
+header input{
+  display:block; width:min(760px,100%); margin:0 auto;
+  padding:18px 22px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:16px;
+  background:rgba(255,255,255,.98);
+  color:var(--ink);
+  font-size:18px;
+  outline:none;
+  box-shadow:0 14px 35px rgba(0,0,0,.14);
+}
+header input:focus{box-shadow:0 0 0 4px rgba(96,165,250,.28),0 14px 35px rgba(0,0,0,.14)}
+#tools{
+  width:min(1120px,calc(100% - 32px));
+  margin:-8px auto 70px;
+  position:relative; z-index:3;
+}
+.section{
+  margin:46px 0 18px;
+  padding:0;
+}
+.section h2{
+  margin:0 0 6px;
+  font-size:clamp(25px,4vw,34px);
+  letter-spacing:-1px;
+}
+.section > p{
+  margin:0 0 18px;
+  color:var(--muted);
+}
+.tool{
+  display:inline-flex;
+  vertical-align:top;
+  flex-direction:column;
+  width:calc(33.333% - 14px);
+  min-height:220px;
+  margin:0 14px 14px 0;
+  padding:24px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:0 5px 18px rgba(15,23,42,.045);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+.tool:hover{
+  transform:translateY(-5px);
+  box-shadow:var(--shadow);
+  border-color:#cbd8f7;
+}
+.tool h3{
+  margin:0 0 8px;
+  font-size:21px;
+  letter-spacing:-.3px;
+}
+.tool p{
+  margin:0 0 18px;
+  color:var(--muted);
+  flex:1;
+}
+.tool button,.tool a{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:max-content; min-width:120px;
+  padding:11px 17px;
+  border:0; border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  color:#fff;
+  font-weight:750;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 7px 15px rgba(37,99,235,.2);
+}
+.tool button:hover,.tool a:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.tool .badge{
+  display:inline-flex; width:max-content;
+  margin-bottom:14px; padding:5px 10px;
+  border-radius:999px;
+  background:#eef4ff; color:var(--blue2);
+  font-size:12px; font-weight:800;
+}
+footer{
+  padding:42px 20px;
+  background:#0b1220;
+  color:#cbd5e1;
+  text-align:center;
+}
+footer strong{color:#fff}
+@media(max-width:900px){
+  .tool{width:calc(50% - 10px);margin-right:10px}
+}
+@media(max-width:620px){
+  header{padding:42px 18px 68px}
+  header h1{letter-spacing:-2px}
+  #tools{width:calc(100% - 24px);margin-bottom:45px}
+  .section{margin-top:34px}
+  .tool{display:flex;width:100%;margin:0 0 13px;min-height:190px;padding:21px}
+  .tool h3{font-size:20px}
+}
 </style>
 </head>
 <body>
