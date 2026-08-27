@@ -355,7 +355,7 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script>
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
-const cats=['All','Money & Finance','Document & Image','Audio & AI','Vehicle','Job','Everyday','Health & Fitness','Education'];
+const cats=['All','Money & Finance','Document & Image','Audio & AI','Vehicle','Job','Everyday','Carpenter & Construction','Health & Fitness','Education'];
 const tools=[
 ['Money & Finance','CTC → In-Hand Salary','Estimate monthly take-home salary.','ctc'],
 ['Money & Finance','EMI Calculator','Calculate EMI, interest and repayment.','emi'],
@@ -450,6 +450,14 @@ const tools=[
 ['Everyday','Ratio Calculator','Simplify and compare two ratios.','ratio'],
 ['Everyday','LCM & HCF Calculator','Find LCM and HCF of two numbers.','lcmhcf'],
 ['Everyday','Unit Price by Weight','Compare price per gram or kilogram.','priceweight'],
+
+['Carpenter & Construction','Feet & Inches Calculator','Convert feet/inches, calculate decimal feet and total length.','feetinch'],
+['Carpenter & Construction','Board Foot Calculator','Calculate lumber volume in board feet and estimate quantity.','boardfoot'],
+['Carpenter & Construction','Wood / Lumber Cost Calculator','Estimate total wood cost from size, quantity and price per unit.','woodcost'],
+['Carpenter & Construction','Cut List Calculator','Calculate total material length and estimated waste from a simple cut list.','cutlist'],
+['Carpenter & Construction','Room Area & Material Calculator','Calculate floor/wall area and estimate material quantity.','roommaterial'],
+['Carpenter & Construction','Staircase Calculator','Estimate risers, treads and staircase run from floor height.','stair'],
+
 ['Job','Notice Period Calculator','Find your last working date from a notice period.','noticecalc'],
 ['Job','Experience Calculator','Calculate years and months of experience.','experiencecalc'],
 ['Job','Overtime Pay Calculator','Estimate overtime pay from hourly salary.','otpay'],
@@ -472,13 +480,14 @@ function render(){
  const groups={};
  tools.filter(t=>(active==='All'||t[0]===active)&&t.slice(1,3).join(' ').toLowerCase().includes(q))
    .forEach(t=>(groups[t[0]]??=[]).push(t));
- const order=['Money & Finance','Vehicle','Job','Everyday','Audio & AI','Document & Image','Health & Fitness','Education'];
- const icons={'Money & Finance':'💰','Vehicle':'🚗','Job':'💼','Everyday':'✨','Audio & AI':'🎙️','Document & Image':'📄','Health & Fitness':'❤️','Education':'🎓'};
+ const order=['Money & Finance','Vehicle','Job','Everyday','Carpenter & Construction','Audio & AI','Document & Image','Health & Fitness','Education'];
+ const icons={'Money & Finance':'💰','Vehicle':'🚗','Job':'💼','Everyday':'✨','Carpenter & Construction':'🪚','Audio & AI':'🎙️','Document & Image':'📄','Health & Fitness':'❤️','Education':'🎓'};
  const descriptions={
    'Money & Finance':'Salary, loans, savings, tax and investment calculators',
    'Vehicle':'Fuel, mileage, EV, trip and vehicle cost tools',
    'Job':'Salary, notice period, experience and workplace tools',
    'Everyday':'Useful calculators for everyday life',
+   'Carpenter & Construction':'Measurements, lumber, cut lists, materials and stair planning',
    'Audio & AI':'Transcription, conversation and audio productivity tools',
    'Document & Image':'PDF, document and image utilities',
    'Health & Fitness':'Simple health and fitness estimators',
@@ -531,7 +540,39 @@ case'home':return f(inp('p','Home loan amount',5000000)+inp('r','Annual interest
 case'carloan':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
 case'wordpdf':return `<label>Document text</label><textarea id="text">Type or paste your document here.</textarea><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'transcribe':return `<div class="audio-transcriber"><div class="notice">🔒 <strong>Unlimited local transcription:</strong> upload as many files as you want. Each individual file must be <strong>under 100 MB</strong>. Audio is processed in your browser and is not sent to a PenniTools server.</div><div class="audio-drop" id="audioDrop"><div class="audio-icon">🎙️</div><h3>Audio → Accurate Transcript</h3><p>MP3, WAV, M4A, OGG, WebM, AAC and other browser-supported audio.</p><input id="audioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.webm,.aac"><label class="btn" for="audioFile">Choose audio</label><div id="audioName" class="small"></div></div><div class="audio-options row"><div><label>Spoken language</label><select id="audioLang"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="te">Telugu</option><option value="ta">Tamil</option><option value="kn">Kannada</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="bn">Bengali</option><option value="gu">Gujarati</option><option value="pa">Punjabi</option><option value="ur">Urdu</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ar">Arabic</option><option value="zh">Chinese</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></div><div><label>Accuracy</label><select id="audioModel"><option value="Xenova/whisper-tiny">Fast — Tiny</option><option value="Xenova/whisper-small">Balanced — Small</option><option value="onnx-community/whisper-large-v3-turbo" selected>High accuracy — Large v3 Turbo</option></select></div></div><div class="audio-options row"><div><label>Speaker mode</label><select id="speakerMode"><option value="mixed">Mixed audio — best-effort transcript</option><option value="stereo">Call recording — Caller / Receiver from stereo channels</option></select></div><div><label>Transcript detail</label><select id="transcriptDetail"><option value="segments" selected>Timestamped segments</option><option value="plain">Plain transcript</option></select></div></div><button class="btn" id="startTranscribe" disabled>Start high-accuracy transcription</button><div id="audioStatus" class="small"></div><div id="callNotice" class="notice" style="display:none"></div><textarea id="transcriptOut" placeholder="Your transcript will appear here…"></textarea><div id="analysisOut" class="analysis-box" style="display:none"></div><div class="audio-actions"><button class="btn secondary" id="copyTranscript" disabled>Copy transcript</button><button class="btn secondary" id="downloadTranscript" disabled>Download TXT</button><button class="btn secondary" id="downloadSrt" disabled>Download SRT</button><button class="btn secondary" id="analyzeTranscript" disabled>Analyze transcript</button></div><p class="small"><strong>Accuracy note:</strong> no speech-to-text system can guarantee 100% accuracy. Speaker labels are reliable when a call recording has separate stereo channels; if both people are mixed into one mono track, true caller/receiver separation requires a dedicated diarization model/server.</p></div>`;
-case'pdfeditor':return `<div class="pdf-editor">
+case'pdflock':{
+   const file=$('#pdfLockFile')?.files?.[0], mode=$('#pdfLockMode')?.value, pass=$('#pdfLockPassword')?.value||'';
+   if(!file) throw Error('Choose a PDF first.');
+   if(!pass) throw Error(mode==='lock'?'Enter a password for the PDF.':'Enter the existing PDF password.');
+   if(mode==='lock' && pass!==($('#pdfLockConfirm')?.value||'')) throw Error('The password confirmation does not match.');
+   const status=$('#pdfLockStatus'); status.textContent='Loading PDF security engine…';
+   try{
+     const bytes=new Uint8Array(await file.arrayBuffer());
+     if(mode==='lock'){
+       const mod=await import('https://cdn.jsdelivr.net/npm/@pdfsmaller/pdf-encrypt@1.2.0/+esm');
+       status.textContent='Encrypting PDF…';
+       const encrypted=await mod.encryptPDF(bytes,pass,{algorithm:'AES-256'});
+       dl(new Blob([encrypted],{type:'application/pdf'}),file.name.replace(/\.pdf$/i,'')+'-protected.pdf');
+       status.textContent='Done — your protected PDF has been downloaded.';
+       out(`<strong>PDF locked successfully.</strong><br>Open the downloaded file with the password you entered.`);
+     }else{
+       const mod=await import('https://cdn.jsdelivr.net/npm/@pdfsmaller/pdf-decrypt@1.0.1/+esm');
+       status.textContent='Checking password and decrypting PDF…';
+       const plain=await mod.decryptPDF(bytes,pass);
+       dl(new Blob([plain],{type:'application/pdf'}),file.name.replace(/\.pdf$/i,'')+'-unlocked.pdf');
+       status.textContent='Done — password removed from the downloaded copy.';
+       out(`<strong>PDF unlocked successfully.</strong><br>The downloaded copy no longer requires the password.`);
+     }
+   }catch(e){
+     console.error(e);
+     const msg=String(e?.message||e);
+     if(/incorrect password/i.test(msg)) throw Error('Incorrect PDF password.');
+     if(/secure|crypto|webcrypto/i.test(msg)) throw Error('Secure browser encryption is unavailable. Open PenniTools over HTTPS (GitHub Pages provides HTTPS).');
+     throw Error('PDF security operation failed: '+msg);
+   }
+   break}
+
+ case'pdfeditor':return `<div class="pdf-editor">
   <div class="notice">📝 <strong>PDF Editor</strong> — edit a copy of your PDF directly in your browser. You can add text, rotate a page, remove pages, or add a watermark. Your original file is not changed.</div>
   <div class="drop">
     <b>Choose PDF</b>
@@ -578,7 +619,22 @@ case'mergepdf':return fileBox('pdfs','Choose PDFs','Merge PDFs in selected order
 case'splitpdf':return `${fileBox('pdf','Choose PDF','Extract selected pages')}${inp('pages','Pages (e.g. 1,3-5)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'removePages':return `${fileBox('pdf','Choose PDF','Remove selected pages')}${inp('pages','Pages to remove (e.g. 2,4)','2')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'reorder':return `${fileBox('pdf','Choose PDF','Reorder pages')}${inp('order','New order (e.g. 3,1,2)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
-case'pdflock':return fileBox('pdf','Choose PDF','Browser security does not reliably create password-protected PDFs without a dedicated backend. This tool downloads a copy.');
+case'pdflock':return `<div class="notice">🔐 <strong>PDF Lock / Unlock</strong> — password-protect your PDF or remove a password when you know the existing password. Processing happens in your browser; the PDF is not uploaded.</div>
+<div class="drop">
+  <b>Choose PDF</b>
+  <p class="small">Select a PDF you own or are authorized to modify.</p>
+  <input id="pdfLockFile" type="file" accept=".pdf,application/pdf">
+</div>
+<div class="row">
+  <div><label>Action</label><select id="pdfLockMode">
+    <option value="lock">🔒 Lock / Password protect</option>
+    <option value="unlock">🔓 Unlock / Remove password</option>
+  </select></div>
+  <div><label>Password</label><input id="pdfLockPassword" type="password" autocomplete="new-password" placeholder="Enter password"></div>
+</div>
+<div id="pdfLockConfirmWrap"><label>Confirm new password</label><input id="pdfLockConfirm" type="password" autocomplete="new-password" placeholder="Re-enter password"></div>
+<p id="pdfLockStatus" class="small"></p>
+<button class="btn" id="calc">Process PDF</button><div id="out"></div>`;
 case'crop':return `${fileBox('img','Choose image','Crop using X/Y and width/height in pixels')}<div class="row">${inp('x','X',0)+inp('y','Y',0)+inp('cw','Width',500)+inp('ch','Height',500)}</div><button class="btn" id="calc">Crop & Download</button><div id="out"></div>`;
 case'resize':return `${fileBox('img','Choose image','Resize image')}${f(inp('w','Width px',800)+inp('h','Height px',600)+inp('quality','JPG quality',0.85,'number',0.01),'Resize & Download')}`;
 case'compress':return `${fileBox('img','Choose image','Compress image')}${inp('quality','JPG quality',0.7,'number',0.01)}<button class="btn" id="calc">Compress & Download</button><div id="out"></div>`;
@@ -665,6 +721,26 @@ case'pcttotal':return f(inp('part','Part',25)+inp('total','Total',100));
 case'ratio':return f(inp('a','First value',20)+inp('b','Second value',30));
 case'lcmhcf':return f(inp('a','First number',12)+inp('b','Second number',18));
 case'priceweight':return f(inp('price','Price',200)+inp('grams','Weight in grams',500));
+case'feetinch':return `<div class="notice">📏 Enter measurements in feet and inches. The calculator also shows decimal feet and total inches.</div>
+<div class="row">${inp('fiFeet','Feet',8)}${inp('fiInches','Inches',6)}</div>
+<button class="btn" id="calc">Calculate Length</button><div id="out"></div>`;
+case'boardfoot':return `<div class="notice">🪵 Board feet = thickness(in) × width(in) × length(ft) ÷ 12.</div>
+<div class="row">${inp('bfThickness','Thickness (in)',2)}${inp('bfWidth','Width (in)',8)}${inp('bfLength','Length (ft)',10)}${inp('bfQty','Quantity',1)}</div>
+<button class="btn" id="calc">Calculate Board Feet</button><div id="out"></div>`;
+case'woodcost':return `<div class="notice">💰 Estimate lumber cost from dimensions, quantity and price per board foot.</div>
+<div class="row">${inp('wcThickness','Thickness (in)',2)}${inp('wcWidth','Width (in)',8)}${inp('wcLength','Length (ft)',10)}${inp('wcQty','Quantity',5)}${inp('wcPrice','Price per board foot (₹)',80)}</div>
+<button class="btn" id="calc">Calculate Wood Cost</button><div id="out"></div>`;
+case'cutlist':return `<div class="notice">✂️ Enter up to 10 cuts. Use the same unit for all lengths. The result includes estimated waste.</div>
+<div class="row">${inp('clStock','Available stock length',8)}${inp('clWaste','Estimated waste %',10)}</div>
+<label>Cut lengths (comma separated)</label><textarea id="clCuts" placeholder="2.5, 1.2, 0.8, 2.5"></textarea>
+<button class="btn" id="calc">Calculate Cut List</button><div id="out"></div>`;
+case'roommaterial':return `<div class="notice">🏠 Calculate floor area and estimate the number of tiles/sheets required, including waste.</div>
+<div class="row">${inp('rmLength','Room length (ft)',12)}${inp('rmWidth','Room width (ft)',10)}${inp('rmMatL','Material length (ft)',2)}${inp('rmMatW','Material width (ft)',2)}${inp('rmWaste','Waste %',10)}</div>
+<button class="btn" id="calc">Calculate Material</button><div id="out"></div>`;
+case'stair':return `<div class="notice">🪜 A practical estimate only. Verify stair dimensions against local building rules and site conditions before construction.</div>
+<div class="row">${inp('stHeight','Floor-to-floor height (ft)',10)}${inp('stRiser','Target riser height (in)',7)}${inp('stTread','Tread depth (in)',10)}</div>
+<button class="btn" id="calc">Calculate Staircase</button><div id="out"></div>`;
+
 case'noticecalc':return `<div class="row">${inp('start','Notice start date','','date')+inp('days','Notice period (days)',30)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
 case'experiencecalc':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
 case'otpay':return f(inp('monthly','Monthly salary',50000)+inp('hours','Overtime hours',10)+inp('mult','Overtime multiplier',2));
@@ -846,6 +922,11 @@ if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
 
  if(id==='signature') initSig();
  if(id==='transcribe') initTranscriberTool();
+ if(id==='pdflock'){
+ const mode=$('#pdfLockMode'), wrap=$('#pdfLockConfirmWrap');
+ const sync=()=>{wrap.style.display=mode.value==='lock'?'block':'none'; $('#pdfLockPassword').autocomplete=mode.value==='lock'?'new-password':'current-password';};
+ mode.onchange=sync; sync();
+}
  $('#calc')?.addEventListener('click',()=>calculate(id));
 }
 function updateUnits(){
@@ -888,6 +969,40 @@ async function calculate(id){
  case'ev':{let k=num($('#battery').value),pct=Math.max(0,num($('#to').value)-num($('#from').value))/100,cost=k*pct*num($('#tariff').value);out(`Energy used: <strong>${(k*pct).toFixed(2)} kWh</strong><br>Charging cost: <strong>${money(cost)}</strong>`);break}
  case'trip':{let l=num($('#distance').value)/num($('#mileage').value),total=l*num($('#fuelprice').value)+num($('#toll').value),people=Math.max(1,num($('#people').value));out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
  case'insurance':{let idv=num($('#idv').value),prem=idv*num($('#rate').value)/100,tot=prem*(1+num($('#gst').value)/100);out(`Estimated premium: <strong>${money(tot)}</strong><br>Base premium: ${money(prem)}<br>GST: ${money(tot-prem)}`);break}
+ case'feetinch':{
+   let ft=num($('#fiFeet').value), inches=num($('#fiInches').value);
+   let totalIn=ft*12+inches, dec=totalIn/12;
+   out(`Total length: <strong>${Math.floor(totalIn/12)} ft ${ (totalIn%12).toFixed(2) } in</strong><br>Decimal feet: <strong>${dec.toFixed(3)} ft</strong><br>Total inches: <strong>${totalIn.toFixed(2)} in</strong>`);
+   break}
+ case'boardfoot':{
+   let t=num($('#bfThickness').value),w=num($('#bfWidth').value),l=num($('#bfLength').value),q=Math.max(1,num($('#bfQty').value));
+   let one=t*w*l/12,total=one*q;
+   out(`Board feet per piece: <strong>${one.toFixed(2)}</strong><br>Total board feet: <strong>${total.toFixed(2)}</strong><br>Pieces: ${q}`);
+   break}
+ case'woodcost':{
+   let t=num($('#wcThickness').value),w=num($('#wcWidth').value),l=num($('#wcLength').value),q=Math.max(1,num($('#wcQty').value)),p=num($('#wcPrice').value);
+   let bf=t*w*l/12*q,cost=bf*p;
+   out(`Total lumber: <strong>${bf.toFixed(2)} board ft</strong><br>Estimated wood cost: <strong>${money(cost)}</strong><br>Average cost/piece: ${money(cost/q)}`);
+   break}
+ case'cutlist':{
+   let stock=Math.max(0,num($('#clStock').value)),waste=Math.max(0,num($('#clWaste').value));
+   let cuts=($('#clCuts').value||'').split(',').map(Number).filter(x=>x>0);
+   if(!cuts.length)throw Error('Enter at least one cut length.');
+   let total=cuts.reduce((a,b)=>a+b,0),withWaste=total*(1+waste/100),stocks=stock?Math.ceil(withWaste/stock):0;
+   out(`Total cut length: <strong>${total.toFixed(3)}</strong><br>With ${waste}% waste: <strong>${withWaste.toFixed(3)}</strong><br>${stock?`Estimated stock pieces needed: <strong>${stocks}</strong>`:'Enter a stock length to estimate pieces.'}`);
+   break}
+ case'roommaterial':{
+   let L=num($('#rmLength').value),W=num($('#rmWidth').value),ml=num($('#rmMatL').value),mw=num($('#rmMatW').value),waste=Math.max(0,num($('#rmWaste').value));
+   let area=L*W,piece=ml*mw,needed=piece?Math.ceil(area*(1+waste/100)/piece):0;
+   out(`Room area: <strong>${area.toFixed(2)} sq ft</strong><br>Material area/piece: ${piece.toFixed(2)} sq ft<br>Estimated quantity: <strong>${needed}</strong> pieces<br>Includes ${waste}% waste.`);
+   break}
+ case'stair':{
+   let heightIn=num($('#stHeight').value)*12,target=num($('#stRiser').value),tread=num($('#stTread').value);
+   if(heightIn<=0||target<=0||tread<=0)throw Error('Enter positive measurements.');
+   let risers=Math.max(1,Math.ceil(heightIn/target)),actual=heightIn/risers,run=(risers-1)*tread;
+   out(`Number of risers: <strong>${risers}</strong><br>Actual riser height: <strong>${actual.toFixed(2)} in</strong><br>Approx. horizontal run: <strong>${(run/12).toFixed(2)} ft</strong> (${run.toFixed(1)} in)<br>Tread depth: ${tread.toFixed(2)} in`);
+   break}
+
  case'notice':{let d=new Date($('#start').value);d.setDate(d.getDate()+num($('#days').value));out(`Estimated last working date: <strong>${d.toLocaleDateString('en-IN')}</strong>`);break}
  case'experience':case'datediff':{let a=new Date($('#start').value),b=new Date($('#end').value),days=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${days} days</strong><br>Approximately ${(days/365.25).toFixed(2)} years`);break}
  case'leave':out(`Estimated leave value: <strong>${money(num($('#salary').value)/num($('#workdays').value)*num($('#days').value))}</strong>`);break;
