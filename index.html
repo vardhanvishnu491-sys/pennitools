@@ -452,7 +452,7 @@ case'passport':return `${fileBox('img','Choose photo','Creates a 35×45 ratio im
 case'mileage':return f(inp('distance','Distance (km)',100)+inp('fuel','Fuel used (litres)',8));
 case'fuel':return f(inp('distance','Distance (km)',300)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',100));
 case'ev':return f(inp('battery','Battery capacity (kWh)',40)+inp('from','Start charge %',20)+inp('to','End charge %',90)+inp('tariff','Electricity price/kWh',10));
-case'tripcost':return `<div class="trip-box">
+case'trip':return `<div class="trip-box">
 <div class="row">${inp('distance','Distance (km)',200)+inp('mileage','Vehicle mileage (km/l)',15)+inp('fuelprice','Fuel price/litre',105)+inp('toll','Tolls',500)}</div>
 <div class="row">${inp('parking','Parking',200)+inp('hotel','Hotel',0)+inp('food','Food per person',500)+inp('tickets','Tickets / activities',0)}</div>
 <div class="row">${inp('other','Other expenses',0)+inp('people','Number of people',2)}<div><label>Trip type</label><select id="roundtrip"><option value="1">Round trip</option><option value="0">One way</option></select></div></div>
@@ -653,7 +653,7 @@ async function initTranscriberTool(){
  $('#analyzeTranscript').addEventListener('click',()=>{let lines=[];try{lines=JSON.parse(ta.dataset.lines||'[]')}catch{};if(!lines.length)return;const box=$('#analysisOut');box.innerHTML=basicCallAnalysis(lines);box.style.display='block';box.scrollIntoView({behavior:'smooth',block:'nearest'});});
 }
 function bindTool(id){
- if(id==='tripcost'){ $('#split').onclick=()=>{
+ if(id==='trip'){ $('#split').onclick=()=>{
 let rows=$('#paidby').value.trim().split(/\n/).map(x=>x.split(',')).filter(x=>x.length>=2&&x[0].trim()&&!isNaN(Number(x[1])));
 if(rows.length<2){$('#splitout').innerHTML='<p class="error">Enter at least two payments.</p>';return}
 let total=rows.reduce((s,x)=>s+Number(x[1]),0),share=total/rows.length;
@@ -793,7 +793,7 @@ case'bodyfat':{let bmi=num($('#bmi').value),age=num($('#age').value);out(`BMI-ba
 case'pctcgpa':{let p=num($('#percentage').value);out(`Estimated CGPA: <strong>${(p/9.5).toFixed(2)}</strong>`);break}
 case'markspercent':{let a=num($('#obtained').value),m=num($('#maximum').value);out(`Percentage: <strong>${m?(a/m*100).toFixed(2):0}%</strong>`);break}
 case'gpa':{let rows=$('#grades').value.trim().split(/\n/).map(x=>x.split(/[,\s]+/).map(Number)).filter(x=>x.length>=2&&!isNaN(x[0])&&!isNaN(x[1]));let cr=rows.reduce((s,x)=>s+x[1],0),pts=rows.reduce((s,x)=>s+x[0]*x[1],0);if(!cr)throw Error('Enter grade,credit pairs');out(`Weighted GPA: <strong>${(pts/cr).toFixed(2)}</strong><br>Credits: ${cr}`);break}
-case'tripcost':{
+case'trip':{
 let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),mult=Number($('#roundtrip').value);
 let people=Math.max(1,num($('#people').value)),fuel=m>0?(d*mult/m)*fp:0;
 let toll=num($('#toll').value)*mult,parking=num($('#parking').value)*mult,hotel=num($('#hotel').value);
