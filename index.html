@@ -580,11 +580,11 @@ case'pdfeditor':return `<div class="pdf-editor">
   <button class="btn secondary" type="button" onclick="resetPdfEditor()">Reset editor</button>
   <div id="out"></div>
 </div>`;
-case'pdfword':return fileBox('pdf','Choose PDF','Extract readable text into a .txt file');
-case'pdfjpg':return fileBox('pdf','Choose PDF','Render pages to JPG (first page in this version)');
-case'jpgpdf':return fileBox('img','Choose images','Create a PDF from selected images');
-case'pdfcompress':return fileBox('pdf','Choose PDF','Re-save PDF objects; scanned PDFs may not shrink much');
-case'mergepdf':return fileBox('pdfs','Choose PDFs','Merge PDFs in selected order');
+case'pdfword':return `${fileBox('pdf','Choose PDF','Extract readable text into a Word-compatible .doc file')}<button class="btn" id="calc">Convert to Word</button><div id="out"></div>`;
+case'pdfjpg':return `${fileBox('pdf','Choose PDF','Convert every PDF page to JPG images (downloaded as a ZIP)')}<button class="btn" id="calc">Convert to JPG</button><div id="out"></div>`;
+case'jpgpdf':return `<div class="drop"><b>Choose images</b><p class="small">Create one PDF from one or more selected images. Select multiple images if needed.</p><input id="img" type="file" multiple accept="image/*"></div><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'pdfcompress':return `${fileBox('pdf','Choose PDF','Re-save the PDF to reduce size where possible')}<button class="btn" id="calc">Compress PDF</button><div id="out"></div>`;
+case'mergepdf':return `${fileBox('pdfs','Choose PDFs','Merge multiple PDFs in the order you select them')}<button class="btn" id="calc">Merge PDFs</button><div id="out"></div>`;
 case'splitpdf':return `${fileBox('pdf','Choose PDF','Extract selected pages')}${inp('pages','Pages (e.g. 1,3-5)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'removePages':return `${fileBox('pdf','Choose PDF','Remove selected pages')}${inp('pages','Pages to remove (e.g. 2,4)','2')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'reorder':return `${fileBox('pdf','Choose PDF','Reorder pages')}${inp('order','New order (e.g. 3,1,2)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
@@ -1137,7 +1137,7 @@ if(c==='Temperature'){let C=a==='C'?v:a==='F'?(v-32)*5/9:v-273.15;return b==='C'
 const base={Length:{m:1,km:1000,cm:.01,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495231}};return v*base[c][a]/base[c][b]
 }
 function initSig(){const c=$('#sig'),x=c.getContext('2d');x.lineWidth=3;x.lineCap='round';let on=false;c.addEventListener('pointerdown',e=>{on=true;x.beginPath();x.moveTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight)});c.addEventListener('pointermove',e=>{if(!on)return;x.lineTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight);x.stroke()});window.addEventListener('pointerup',()=>on=false)}
-async function jpgToPdf(){let fs=[...$('#img').files];if(!fs.length)throw Error('Choose at least one image');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,(fs[i].type||'image/jpeg').includes('png')?'PNG':'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
+async function jpgToPdf(){let fs=[...($('#img')?.files||[])];if(!fs.length)throw Error('Choose at least one image');if(fs.length>30)throw Error('Please select up to 30 images at a time.');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,(fs[i].type||'image/jpeg').includes('png')?'PNG':'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
 async function fileData(f){return await new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
 async function pdfDoc(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');return await PDFLib.PDFDocument.load(await f.arrayBuffer())}
 async function pdfToBytes(doc){return await doc.save({useObjectStreams:true})}
@@ -1163,6 +1163,7 @@ async function pdfToText(){
  let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
  const pdfjs=await loadPdfJs();
  const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ $('#out').innerHTML='<div class="result">Reading PDF…</div>';
  let text=[];
  for(let i=1;i<=pdf.numPages;i++){
    const page=await pdf.getPage(i);
@@ -1181,6 +1182,7 @@ async function pdfToJpg(){
  let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
  const pdfjs=await loadPdfJs();
  const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ $('#out').innerHTML='<div class="result">Rendering PDF pages…</div>';
  if(typeof JSZip==='undefined')throw Error('JPG packaging library failed to load. Refresh and try again.');
  const zip=new JSZip();
  for(let i=1;i<=pdf.numPages;i++){
