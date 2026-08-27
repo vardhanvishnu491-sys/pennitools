@@ -37,6 +37,7 @@ footer{padding:30px 0;background:#101828;color:#d0d5dd}.empty{padding:30px;text-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script>
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
 const cats=['All','Money & Finance','Document & Image','Vehicle','Job','Everyday'];
@@ -86,7 +87,23 @@ const tools=[
 ['Everyday','Percentage Calculator','Calculate percentages quickly.','percentage'],
 ['Everyday','Discount Calculator','Calculate discount and final price.','discount'],
 ['Everyday','Unit Converter','Convert common length, weight and temperature units.','unit'],
-['Everyday','Currency Converter','Convert currencies using a live public rate service when available.','currency']
+['Everyday','Currency Converter','Convert currencies using a live public rate service when available.','currency'],
+['Money & Finance','Simple Interest Calculator','Calculate simple interest and maturity amount.','simpleint'],
+['Money & Finance','Compound Interest Calculator','Calculate compound interest and maturity amount.','compoundint'],
+['Money & Finance','Inflation Calculator','Estimate future value after inflation.','inflation'],
+['Money & Finance','CAGR Calculator','Calculate compound annual growth rate.','cagr'],
+['Money & Finance','Loan Comparison Calculator','Compare two loans by EMI and total interest.','loancompare'],
+['Money & Finance','Salary Breakdown Calculator','Break annual salary into monthly gross and deductions.','salarybreak'],
+['Document & Image','PDF Page Numbering','Add page numbers to every PDF page.','pagenumber'],
+['Document & Image','Rotate PDF','Rotate all PDF pages by 90, 180 or 270 degrees.','rotatepdf'],
+['Vehicle','Petrol vs Diesel Cost','Compare running cost of petrol and diesel vehicles.','petroldiesel'],
+['Vehicle','EV vs Petrol Cost','Compare estimated EV and petrol running costs.','evpetrol'],
+['Vehicle','Car Depreciation Calculator','Estimate vehicle value after depreciation.','depreciation'],
+['Job','Working Days Calculator','Count working days between two dates.','workingdays'],
+['Job','Overtime Calculator','Estimate overtime pay from salary and hours.','overtime'],
+['Everyday','BMI Calculator','Calculate BMI from height and weight.','bmi'],
+['Everyday','Tip Calculator','Calculate tip and split the bill.','tip'],
+['Everyday','Time Zone Converter','Convert a time between common time zones.','timezone']
 ];
 
 function render(){
@@ -129,7 +146,7 @@ case'splitpdf':return `${fileBox('pdf','Choose PDF','Extract selected pages')}${
 case'removePages':return `${fileBox('pdf','Choose PDF','Remove selected pages')}${inp('pages','Pages to remove (e.g. 2,4)','2')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'reorder':return `${fileBox('pdf','Choose PDF','Reorder pages')}${inp('order','New order (e.g. 3,1,2)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'pdflock':return fileBox('pdf','Choose PDF','Browser security does not reliably create password-protected PDFs without a dedicated backend. This tool downloads a copy.');
-case'crop':return imageTool('Crop image','crop');
+case'crop':return `${fileBox('img','Choose image','Crop using X/Y and width/height in pixels')}<div class="row">${inp('x','X',0)+inp('y','Y',0)+inp('cw','Width',500)+inp('ch','Height',500)}</div><button class="btn" id="calc">Crop & Download</button><div id="out"></div>`;
 case'resize':return `${fileBox('img','Choose image','Resize image')}${f(inp('w','Width px',800)+inp('h','Height px',600)+inp('quality','JPG quality',0.85,'number',0.01),'Resize & Download')}`;
 case'compress':return `${fileBox('img','Choose image','Compress image')}${inp('quality','JPG quality',0.7,'number',0.01)}<button class="btn" id="calc">Compress & Download</button><div id="out"></div>`;
 case'convert':return `${fileBox('img','Choose image','Convert image')}<label>Output</label><select id="fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option></select><button class="btn" id="calc">Convert & Download</button><div id="out"></div>`;
@@ -149,6 +166,22 @@ case'datediff':return f(inp('start','Start date',new Date().toISOString().slice(
 case'percentage':return f(inp('value','Value',25)+inp('total','Total',200));
 case'discount':return f(inp('price','Original price',1000)+inp('discount','Discount %',20));
 case'unit':return `<div class="row"><div><label>Category</label><select id="uc"><option>Length</option><option>Weight</option><option>Temperature</option></select></div><div><label>Value</label><input id="uv" type="number" value="1"></div></div><div class="row"><div><label>From</label><select id="uf"></select></div><div><label>To</label><select id="ut"></select></div></div><button class="btn" id="calc">Convert</button><div id="out"></div>`;
+case'simpleint':return f(inp('p','Principal',100000)+inp('r','Annual interest %',8)+inp('t','Time (years)',3));
+case'compoundint':return f(inp('p','Principal',100000)+inp('r','Annual interest %',8)+inp('t','Time (years)',5)+inp('n','Compounds/year',4));
+case'inflation':return f(inp('p','Current amount',100000)+inp('r','Inflation %',6)+inp('t','Years',10));
+case'cagr':return f(inp('startv','Starting value',100000)+inp('endv','Ending value',200000)+inp('years','Years',5));
+case'loancompare':return `<div class="row">${inp('p1','Loan A amount',1000000)+inp('r1','Loan A rate %',10)+inp('n1','Loan A months',60)+inp('p2','Loan B amount',1000000)+inp('r2','Loan B rate %',11)+inp('n2','Loan B months',60)}</div><button class="btn" id="calc">Compare Loans</button><div id="out"></div>`;
+case'salarybreak':return f(inp('annual','Annual CTC',1200000)+inp('pf','Employee PF %',12)+inp('tax','Estimated monthly tax',5000)+inp('other','Other monthly deductions',1000));
+case'pagenumber':return `${fileBox('pdf','Choose PDF','Add page numbers to the bottom of every page')}<button class="btn" id="calc">Add Page Numbers</button><div id="out"></div>`;
+case'rotatepdf':return `${fileBox('pdf','Choose PDF','Rotate every page')}<label>Rotation</label><select id="angle"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select><button class="btn" id="calc">Rotate PDF</button><div id="out"></div>`;
+case'petroldiesel':return `<div class="row">${inp('distance','Monthly distance (km)',1500)+inp('petrolm','Petrol mileage (km/l)',15)+inp('dieselm','Diesel mileage (km/l)',20)+inp('petrolp','Petrol price/litre',105)+inp('dieselp','Diesel price/litre',92)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'evpetrol':return `<div class="row">${inp('distance','Monthly distance (km)',1500)+inp('evkm','EV efficiency (km/kWh)',7)+inp('evrate','Electricity ₹/kWh',10)+inp('petrolm','Petrol mileage (km/l)',15)+inp('petrolp','Petrol price/litre',105)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'depreciation':return f(inp('price','Purchase price',1000000)+inp('rate','Annual depreciation %',10)+inp('years','Years',5));
+case'workingdays':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><label><input id="sat" type="checkbox"> Include Saturdays</label><button class="btn" id="calc">Count Working Days</button><div id="out"></div>`;
+case'overtime':return f(inp('salary','Monthly salary',30000)+inp('days','Working days/month',26)+inp('hours','Normal hours/day',8)+inp('ot','Overtime hours',10)+inp('mult','Overtime multiplier',2));
+case'bmi':return f(inp('weight','Weight (kg)',70)+inp('height','Height (cm)',170));
+case'tip':return f(inp('bill','Bill amount',1000)+inp('tip','Tip %',10)+inp('people','People',2));
+case'timezone':return `<div class="row">${inp('time','Time','','time')}<div><label>From</label><select id="tzfrom"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div><div><label>To</label><select id="tzto"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div></div><button class="btn" id="calc">Convert Time</button><div id="out"></div>`;
 case'currency':return `<div class="row">${inp('amt','Amount',1)}<div><label>From</label><select id="from"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div><div><label>To</label><select id="to"><option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div></div><button class="btn" id="calc">Get Rate</button><div id="out"></div>`;
 }
 }
@@ -196,7 +229,23 @@ async function calculate(id){
  case'percentage':out(`<strong>${(num($('#value').value)/num($('#total').value)*100).toFixed(2)}%</strong>`);break;
  case'discount':{let p=num($('#price').value),d=num($('#discount').value),save=p*d/100;out(`Final price: <strong>${money(p-save)}</strong><br>You save: ${money(save)}`);break}
  case'unit':{let c=$('#uc').value,v=num($('#uv').value),a=$('#uf').value,b=$('#ut').value,res=convertUnit(c,v,a,b);out(`<strong>${res}</strong> ${b}`);break}
- case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
+ case'simpleint':{let p=num($('#p').value),r=num($('#r').value),t=num($('#t').value),i=p*r*t/100;out(`Simple interest: <strong>${money(i)}</strong><br>Maturity amount: <strong>${money(p+i)}</strong>`);break}
+case'compoundint':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),n=num($('#n').value),a=p*Math.pow(1+r/n,n*t);out(`Compound interest: <strong>${money(a-p)}</strong><br>Maturity amount: <strong>${money(a)}</strong>`);break}
+case'inflation':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),a=p*Math.pow(1+r,t);out(`Estimated future cost: <strong>${money(a)}</strong><br>Increase due to inflation: ${money(a-p)}`);break}
+case'cagr':{let s=num($('#startv').value),e=num($('#endv').value),y=num($('#years').value),c=(Math.pow(e/s,1/y)-1)*100;out(`CAGR: <strong>${c.toFixed(2)}%</strong>`);break}
+case'loancompare':{let a=annuity(num($('#p1').value),num($('#r1').value),num($('#n1').value)),b=annuity(num($('#p2').value),num($('#r2').value),num($('#n2').value)),ta=a*num($('#n1').value),tb=b*num($('#n2').value);out(`Loan A EMI: <strong>${money(a)}</strong> · Interest: ${money(ta-num($('#p1').value))}<br>Loan B EMI: <strong>${money(b)}</strong> · Interest: ${money(tb-num($('#p2').value))}<br><strong>${ta<tb?'Loan A':'Loan B'}</strong> has the lower total repayment.`);break}
+case'salarybreak':{let a=num($('#annual').value),m=a/12,p=m*num($('#pf').value)/100,t=num($('#tax').value),o=num($('#other').value);out(`Monthly gross: <strong>${money(m)}</strong><br>PF: ${money(p)} · Tax: ${money(t)} · Other: ${money(o)}<br>Estimated in-hand: <strong>${money(m-p-t-o)}</strong>`);break}
+case'pagenumber':await pageNumberPdf();break;
+case'rotatepdf':await rotatePdf();break;
+case'petroldiesel':{let d=num($('#distance').value),pc=d/num($('#petrolm').value)*num($('#petrolp').value),dc=d/num($('#dieselm').value)*num($('#dieselp').value);out(`Petrol monthly cost: <strong>${money(pc)}</strong><br>Diesel monthly cost: <strong>${money(dc)}</strong><br>Estimated saving: <strong>${money(Math.abs(pc-dc))}</strong>`);break}
+case'evpetrol':{let d=num($('#distance').value),ec=d/num($('#evkm').value)*num($('#evrate').value),pc=d/num($('#petrolm').value)*num($('#petrolp').value);out(`EV monthly cost: <strong>${money(ec)}</strong><br>Petrol monthly cost: <strong>${money(pc)}</strong><br>EV saving: <strong>${money(pc-ec)}</strong>`);break}
+case'depreciation':{let p=num($('#price').value),r=num($('#rate').value)/100,y=num($('#years').value),v=p*Math.pow(1-r,y);out(`Estimated value after ${y} years: <strong>${money(v)}</strong><br>Estimated depreciation: ${money(p-v)}`);break}
+case'workingdays':{let a=new Date($('#start').value),b=new Date($('#end').value),sat=$('#sat').checked,c=0;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let w=d.getDay();if(w!==0&&(sat||w!==6))c++}out(`Working days: <strong>${c}</strong>`);break}
+case'overtime':{let s=num($('#salary').value),d=num($('#days').value),h=num($('#hours').value),ot=num($('#ot').value),m=num($('#mult').value),rate=s/(d*h);out(`Approx hourly rate: ${money(rate)}<br>Overtime pay: <strong>${money(rate*m*ot)}</strong>`);break}
+case'bmi':{let w=num($('#weight').value),h=num($('#height').value)/100,b=w/(h*h),cat=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obesity';out(`BMI: <strong>${b.toFixed(1)}</strong><br>Category: <strong>${cat}</strong>`);break}
+case'tip':{let b=num($('#bill').value),p=num($('#tip').value),n=Math.max(1,num($('#people').value)),t=b*p/100;out(`Tip: <strong>${money(t)}</strong><br>Total bill: <strong>${money(b+t)}</strong><br>Per person: <strong>${money((b+t)/n)}</strong>`);break}
+case'timezone':{let t=$('#time').value;if(!t)throw Error('Choose a time');let [hh,mm]=t.split(':').map(Number),now=new Date();now.setHours(hh,mm,0,0);let opts={hour:'2-digit',minute:'2-digit',hour12:true,timeZone:$('#tzto').value,timeZoneName:'short'};out(`Converted time: <strong>${new Intl.DateTimeFormat('en-IN',opts).format(now)}</strong><br><span class="small">Conversion uses your device's current date.</span>`);break}
+case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
  case'wordpdf':{const {jsPDF}=window.jspdf;let pdf=new jsPDF();let lines=pdf.splitTextToSize($('#text').value,180);let y=15;lines.forEach(line=>{if(y>280){pdf.addPage();y=15}pdf.text(line,15,y);y+=7});pdf.save('pennitools-document.pdf');out('PDF created and downloaded.');break}
  case'jpgpdf':await jpgToPdf();break;
  case'pdfword':await pdfToText();break;
@@ -231,11 +280,31 @@ async function pdfPages(remove){let d=await pdfDoc(),max=d.getPageCount(),sel=pa
 async function reorderPdf(){let d=await pdfDoc(),order=parsePages($('#order').value,d.getPageCount()).map(n=>n-1);if(order.length!==d.getPageCount())throw Error('Enter every page exactly once');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,order);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-reordered.pdf');out('PDF reordered.')}
 async function copyPdf(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');dl(new Blob([await f.arrayBuffer()],{type:'application/pdf'}),'pennitools-copy.pdf');out('A browser-safe copy was downloaded. True lossless PDF compression/password encryption generally requires more specialized processing.')}
 async function pdfToText(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');out('This lightweight browser version cannot guarantee text extraction from every PDF. For text PDFs, select the PDF and use your browser/PDF reader to copy text.')}
-async function pdfToJpg(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');out('PDF-to-JPG rendering needs a PDF renderer such as PDF.js. The current version is intentionally left safe rather than pretending to convert unsupported PDFs.')}
+async function pdfToJpg(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+ pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ for(let i=1;i<=pdf.numPages;i++){
+   const page=await pdf.getPage(i),v=page.getViewport({scale:1.6});
+   const c=document.createElement('canvas'); c.width=v.width;c.height=v.height;
+   await page.render({canvasContext:c.getContext('2d'),viewport:v}).promise;
+   c.toBlob(b=>dl(b,`pennitools-page-${i}.jpg`),'image/jpeg',.92);
+ }
+ out(`${pdf.numPages} JPG page(s) created.`);
+}
+async function pageNumberPdf(){
+ let d=await pdfDoc(),pages=d.getPages();
+ pages.forEach((p,i)=>{let s=p.getSize();p.drawText(String(i+1),{x:s.width/2-5,y:15,size:10})});
+ dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-numbered.pdf');out('Page numbers added.');
+}
+async function rotatePdf(){
+ let d=await pdfDoc(),a=Number($('#angle').value);
+ d.getPages().forEach(p=>p.setRotation(PDFLib.degrees((p.getRotation().angle+a)%360)));
+ dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-rotated.pdf');out(`Pages rotated by ${a}°.`);
+}
 async function imageDownload(mode){
 let f=$('#img').files[0];if(!f)throw Error('Choose an image');let src=await fileData(f),im=new Image();await new Promise(r=>{im.onload=r;im.src=src});let c=document.createElement('canvas'),ctx=c.getContext('2d');
-if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531}else{c.width=im.width;c.height=im.height}
-if(mode==='crop'){c.width=im.width;c.height=im.height}
-ctx.drawImage(im,0,0,c.width,c.height);let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'?num($('#quality').value):mode==='resize'?num($('#quality').value):.9;c.toBlob(b=>dl(b,mode==='convert'&&type==='image/png'?'pennitools.png':'pennitools.jpg'),type,q);out('Image downloaded.')}
+if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='crop'){let x=Math.max(0,num($('#x').value)),y=Math.max(0,num($('#y').value)),w=Math.min(num($('#cw').value)||im.width,im.width-x),h=Math.min(num($('#ch').value)||im.height,im.height-y);c.width=w;c.height=h;ctx.drawImage(im,x,y,w,h,0,0,w,h)}else{c.width=im.width;c.height=im.height;ctx.drawImage(im,0,0,c.width,c.height)}let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'?num($('#quality').value):mode==='resize'?num($('#quality').value):.9;c.toBlob(b=>dl(b,mode==='convert'&&type==='image/png'?'pennitools.png':'pennitools.jpg'),type,q);out('Image downloaded.')}
 </script>
 </body></html>
