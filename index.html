@@ -3,87 +3,239 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="PenniTools - free online tools for everyday India">
-<title>PenniTools — Free Tools for India</title>
+<meta name="description" content="PenniTools - free calculators and everyday online tools for India.">
+<meta name="theme-color" content="#155eef">
+<title>PenniTools — Everyday Calculators & Tools</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:#f6f8fc;color:#111827}
-header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-index:5}.nav{max-width:1100px;margin:auto;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}.logo{font-size:30px;font-weight:800}.logo span{color:#2563eb}
-nav a{margin-left:15px;text-decoration:none;color:#344054;font-weight:600;font-size:14px}.hero{max-width:1100px;margin:auto;text-align:center;padding:40px 20px 15px}.hero h1{font-size:40px;margin:0 0 8px}.hero p{color:#667085;font-size:18px}.search{width:100%;max-width:650px;padding:15px;border:1px solid #d0d5dd;border-radius:13px;font-size:16px}
-main{max-width:1100px;margin:auto;padding:10px 20px 60px}.section{margin-top:38px}.section h2{font-size:29px;margin:0}.section>p{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}.card{background:#fff;border:1px solid #e5e7eb;border-radius:20px;padding:24px;box-shadow:0 3px 15px #1018280a}.icon{font-size:34px}.card h3{font-size:22px;margin:12px 0 8px}.card p{color:#667085;min-height:42px}.btn{border:0;background:#2563eb;color:#fff;border-radius:11px;padding:13px 18px;font-size:15px;font-weight:700;cursor:pointer}.badge{display:inline-block;background:#eef4ff;color:#2563eb;padding:6px 10px;border-radius:99px;font-size:13px;font-weight:700}
-.tool{display:none;background:#fff;border:1px solid #e5e7eb;border-radius:18px;padding:22px;margin-top:18px}.tool.active{display:block}.form{display:grid;gap:12px;max-width:600px}.form label{font-weight:700;font-size:14px}.form input{display:block;width:100%;margin-top:6px;padding:13px;border:1px solid #d0d5dd;border-radius:10px;font-size:16px}.result{margin-top:15px;background:#eef4ff;border-radius:11px;padding:15px;font-weight:700}.drop{border:2px dashed #b8c5dd;border-radius:15px;padding:25px;text-align:center}.small{font-size:13px;color:#667085}
-footer{background:#111827;color:#d1d5db;text-align:center;padding:28px}
-@media(max-width:700px){.hero h1{font-size:31px}nav{display:none}}
+:root{--b:#155eef;--ink:#101828;--muted:#667085;--bg:#f7f9fc;--card:#fff;--line:#e4e7ec;--ok:#067647;--danger:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#155eef,#0040c1);color:white;padding:28px 16px 22px;position:sticky;top:0;z-index:10;box-shadow:0 3px 15px #0002}
+.wrap{max-width:1100px;margin:auto;padding:0 14px}.brand{font-size:32px;font-weight:900}.brand span{color:#9dbaff}.tag{opacity:.9;margin-top:4px}
+.search{width:100%;margin-top:18px;border:0;border-radius:14px;padding:14px 16px;font-size:16px;outline:0}
+nav{display:flex;gap:8px;overflow:auto;padding:12px 0}.chip{border:1px solid #ffffff55;color:#fff;background:#ffffff18;border-radius:999px;padding:8px 13px;white-space:nowrap;cursor:pointer}
+main{padding:24px 0 60px}.section{margin:26px 0}.section h2{font-size:24px;margin:0 0 4px}.section p{color:var(--muted);margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;box-shadow:0 2px 8px #1018280a}.card h3{margin:0 0 7px;font-size:18px}.card p{min-height:40px;color:var(--muted);font-size:14px}.btn{background:var(--b);color:white;border:0;border-radius:10px;padding:11px 15px;font-weight:700;cursor:pointer}.btn.alt{background:#eef4ff;color:#174ea6}.hidden{display:none!important}
+.modal{position:fixed;inset:0;background:#10182899;display:none;align-items:flex-end;justify-content:center;z-index:30}.modal.show{display:flex}.panel{background:white;width:min(760px,100%);max-height:92vh;overflow:auto;border-radius:22px 22px 0 0;padding:22px}.close{float:right;border:0;background:#eef2f6;border-radius:50%;width:38px;height:38px;font-size:20px}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 5px}input,select,textarea{width:100%;padding:11px 12px;border:1px solid #d0d5dd;border-radius:10px;font-size:15px;background:#fff}textarea{min-height:130px}
+.row{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.result{margin-top:15px;padding:14px;border-radius:12px;background:#f2f4f7}.result strong{font-size:22px}.small{font-size:12px;color:var(--muted)}.drop{border:2px dashed #98a2b3;padding:25px;text-align:center;border-radius:14px;margin-top:10px}.list{padding-left:20px}.notice{background:#fffaeb;border:1px solid #fedf89;padding:12px;border-radius:10px;color:#7a2e0e;font-size:13px}
+footer{padding:30px 0;background:#101828;color:#d0d5dd}.empty{padding:30px;text-align:center;color:var(--muted)}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
-<script>pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';</script>
 </head>
 <body>
-<header><div class="nav"><div class="logo"><span>Penni</span>Tools</div><nav><a href="#money">Money</a><a href="#images">Images</a><a href="#documents">Documents</a><a href="#jobs">Jobs</a><a href="#vehicles">Vehicles</a></nav></div></header>
-<section class="hero"><h1>Free & Simple Tools for India 🇮🇳</h1><p>Useful calculators and file tools that work directly in your browser.</p><input id="search" class="search" placeholder="Search tools…"></section>
-<main>
-
-<section id="money" class="section"><h2>💰 Money Tools</h2><p>Salary, loan and savings calculators.</p><div class="grid">
-<article class="card" data-name="ctc in hand salary"><span class="badge">Popular</span><div class="icon">💼</div><h3>CTC → In-Hand Salary</h3><p>Estimate monthly take-home salary.</p><button class="btn" onclick="openTool('ctc')">Use tool</button></article>
-<article class="card" data-name="emi calculator"><span class="badge">Popular</span><div class="icon">🏦</div><h3>EMI Calculator</h3><p>Calculate EMI, interest and repayment.</p><button class="btn" onclick="openTool('emi')">Use tool</button></article>
-<article class="card" data-name="pf calculator"><div class="icon">🧾</div><h3>PF Calculator</h3><p>Estimate employee and employer PF contributions.</p><button class="btn" onclick="openTool('pf')">Use tool</button></article>
+<header>
+<div class="wrap">
+  <div class="brand"><span>Penni</span>Tools</div>
+  <div class="tag">Simple tools. Everyday solutions for India.</div>
+  <input id="search" class="search" placeholder="Search calculators and tools…">
+  <nav id="cats"></nav>
 </div>
-<div id="ctc" class="tool"><h2>💼 CTC → In-Hand Salary</h2><div class="form"><label>Annual CTC (₹)<input id="ctcV" type="number" placeholder="600000"></label><label>Annual deductions (₹)<input id="ctcD" type="number" placeholder="60000"></label><button class="btn" onclick="ctcCalc()">Calculate</button></div><div id="ctcR" class="result">Enter your figures.</div><p class="small">Estimate only; actual take-home depends on salary structure, tax and benefits.</p></div>
-<div id="emi" class="tool"><h2>🏦 EMI Calculator</h2><div class="form"><label>Loan amount (₹)<input id="loan" type="number" placeholder="1000000"></label><label>Annual interest rate (%)<input id="rate" type="number" step="0.01" placeholder="10"></label><label>Tenure (years)<input id="tenure" type="number" step="0.5" placeholder="5"></label><button class="btn" onclick="emiCalc()">Calculate EMI</button></div><div id="emiR" class="result">Enter loan details.</div></div>
-<div id="pf" class="tool"><h2>🧾 PF Calculator</h2><div class="form"><label>Basic salary per month (₹)<input id="basic" type="number" placeholder="25000"></label><button class="btn" onclick="pfCalc()">Calculate</button></div><div id="pfR" class="result">Enter basic salary.</div><p class="small">Illustrative 12% employee contribution. Actual contributions may vary.</p></div>
-</section>
+</header>
+<main class="wrap" id="app"></main>
+<footer><div class="wrap">© 2026 PenniTools · Free browser-based tools</div></footer>
 
-<section id="images" class="section"><h2>🖼️ Image Tools</h2><p>Convert, compress and resize images in your browser.</p><div class="grid">
-<article class="card" data-name="image compressor"><span class="badge">Popular</span><div class="icon">🗜️</div><h3>Image Compressor</h3><p>Reduce JPG image size.</p><button class="btn" onclick="openTool('compress')">Use tool</button></article>
-<article class="card" data-name="jpg png converter"><div class="icon">🔄</div><h3>JPG ↔ PNG</h3><p>Convert image formats locally.</p><button class="btn" onclick="openTool('convert')">Use tool</button></article>
-<article class="card" data-name="image resizer"><div class="icon">📐</div><h3>Image Resizer</h3><p>Resize an image to your dimensions.</p><button class="btn" onclick="openTool('resize')">Use tool</button></article>
-</div>
-<div id="compress" class="tool"><h2>🗜️ Image Compressor</h2><div class="drop"><input id="compFile" type="file" accept="image/*"><br><br><label>Quality <input id="quality" type="range" min=".2" max="1" value=".7" step=".05"></label><br><br><button class="btn" onclick="compress()">Compress & Download</button><p id="compMsg" class="small"></p></div></div>
-<div id="convert" class="tool"><h2>🔄 JPG ↔ PNG</h2><div class="drop"><input id="convFile" type="file" accept="image/*"><br><br><select id="convType"><option value="image/png">Convert to PNG</option><option value="image/jpeg">Convert to JPG</option></select><br><br><button class="btn" onclick="convert()">Convert & Download</button><p id="convMsg" class="small"></p></div></div>
-<div id="resize" class="tool"><h2>📐 Image Resizer</h2><div class="form"><input id="resizeFile" type="file" accept="image/*"><label>Width (px)<input id="rw" type="number" placeholder="1200"></label><label>Height (px)<input id="rh" type="number" placeholder="800"></label><button class="btn" onclick="resize()">Resize & Download</button></div><p id="resizeMsg" class="small"></p></div>
-</section>
+<div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeTool()">×</button><div id="toolBody"></div></div></div>
 
-<section id="documents" class="section"><h2>📄 Document Tools</h2><p>PDF utilities.</p><div class="grid">
-<article class="card" data-name="jpg pdf"><div class="icon">🧾</div><h3>JPG → PDF</h3><p>Turn an image into a PDF.</p><button class="btn" onclick="openTool('jpgpdf')">Use tool</button></article>
-<article class="card" data-name="pdf compressor"><div class="icon">📦</div><h3>PDF Compressor</h3><p>Reduce PDF size by rebuilding pages as compressed images.</p><button class="btn" onclick="openTool('pdfcompress')">Use tool</button></article>
-<article class="card" data-name="merge split pdf"><div class="icon">📚</div><h3>Merge / Split PDF</h3><p>Merge PDFs or extract selected pages into a new PDF.</p><button class="btn" onclick="openTool('pdfmerge')">Use tool</button></article>
-</div>
-<div id="jpgpdf" class="tool"><h2>🧾 JPG → PDF</h2><div class="drop"><input id="jpgPdfFiles" type="file" accept="image/*" multiple><br><br><button class="btn" onclick="jpgToPdf()">Create PDF</button><p id="jpgPdfMsg" class="small"></p></div></div>
-<div id="pdfcompress" class="tool"><h2>📦 PDF Compressor</h2><div class="drop"><input id="compressPdfFile" type="file" accept="application/pdf"><br><br><label>Quality <input id="pdfQuality" type="range" min="0.35" max="0.85" value="0.6" step="0.05"></label><br><br><button class="btn" onclick="compressPdf()">Compress & Download</button><p id="pdfCompressMsg" class="small"></p></div><p class="small">For privacy, processing happens in your browser. Compression works by rendering PDF pages to JPEG images, so text may no longer be selectable.</p></div>
-<div id="pdfmerge" class="tool"><h2>📚 Merge / Split PDF</h2><div class="drop"><h3>Merge PDFs</h3><input id="mergeFiles" type="file" accept="application/pdf" multiple><br><br><button class="btn" onclick="mergePdfs()">Merge & Download</button><p id="mergeMsg" class="small"></p><hr style="margin:25px 0;border:0;border-top:1px solid #e5e7eb"><h3>Split / Extract Pages</h3><input id="splitFile" type="file" accept="application/pdf"><br><br><input id="splitPages" type="text" placeholder="Pages e.g. 1,3,5-7"><br><br><button class="btn" onclick="splitPdf()">Create Selected Pages PDF</button><p id="splitMsg" class="small"></p></div><p class="small">Page numbers are 1-based. Example: 1,3,5-7.</p></div>
-</section>
-
-<section id="jobs" class="section"><h2>💼 Job Tools</h2><p>Helpful tools for employees and job seekers.</p><div class="grid"><article class="card" data-name="increment calculator salary"><div class="icon">📈</div><h3>Increment Calculator</h3><p>Calculate revised salary after an increment.</p><button class="btn" onclick="openTool('increment')">Use tool</button></article></div>
-<div id="increment" class="tool"><h2>📈 Increment Calculator</h2><div class="form"><label>Current salary (₹)<input id="incS" type="number" placeholder="50000"></label><label>Increment (%)<input id="incP" type="number" placeholder="10"></label><button class="btn" onclick="incCalc()">Calculate</button></div><div id="incR" class="result">Enter salary and increment.</div></div></section>
-
-<section id="vehicles" class="section"><h2>🚗 Vehicle Tools</h2><p>Plan travel and running costs.</p><div class="grid"><article class="card" data-name="fuel cost calculator"><span class="badge">Popular</span><div class="icon">⛽</div><h3>Fuel Cost Calculator</h3><p>Estimate fuel required and trip cost.</p><button class="btn" onclick="openTool('fuel')">Use tool</button></article></div>
-<div id="fuel" class="tool"><h2>⛽ Fuel Cost Calculator</h2><div class="form"><label>Distance (km)<input id="dist" type="number" placeholder="200"></label><label>Mileage (km/l)<input id="mileage" type="number" placeholder="18"></label><label>Fuel price (₹/litre)<input id="fuelPrice" type="number" placeholder="100"></label><button class="btn" onclick="fuelCalc()">Calculate</button></div><div id="fuelR" class="result">Enter trip details.</div></div></section>
-
-</main>
-<footer><strong>PenniTools</strong><br>Free & simple tools for everyday India.<br><span class="small">Calculations are estimates; verify official rules where applicable.</span></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script>
-const rupee=n=>'₹'+Number(n).toLocaleString('en-IN',{maximumFractionDigits:2});
-function openTool(id){document.querySelectorAll('.tool').forEach(x=>x.classList.remove('active'));let e=document.getElementById(id);e.classList.add('active');e.scrollIntoView({behavior:'smooth',block:'start'})}
-function ctcCalc(){let c=+ctcV.value||0,d=+ctcD.value||0;ctcR.textContent='Estimated monthly in-hand: '+rupee(Math.max(0,c-d)/12)}
-function emiCalc(){let p=+loan.value||0,r=(+rate.value||0)/1200,n=(+tenure.value||0)*12;if(!p||!n){emiR.textContent='Enter valid loan details.';return}let e=r?p*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):p/n;emiR.textContent='Monthly EMI: '+rupee(e)+' | Total repayment: '+rupee(e*n)+' | Interest: '+rupee(e*n-p)}
-function pfCalc(){let b=+basic.value||0,e=b*.12;pfR.textContent='Employee PF (12%): '+rupee(e)+' | Employee + employer: '+rupee(e*2)}
-function incCalc(){let s=+incS.value||0,p=+incP.value||0,n=s*(1+p/100);incR.textContent='Revised salary: '+rupee(n)+' | Increase: '+rupee(n-s)}
-function fuelCalc(){let d=+dist.value||0,m=+mileage.value||0,p=+fuelPrice.value||0;if(!d||!m){fuelR.textContent='Enter valid details.';return}let l=d/m;fuelR.textContent='Fuel required: '+l.toFixed(2)+' L | Trip cost: '+rupee(l*p)}
-function img(file,cb){if(!file){cb(null);return}let i=new Image();i.onload=()=>cb(i);i.src=URL.createObjectURL(file)}
-function save(blob,name){let a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
-function makeCanvas(i,w,h){let c=document.createElement('canvas');c.width=w;c.height=h;c.getContext('2d').drawImage(i,0,0,w,h);return c}
-function compress(){let f=compFile.files[0];if(!f){compMsg.textContent='Choose an image first.';return}img(f,i=>{makeCanvas(i,i.naturalWidth,i.naturalHeight).toBlob(b=>{save(b,'pennitools-compressed.jpg');compMsg.textContent='Done — downloaded.'},'image/jpeg',+quality.value)})}
-function convert(){let f=convFile.files[0];if(!f){convMsg.textContent='Choose an image first.';return}let t=convType.value;img(f,i=>{let ext=t==='image/png'?'png':'jpg';makeCanvas(i,i.naturalWidth,i.naturalHeight).toBlob(b=>{save(b,'pennitools-converted.'+ext);convMsg.textContent='Done — downloaded.'},t,.92)})}
-function resize(){let f=resizeFile.files[0],w=+rw.value,h=+rh.value;if(!f||!w||!h){resizeMsg.textContent='Choose an image and enter dimensions.';return}img(f,i=>{makeCanvas(i,w,h).toBlob(b=>{save(b,'pennitools-resized.jpg');resizeMsg.textContent='Done — downloaded.'},'image/jpeg',.92)})}
-async function jpgToPdf(){let fs=[...jpgPdfFiles.files];if(!fs.length){jpgPdfMsg.textContent='Choose at least one image.';return}jpgPdfMsg.textContent='Creating PDF…';const {jsPDF}=window.jspdf;let doc=null;for(let n=0;n<fs.length;n++){let f=fs[n];let data=await fileDataURL(f);let im=await loadImage(data);let orient=im.naturalWidth>=im.naturalHeight?'landscape':'portrait';let pw=orient==='landscape'?297:210,ph=orient==='landscape'?210:297; if(!doc)doc=new jsPDF({orientation:orient,unit:'mm',format:'a4'});else doc.addPage('a4',orient);let margin=8,maxW=pw-margin*2,maxH=ph-margin*2,scale=Math.min(maxW/im.naturalWidth,maxH/im.naturalHeight),w=im.naturalWidth*scale,h=im.naturalHeight*scale;doc.addImage(data,'JPEG',margin+(maxW-w)/2,margin+(maxH-h)/2,w,h,undefined,'MEDIUM')}doc.save('pennitools-images.pdf');jpgPdfMsg.textContent='Done — PDF downloaded.'}
-function fileDataURL(f){return new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
-function loadImage(src){return new Promise((res,rej)=>{let i=new Image();i.onload=()=>res(i);i.onerror=rej;i.src=src})}
-async function mergePdfs(){let fs=[...mergeFiles.files];if(fs.length<2){mergeMsg.textContent='Choose at least 2 PDF files.';return}mergeMsg.textContent='Merging…';try{const out=await PDFLib.PDFDocument.create();for(const f of fs){const src=await PDFLib.PDFDocument.load(await f.arrayBuffer());const pages=await out.copyPages(src,src.getPageIndices());pages.forEach(p=>out.addPage(p))}save(new Blob([await out.save()],{type:'application/pdf'}),'pennitools-merged.pdf');mergeMsg.textContent='Done — merged PDF downloaded.'}catch(e){mergeMsg.textContent='Could not merge these PDFs. Try standard PDF files.'}}
-function parsePages(s,max){let set=new Set();for(let part of s.split(',')){part=part.trim();if(!part)continue;if(part.includes('-')){let [a,b]=part.split('-').map(x=>parseInt(x.trim(),10));if(!Number.isInteger(a)||!Number.isInteger(b)||a<1||b<a||b>max)throw Error();for(let i=a;i<=b;i++)set.add(i)}else{let n=parseInt(part,10);if(!Number.isInteger(n)||n<1||n>max)throw Error();set.add(n)}}return [...set].sort((a,b)=>a-b)}
-async function splitPdf(){let f=splitFile.files[0],spec=splitPages.value.trim();if(!f||!spec){splitMsg.textContent='Choose a PDF and enter pages.';return}try{splitMsg.textContent='Creating PDF…';let src=await PDFLib.PDFDocument.load(await f.arrayBuffer()),pages=parsePages(spec,src.getPageCount()),out=await PDFLib.PDFDocument.create(),copied=await out.copyPages(src,pages.map(n=>n-1));copied.forEach(p=>out.addPage(p));save(new Blob([await out.save()],{type:'application/pdf'}),'pennitools-selected-pages.pdf');splitMsg.textContent='Done — selected pages downloaded.'}catch(e){splitMsg.textContent='Invalid page selection. Example: 1,3,5-7.'}}
-async function compressPdf(){let f=compressPdfFile.files[0];if(!f){pdfCompressMsg.textContent='Choose a PDF first.';return}pdfCompressMsg.textContent='Compressing…';try{let data=await f.arrayBuffer(),pdf=await pdfjsLib.getDocument({data}).promise,{jsPDF}=window.jspdf,doc=null,q=+pdfQuality.value;for(let n=1;n<=pdf.numPages;n++){let page=await pdf.getPage(n),base=page.getViewport({scale:1.35}),canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');canvas.width=Math.ceil(base.width);canvas.height=Math.ceil(base.height);await page.render({canvasContext:ctx,viewport:base}).promise;let img=canvas.toDataURL('image/jpeg',q),orient=canvas.width>=canvas.height?'landscape':'portrait';if(!doc)doc=new jsPDF({orientation:orient,unit:'pt',format:[canvas.width,canvas.height]});else doc.addPage([canvas.width,canvas.height],orient);doc.addImage(img,'JPEG',0,0,canvas.width,canvas.height,undefined,'FAST');}let blob=doc.output('blob');save(blob,'pennitools-compressed.pdf');pdfCompressMsg.textContent='Done — compressed PDF downloaded.'}catch(e){pdfCompressMsg.textContent='Could not process this PDF. Try a smaller or standard PDF.'}}
-document.getElementById('search').addEventListener('input',e=>{let q=e.target.value.toLowerCase();document.querySelectorAll('.card').forEach(c=>c.style.display=!q||c.dataset.name.includes(q)?'block':'none')})
+const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
+const cats=['All','Money & Finance','Document & Image','Vehicle','Job','Everyday'];
+const tools=[
+['Money & Finance','CTC → In-Hand Salary','Estimate monthly take-home salary.','ctc'],
+['Money & Finance','EMI Calculator','Calculate EMI, interest and repayment.','emi'],
+['Money & Finance','PF Calculator','Estimate employee and employer PF.','pf'],
+['Money & Finance','GST Calculator','Add or remove GST from a price.','gst'],
+['Money & Finance','Income Tax Calculator','Estimate Indian income tax with editable slabs.','tax'],
+['Money & Finance','Salary Hike Calculator','Calculate revised salary after a hike.','hike'],
+['Money & Finance','Loan Eligibility Calculator','Estimate a loan amount from income and EMI capacity.','elig'],
+['Money & Finance','SIP Calculator','Estimate SIP maturity and gains.','sip'],
+['Money & Finance','FD Calculator','Estimate fixed-deposit maturity.','fd'],
+['Money & Finance','RD Calculator','Estimate recurring-deposit maturity.','rd'],
+['Money & Finance','Gratuity Calculator','Estimate gratuity under the standard 15/26 formula.','gratuity'],
+['Money & Finance','PPF Calculator','Estimate PPF maturity with annual contributions.','ppf'],
+['Money & Finance','NPS Calculator','Estimate NPS corpus from monthly investment.','nps'],
+['Money & Finance','Home Loan Calculator','Calculate home-loan EMI and repayment.','home'],
+['Document & Image','Word → PDF','Print/save a text document as PDF.','wordpdf'],
+['Document & Image','PDF → Word','Extract PDF text into an editable document.','pdfword'],
+['Document & Image','PDF → JPG','Render PDF pages as JPG images.','pdfjpg'],
+['Document & Image','JPG → PDF','Turn images into a PDF.','jpgpdf'],
+['Document & Image','PDF Compressor','Reduce PDF size where possible.','pdfcompress'],
+['Document & Image','Merge PDF','Merge multiple PDFs into one.','mergepdf'],
+['Document & Image','Split PDF','Extract selected PDF pages.','splitpdf'],
+['Document & Image','PDF Page Remover','Remove selected pages from a PDF.','removePages'],
+['Document & Image','PDF Page Reorder','Reorder PDF pages.','reorder'],
+['Document & Image','PDF Lock / Unlock','Create a copy or export a PDF.','pdflock'],
+['Document & Image','Image Cropper','Crop an image and download it.','crop'],
+['Document & Image','Image Resizer','Resize an image by width/height.','resize'],
+['Document & Image','Image Compressor','Compress a JPG/PNG in your browser.','compress'],
+['Document & Image','JPG ↔ PNG','Convert between common image formats.','convert'],
+['Document & Image','Signature Maker','Draw a signature and download PNG.','signature'],
+['Document & Image','Passport Photo Maker','Create a standard 35×45 mm style photo.','passport'],
+['Vehicle','Mileage Calculator','Calculate vehicle mileage and fuel use.','mileage'],
+['Vehicle','Fuel Cost Calculator','Estimate fuel required and trip cost.','fuel'],
+['Vehicle','EV Charging Cost Calculator','Estimate EV charging cost.','ev'],
+['Vehicle','Trip Cost Calculator','Split a trip cost between passengers.','trip'],
+['Vehicle','Car Loan EMI','Calculate car-loan EMI.','carloan'],
+['Vehicle','Insurance Calculator','Estimate annual insurance premium.','insurance'],
+['Job','Increment Calculator','Calculate revised salary after an increment.','increment'],
+['Job','Notice Period Calculator','Calculate last working day from a notice period.','notice'],
+['Job','Experience Calculator','Calculate experience between two dates.','experience'],
+['Job','Leave Salary Calculator','Estimate salary value for paid leave days.','leave'],
+['Everyday','Age Calculator','Calculate age from date of birth.','age'],
+['Everyday','Date Difference','Calculate days between two dates.','datediff'],
+['Everyday','Percentage Calculator','Calculate percentages quickly.','percentage'],
+['Everyday','Discount Calculator','Calculate discount and final price.','discount'],
+['Everyday','Unit Converter','Convert common length, weight and temperature units.','unit'],
+['Everyday','Currency Converter','Convert currencies using a live public rate service when available.','currency']
+];
+
+function render(){
+ const q=($('#search').value||'').toLowerCase(), active=window.cat||'All';
+ const groups={}; tools.filter(t=>(active==='All'||t[0]===active)&&t.slice(1,3).join(' ').toLowerCase().includes(q)).forEach(t=>(groups[t[0]]??=[]).push(t));
+ $('#app').innerHTML=Object.entries(groups).map(([g,arr])=>`<section class="section"><h2>${g}</h2><p>Useful ${g.toLowerCase()} tools.</p><div class="grid">${arr.map(t=>`<article class="card"><h3>${t[1]}</h3><p>${t[2]}</p><button class="btn" onclick="openTool('${t[3]}','${t[1].replaceAll("'","")}')">Use tool</button></article>`).join('')}</div></section>`).join('')||'<div class="empty">No tools found.</div>';
+}
+$('#cats').innerHTML=cats.map(c=>`<button class="chip" onclick="window.cat='${c}';render()">${c}</button>`).join('');
+$('#search').addEventListener('input',render); render();
+
+function openTool(id,title){ $('#modal').classList.add('show'); $('#toolBody').innerHTML=`<h2>${title}</h2>${toolHTML(id)}`; bindTool(id); }
+function closeTool(){ $('#modal').classList.remove('show'); $('#toolBody').innerHTML=''; }
+function f(fields,button='Calculate'){return `<div class="row">${fields}</div><button class="btn" id="calc">${button}</button><div id="out"></div>`}
+function inp(id,label,val='',type='number',step='any'){return `<div><label>${label}</label><input id="${id}" type="${type}" value="${val}" ${type==='number'?`step="${step}"`:''}></div>`}
+function toolHTML(id){
+const D={};
+switch(id){
+case'ctc':return f(inp('ctc','Annual CTC',600000)+inp('pfp','Employee PF %',12)+inp('taxp','Estimated deductions %',8));
+case'emi':return f(inp('p','Loan amount',1000000)+inp('r','Annual interest %',10)+inp('n','Tenure (months)',60));
+case'pf':return f(inp('basic','Monthly basic salary',30000)+inp('epf','Employee PF %',12)+inp('erpf','Employer PF %',12));
+case'gst':return f(inp('price','Amount',1000)+inp('rate','GST %',18));
+case'tax':return `<div class="notice">Estimate only. Indian tax rules can change. Enter your taxable income and use the editable slab assumptions below.</div>${f(inp('income','Annual taxable income',1000000)+inp('ded','Additional deductions',0)+inp('cess','Cess %',4))}<details><summary>Current default slab assumptions (new-regime style)</summary><p class="small">The calculator uses editable slabs in JavaScript. Verify your final tax with the official Income Tax Department before filing.</p></details>`;
+case'hike':return f(inp('salary','Current annual salary',600000)+inp('pct','Hike %',10));
+case'elig':return f(inp('income','Monthly net income',60000)+inp('existing','Existing monthly EMIs',10000)+inp('rate','Annual interest %',10)+inp('tenure','Tenure (months)',60)+inp('ratio','Max EMI ratio %',50));
+case'sip':return f(inp('sip','Monthly SIP',5000)+inp('rate','Expected annual return %',12)+inp('years','Years',10));
+case'fd':return f(inp('principal','FD principal',100000)+inp('rate','Annual interest %',7)+inp('years','Years',5)+inp('freq','Compounding periods/year',4));
+case'rd':return f(inp('monthly','Monthly RD',5000)+inp('rate','Annual interest %',7)+inp('months','Months',60));
+case'gratuity':return f(inp('last','Last drawn basic + DA/month',50000)+inp('years','Completed years',5));
+case'ppf':return f(inp('annual','Annual contribution',150000)+inp('rate','Annual interest %',7.1)+inp('years','Years',15));
+case'nps':return f(inp('monthly','Monthly contribution',5000)+inp('rate','Expected annual return %',10)+inp('years','Years',25)+inp('annuity','Annuity purchase %',40));
+case'home':return f(inp('p','Home loan amount',5000000)+inp('r','Annual interest %',8.5)+inp('n','Tenure (months)',240));
+case'carloan':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
+case'wordpdf':return `<label>Document text</label><textarea id="text">Type or paste your document here.</textarea><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'pdfword':return fileBox('pdf','Choose PDF','Extract readable text into a .txt file');
+case'pdfjpg':return fileBox('pdf','Choose PDF','Render pages to JPG (first page in this version)');
+case'jpgpdf':return fileBox('img','Choose images','Create a PDF from selected images');
+case'pdfcompress':return fileBox('pdf','Choose PDF','Re-save PDF objects; scanned PDFs may not shrink much');
+case'mergepdf':return fileBox('pdfs','Choose PDFs','Merge PDFs in selected order');
+case'splitpdf':return `${fileBox('pdf','Choose PDF','Extract selected pages')}${inp('pages','Pages (e.g. 1,3-5)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'removePages':return `${fileBox('pdf','Choose PDF','Remove selected pages')}${inp('pages','Pages to remove (e.g. 2,4)','2')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'reorder':return `${fileBox('pdf','Choose PDF','Reorder pages')}${inp('order','New order (e.g. 3,1,2)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'pdflock':return fileBox('pdf','Choose PDF','Browser security does not reliably create password-protected PDFs without a dedicated backend. This tool downloads a copy.');
+case'crop':return imageTool('Crop image','crop');
+case'resize':return `${fileBox('img','Choose image','Resize image')}${f(inp('w','Width px',800)+inp('h','Height px',600)+inp('quality','JPG quality',0.85,'number',0.01),'Resize & Download')}`;
+case'compress':return `${fileBox('img','Choose image','Compress image')}${inp('quality','JPG quality',0.7,'number',0.01)}<button class="btn" id="calc">Compress & Download</button><div id="out"></div>`;
+case'convert':return `${fileBox('img','Choose image','Convert image')}<label>Output</label><select id="fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option></select><button class="btn" id="calc">Convert & Download</button><div id="out"></div>`;
+case'signature':return `<canvas id="sig" width="700" height="260" style="width:100%;border:1px solid #d0d5dd;border-radius:12px;touch-action:none;background:white"></canvas><p class="small">Draw with your finger or mouse.</p><button class="btn" id="calc">Download Signature</button>`;
+case'passport':return `${fileBox('img','Choose photo','Creates a 35×45 ratio image')}${inp('pw','Width px',413)+inp('ph','Height px',531)}<button class="btn" id="calc">Create Photo</button><div id="out"></div>`;
+case'mileage':return f(inp('distance','Distance (km)',100)+inp('fuel','Fuel used (litres)',8));
+case'fuel':return f(inp('distance','Distance (km)',300)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',100));
+case'ev':return f(inp('battery','Battery capacity (kWh)',40)+inp('from','Start charge %',20)+inp('to','End charge %',90)+inp('tariff','Electricity price/kWh',10));
+case'trip':return f(inp('distance','Distance km',300)+inp('mileage','Mileage km/l',15)+inp('fuelprice','Fuel price/litre',100)+inp('toll','Tolls',300)+inp('people','People',4));
+case'insurance':return f(inp('idv','Insured declared value',700000)+inp('rate','Premium rate %',2)+inp('gst','GST %',18));
+case'increment':return f(inp('salary','Current annual salary',600000)+inp('pct','Increment %',10));
+case'notice':return f(inp('start','Start date',new Date().toISOString().slice(0,10),'date')+inp('days','Notice period days',30));
+case'experience':return f(inp('start','Start date','2020-01-01','date')+inp('end','End date',new Date().toISOString().slice(0,10),'date'));
+case'leave':return f(inp('salary','Monthly salary',50000)+inp('days','Paid leave days',10)+inp('workdays','Working days/month',26));
+case'age':return f(inp('dob','Date of birth','1993-01-01','date')+inp('asof','As of',new Date().toISOString().slice(0,10),'date'));
+case'datediff':return f(inp('start','Start date',new Date().toISOString().slice(0,10),'date')+inp('end','End date',new Date().toISOString().slice(0,10),'date'));
+case'percentage':return f(inp('value','Value',25)+inp('total','Total',200));
+case'discount':return f(inp('price','Original price',1000)+inp('discount','Discount %',20));
+case'unit':return `<div class="row"><div><label>Category</label><select id="uc"><option>Length</option><option>Weight</option><option>Temperature</option></select></div><div><label>Value</label><input id="uv" type="number" value="1"></div></div><div class="row"><div><label>From</label><select id="uf"></select></div><div><label>To</label><select id="ut"></select></div></div><button class="btn" id="calc">Convert</button><div id="out"></div>`;
+case'currency':return `<div class="row">${inp('amt','Amount',1)}<div><label>From</label><select id="from"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div><div><label>To</label><select id="to"><option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div></div><button class="btn" id="calc">Get Rate</button><div id="out"></div>`;
+}
+}
+function fileBox(id,label,desc){return `<div class="drop"><b>${label}</b><p class="small">${desc}</p><input id="${id}" type="file" ${id==='pdfs'?'multiple accept=".pdf,application/pdf"':id==='pdf'?'accept=".pdf,application/pdf"':'accept="image/*"'}></div>`}
+function imageTool(title,id){return fileBox('img','Choose image',title)+'<button class="btn" id="calc">Download</button><div id="out"></div>'}
+
+function bindTool(id){
+ if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
+ if(id==='signature') initSig();
+ $('#calc')?.addEventListener('click',()=>calculate(id));
+}
+function updateUnits(){
+ const cat=$('#uc').value, maps={Length:['m','km','cm','ft','in'],Weight:['kg','g','lb','oz'],Temperature:['C','F','K']}, a=maps[cat]; $('#uf').innerHTML=a.map(x=>`<option>${x}</option>`).join(''); $('#ut').innerHTML=a.map(x=>`<option>${x}</option>`).join('');
+}
+function annuity(P,annual,months){let r=annual/1200,n=months;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
+function parsePages(s,max){let out=[];(s||'').split(',').forEach(x=>{x=x.trim();if(x.includes('-')){let [a,b]=x.split('-').map(Number);for(let i=a;i<=b;i++)out.push(i)}else{let n=Number(x);if(n)out.push(n)}});return [...new Set(out)].filter(n=>n>=1&&(!max||n<=max))}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function out(html){$('#out').innerHTML=`<div class="result">${html}</div>`}
+async function calculate(id){
+ try{
+ switch(id){
+ case'ctc':{let c=num($('#ctc').value),pf=num($('#pfp').value),tx=num($('#taxp').value);out(`Estimated monthly in-hand: <strong>${money(c*(1-pf/100-tx/100)/12)}</strong><br><span class="small">Estimate only; actual salary depends on payroll, tax regime and benefits.</span>`);break}
+ case'emi':{let e=annuity(num($('#p').value),num($('#r').value),num($('#n').value)),n=num($('#n').value);out(`Monthly EMI: <strong>${money(e)}</strong><br>Total interest: ${money(e*n-num($('#p').value))}<br>Total repayment: ${money(e*n)}`);break}
+ case'pf':{let b=num($('#basic').value),ee=b*num($('#epf').value)/100,er=b*num($('#erpf').value)/100;out(`Employee PF: <strong>${money(ee)}/month</strong><br>Employer PF contribution: ${money(er)}/month<br>Combined: ${money(ee+er)}/month`);break}
+ case'gst':{let p=num($('#price').value),r=num($('#rate').value);out(`With GST: <strong>${money(p*(1+r/100))}</strong><br>GST amount: ${money(p*r/100)}<br>Price before GST: ${money(p/(1+r/100))}`);break}
+ case'tax':{let x=Math.max(0,num($('#income').value)-num($('#ded').value)), slabs=[[400000,0],[400000,.05],[400000,.10],[400000,.15],[400000,.20],[Infinity,.30]],tax=0,prev=0;for(const [cap,rate] of slabs){let part=Math.max(0,Math.min(x,prev+cap)-prev);tax+=part*rate;prev+=cap;if(x<=prev)break}let cess=tax*num($('#cess').value)/100;out(`Estimated tax before cess: <strong>${money(tax)}</strong><br>Cess: ${money(cess)}<br>Total estimate: <strong>${money(tax+cess)}</strong><br><span class="small">Simplified slab estimate; verify current exemptions, rebate, surcharge and final rules.</span>`);break}
+ case'hike':case'increment':{let s=num($('#salary').value),p=num($('#pct').value);out(`Revised salary: <strong>${money(s*(1+p/100))}/year</strong><br>Increase: ${money(s*p/100)}<br>Monthly revised: ${money(s*(1+p/100)/12)}`);break}
+ case'elig':{let inc=num($('#income').value),emi=Math.max(0,inc*num($('#ratio').value)/100-num($('#existing').value)),P=annuity(1,num($('#rate').value),num($('#tenure').value));out(`Estimated additional EMI capacity: <strong>${money(emi)}</strong><br>Estimated loan amount: <strong>${money(emi/P)}</strong>`);break}
+ case'sip':{let m=num($('#sip').value),r=num($('#rate').value)/1200,n=num($('#years').value)*12,fv=r?m*((Math.pow(1+r,n)-1)/r)*(1+r):m*n;out(`Maturity: <strong>${money(fv)}</strong><br>Invested: ${money(m*n)}<br>Estimated gains: ${money(fv-m*n)}`);break}
+ case'fd':{let p=num($('#principal').value),r=num($('#rate').value)/100,f=num($('#freq').value),y=num($('#years').value),fv=p*Math.pow(1+r/f,f*y);out(`Maturity: <strong>${money(fv)}</strong><br>Interest: ${money(fv-p)}`);break}
+ case'rd':{let m=num($('#monthly').value),r=num($('#rate').value)/400,n=num($('#months').value),fv=m*((Math.pow(1+r,n)-1)/r)*(1+r);out(`Approx maturity: <strong>${money(fv)}</strong><br>Deposits: ${money(m*n)}<br>Interest: ${money(fv-m*n)}`);break}
+ case'gratuity':{let b=num($('#last').value),y=num($('#years').value),g=b*15/26*y;out(`Estimated gratuity: <strong>${money(g)}</strong>`);break}
+ case'ppf':{let a=num($('#annual').value),r=num($('#rate').value)/100,n=num($('#years').value),fv=a*((Math.pow(1+r,n)-1)/r);out(`Estimated maturity: <strong>${money(fv)}</strong><br>Total contributions: ${money(a*n)}`);break}
+ case'nps':{let m=num($('#monthly').value),r=num($('#rate').value)/1200,n=num($('#years').value)*12,fv=r?m*((Math.pow(1+r,n)-1)/r)*(1+r):m*n,an=fv*num($('#annuity').value)/100;out(`Estimated corpus: <strong>${money(fv)}</strong><br>Illustrative annuity portion: ${money(an)}<br>Remaining corpus: ${money(fv-an)}`);break}
+ case'home':case'carloan':{let e=annuity(num($('#p').value),num($('#r').value),num($('#n').value)),n=num($('#n').value);out(`EMI: <strong>${money(e)}</strong><br>Total interest: ${money(e*n-num($('#p').value))}`);break}
+ case'mileage':out(`Mileage: <strong>${(num($('#distance').value)/num($('#fuel').value)).toFixed(2)} km/l</strong><br>Fuel used per 100 km: ${(num($('#fuel').value)/num($('#distance').value)*100).toFixed(2)} L`);break;
+ case'fuel':{let d=num($('#distance').value),m=num($('#mileage').value),p=num($('#price').value),l=d/m;out(`Fuel needed: <strong>${l.toFixed(2)} L</strong><br>Trip cost: <strong>${money(l*p)}</strong>`);break}
+ case'ev':{let k=num($('#battery').value),pct=Math.max(0,num($('#to').value)-num($('#from').value))/100,cost=k*pct*num($('#tariff').value);out(`Energy used: <strong>${(k*pct).toFixed(2)} kWh</strong><br>Charging cost: <strong>${money(cost)}</strong>`);break}
+ case'trip':{let l=num($('#distance').value)/num($('#mileage').value),total=l*num($('#fuelprice').value)+num($('#toll').value),people=Math.max(1,num($('#people').value));out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
+ case'insurance':{let idv=num($('#idv').value),prem=idv*num($('#rate').value)/100,tot=prem*(1+num($('#gst').value)/100);out(`Estimated premium: <strong>${money(tot)}</strong><br>Base premium: ${money(prem)}<br>GST: ${money(tot-prem)}`);break}
+ case'notice':{let d=new Date($('#start').value);d.setDate(d.getDate()+num($('#days').value));out(`Estimated last working date: <strong>${d.toLocaleDateString('en-IN')}</strong>`);break}
+ case'experience':case'datediff':{let a=new Date($('#start').value),b=new Date($('#end').value),days=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${days} days</strong><br>Approximately ${(days/365.25).toFixed(2)} years`);break}
+ case'leave':out(`Estimated leave value: <strong>${money(num($('#salary').value)/num($('#workdays').value)*num($('#days').value))}</strong>`);break;
+ case'age':{let d=new Date($('#dob').value),a=new Date($('#asof').value),y=a.getFullYear()-d.getFullYear(),m=a.getMonth()-d.getMonth(),day=a.getDate()-d.getDate();if(day<0){m--;day+=new Date(a.getFullYear(),a.getMonth(),0).getDate()}if(m<0){y--;m+=12}out(`Age: <strong>${y} years, ${m} months, ${day} days</strong>`);break}
+ case'percentage':out(`<strong>${(num($('#value').value)/num($('#total').value)*100).toFixed(2)}%</strong>`);break;
+ case'discount':{let p=num($('#price').value),d=num($('#discount').value),save=p*d/100;out(`Final price: <strong>${money(p-save)}</strong><br>You save: ${money(save)}`);break}
+ case'unit':{let c=$('#uc').value,v=num($('#uv').value),a=$('#uf').value,b=$('#ut').value,res=convertUnit(c,v,a,b);out(`<strong>${res}</strong> ${b}`);break}
+ case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
+ case'wordpdf':{const {jsPDF}=window.jspdf;let pdf=new jsPDF();let lines=pdf.splitTextToSize($('#text').value,180);let y=15;lines.forEach(line=>{if(y>280){pdf.addPage();y=15}pdf.text(line,15,y);y+=7});pdf.save('pennitools-document.pdf');out('PDF created and downloaded.');break}
+ case'jpgpdf':await jpgToPdf();break;
+ case'pdfword':await pdfToText();break;
+ case'pdfjpg':await pdfToJpg();break;
+ case'mergepdf':await mergePdfs();break;
+ case'splitpdf':await pdfPages(false);break;
+ case'removePages':await pdfPages(true);break;
+ case'reorder':await reorderPdf();break;
+ case'pdfcompress':await copyPdf();break;
+ case'pdflock':await copyPdf();break;
+ case'crop':await imageDownload('crop');break;
+ case'resize':await imageDownload('resize');break;
+ case'compress':await imageDownload('compress');break;
+ case'convert':await imageDownload('convert');break;
+ case'passport':await imageDownload('passport');break;
+ case'signature':$('#sig').toBlob(b=>dl(b,'pennitools-signature.png'),'image/png');out('Signature downloaded.');break;
+ }
+ }catch(e){out(`<span style="color:#b42318">Could not complete: ${e.message}</span>`)}
+}
+function convertUnit(c,v,a,b){
+if(a===b)return v;
+if(c==='Temperature'){let C=a==='C'?v:a==='F'?(v-32)*5/9:v-273.15;return b==='C'?C:b==='F'?C*9/5+32:C+273.15}
+const base={Length:{m:1,km:1000,cm:.01,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495231}};return v*base[c][a]/base[c][b]
+}
+function initSig(){const c=$('#sig'),x=c.getContext('2d');x.lineWidth=3;x.lineCap='round';let on=false;c.addEventListener('pointerdown',e=>{on=true;x.beginPath();x.moveTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight)});c.addEventListener('pointermove',e=>{if(!on)return;x.lineTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight);x.stroke()});window.addEventListener('pointerup',()=>on=false)}
+async function jpgToPdf(){let fs=[...$('#img').files];if(!fs.length)throw Error('Choose at least one image');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
+async function fileData(f){return await new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+async function pdfDoc(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');return await PDFLib.PDFDocument.load(await f.arrayBuffer())}
+async function pdfToBytes(doc){return await doc.save({useObjectStreams:true})}
+async function mergePdfs(){let fs=[...$('#pdfs').files];if(fs.length<1)throw Error('Choose PDFs');let outdoc=await PDFLib.PDFDocument.create();for(const f of fs){let d=await PDFLib.PDFDocument.load(await f.arrayBuffer()),pages=await outdoc.copyPages(d,d.getPageIndices());pages.forEach(p=>outdoc.addPage(p))}dl(new Blob([await outdoc.save()],{type:'application/pdf'}),'pennitools-merged.pdf');out('Merged successfully.')}
+async function pdfPages(remove){let d=await pdfDoc(),max=d.getPageCount(),sel=parsePages($('#pages').value,max);let keep=[...Array(max).keys()].filter(i=>remove?!sel.includes(i+1):sel.includes(i+1));if(!keep.length)throw Error('No pages left');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,keep);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-pages.pdf');out('PDF created.')}
+async function reorderPdf(){let d=await pdfDoc(),order=parsePages($('#order').value,d.getPageCount()).map(n=>n-1);if(order.length!==d.getPageCount())throw Error('Enter every page exactly once');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,order);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-reordered.pdf');out('PDF reordered.')}
+async function copyPdf(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');dl(new Blob([await f.arrayBuffer()],{type:'application/pdf'}),'pennitools-copy.pdf');out('A browser-safe copy was downloaded. True lossless PDF compression/password encryption generally requires more specialized processing.')}
+async function pdfToText(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');out('This lightweight browser version cannot guarantee text extraction from every PDF. For text PDFs, select the PDF and use your browser/PDF reader to copy text.')}
+async function pdfToJpg(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');out('PDF-to-JPG rendering needs a PDF renderer such as PDF.js. The current version is intentionally left safe rather than pretending to convert unsupported PDFs.')}
+async function imageDownload(mode){
+let f=$('#img').files[0];if(!f)throw Error('Choose an image');let src=await fileData(f),im=new Image();await new Promise(r=>{im.onload=r;im.src=src});let c=document.createElement('canvas'),ctx=c.getContext('2d');
+if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531}else{c.width=im.width;c.height=im.height}
+if(mode==='crop'){c.width=im.width;c.height=im.height}
+ctx.drawImage(im,0,0,c.width,c.height);let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'?num($('#quality').value):mode==='resize'?num($('#quality').value):.9;c.toBlob(b=>dl(b,mode==='convert'&&type==='image/png'?'pennitools.png':'pennitools.jpg'),type,q);out('Image downloaded.')}
 </script>
-</body>
-</html>
+</body></html>
