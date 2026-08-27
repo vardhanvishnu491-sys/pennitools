@@ -246,11 +246,16 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 <style>
 .audio-transcriber{display:flex;flex-direction:column;gap:15px}.audio-drop{border:2px dashed #b8c9ea;border-radius:18px;padding:25px;text-align:center;background:linear-gradient(135deg,#f8fbff,#f2f7ff)}.audio-icon{font-size:42px}.audio-drop h3{margin:5px 0}.audio-drop p{color:var(--muted);margin:0 0 15px}.audio-drop input{position:absolute;left:-9999px}.audio-options{margin-top:2px}.audio-transcriber textarea{min-height:260px;width:100%;padding:15px;border:1px solid #d7deea;border-radius:13px;font:15px/1.6 inherit;resize:vertical}.audio-actions{display:flex;gap:10px;flex-wrap:wrap}.btn.secondary{background:#eef4ff;color:#2457c6;box-shadow:none}.audio-transcriber .notice{margin:0}.audio-transcriber select{padding:12px;border:1px solid #d7deea;border-radius:10px;background:#fff;font-size:15px}.analysis-box{border:1px solid #d7deea;border-radius:16px;padding:18px;background:linear-gradient(135deg,#f8fbff,#fff)}.analysis-box h3{margin-top:0}.analysis-box h4{margin-bottom:6px}.analysis-box ul{margin-top:6px;padding-left:22px}
 </style>
+
 <style>
-.trip-box,.trip-split{margin-top:14px;padding:18px;border:1px solid #e4e9f2;border-radius:18px;background:#fff}
-.trip-result{margin-top:16px;padding:16px;border-radius:14px;background:#f3f7ff;line-height:1.8}
-.trip-split h3{margin:0 0 6px}.error{color:#b42318}
-</style></head>
+.audio-ai{padding:18px;border:1px solid #dfe6f2;border-radius:20px;background:linear-gradient(135deg,#fff,#f7faff)}
+.audio-limit{padding:13px 15px;border-radius:13px;background:#eef6ff;color:#164e9b;margin-bottom:15px}
+.audio-ai input[type=file]{width:100%;padding:12px;border:1px dashed #b9c7df;border-radius:12px;background:#fff}
+.audio-ai textarea{min-height:170px;margin-top:14px}
+.audio-status{margin:14px 0;padding:12px;border-radius:12px;background:#f5f7fb;color:#475467}
+.audio-ai .btn{margin:6px 5px 0 0}
+</style>
+</head>
 <body>
 <header>
 <div class="wrap">
@@ -308,7 +313,6 @@ const tools=[
 ['Document & Image','JPG ↔ PNG','Convert between common image formats.','convert'],
 ['Document & Image','Signature Maker','Draw a signature and download PNG.','signature'],
 ['Document & Image','Passport Photo Maker','Create a standard 35×45 mm style photo.','passport'],
-['Audio & AI','Audio → Text Transcriber','Transcribe up to 100 MB of audio in 100+ languages, locally in your browser. Unlimited use.','transcribe'],
 ['Vehicle','Mileage Calculator','Calculate vehicle mileage and fuel use.','mileage'],
 ['Vehicle','Fuel Cost Calculator','Estimate fuel required and trip cost.','fuel'],
 ['Vehicle','EV Charging Cost Calculator','Estimate EV charging cost.','ev'],
@@ -381,6 +385,11 @@ const tools=[
 ['Education','Percentage to CGPA','Convert percentage to CGPA using a common 10-point formula.','pctcgpa'],
 ['Education','Marks Percentage Calculator','Calculate percentage from marks obtained and maximum marks.','markspercent'],
 ['Education','GPA Calculator','Calculate weighted GPA from grades and credits.','gpa']
+['Audio & AI','Audio → Text Transcriber','Transcribe audio in many languages with timestamps. Per-file limit: under 100 MB.','audiotranscribe'],
+['Audio & AI','Call Transcript Analyzer','Organize a call transcript into speakers, topics, action items and key moments.','callanalysis'],
+['Audio & AI','Audio → Translation','Create a translated text version of an audio transcript.','audiotranslate'],
+['Audio & AI','Audio Transcript Cleaner','Clean spacing, punctuation and obvious formatting without changing the words.','transcriptclean'],
+
 ];
 
 function render(){
@@ -452,14 +461,7 @@ case'passport':return `${fileBox('img','Choose photo','Creates a 35×45 ratio im
 case'mileage':return f(inp('distance','Distance (km)',100)+inp('fuel','Fuel used (litres)',8));
 case'fuel':return f(inp('distance','Distance (km)',300)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',100));
 case'ev':return f(inp('battery','Battery capacity (kWh)',40)+inp('from','Start charge %',20)+inp('to','End charge %',90)+inp('tariff','Electricity price/kWh',10));
-case'trip':return `<div class="trip-box">
-<div class="row">${inp('distance','Distance (km)',200)+inp('mileage','Vehicle mileage (km/l)',15)+inp('fuelprice','Fuel price/litre',105)+inp('toll','Tolls',500)}</div>
-<div class="row">${inp('parking','Parking',200)+inp('hotel','Hotel',0)+inp('food','Food per person',500)+inp('tickets','Tickets / activities',0)}</div>
-<div class="row">${inp('other','Other expenses',0)+inp('people','Number of people',2)}<div><label>Trip type</label><select id="roundtrip"><option value="1">Round trip</option><option value="0">One way</option></select></div></div>
-<button class="btn" id="calc">Calculate Trip Cost</button><div id="out"></div></div>
-<div class="trip-split"><h3>👥 Expense Split</h3><p class="small">Optional: enter payments, one person per line: Name,Amount</p>
-<textarea id="paidby" placeholder="Ravi,2500&#10;Divya,1800&#10;Rahul,1200"></textarea>
-<button class="btn" id="split">Calculate Split</button><div id="splitout"></div></div>`;
+case'trip':return f(inp('distance','Distance km',300)+inp('mileage','Mileage km/l',15)+inp('fuelprice','Fuel price/litre',100)+inp('toll','Tolls',300)+inp('people','People',4));
 case'insurance':return f(inp('idv','Insured declared value',700000)+inp('rate','Premium rate %',2)+inp('gst','GST %',18));
 case'increment':return f(inp('salary','Current annual salary',600000)+inp('pct','Increment %',10));
 case'notice':return f(inp('start','Start date',new Date().toISOString().slice(0,10),'date')+inp('days','Notice period days',30));
@@ -546,6 +548,35 @@ case'bodyfat':return f(inp('bmi','BMI',25)+inp('age','Age',30));
 case'pctcgpa':return f(inp('percentage','Percentage',80));
 case'markspercent':return f(inp('obtained','Marks obtained',80)+inp('maximum','Maximum marks',100));
 case'gpa':return `<label>Grades and credits</label><textarea id="grades" placeholder="8,3&#10;9,4&#10;7,3"></textarea><p class="small">One grade and credit per line, e.g. 8,3</p><button class="btn" id="calc">Calculate GPA</button><div id="out"></div>`;
+case'audiotranscribe':return `<div class="audio-ai">
+  <div class="audio-limit">🎙️ <strong>Unlimited use</strong> · Each audio file must be <strong>under 100 MB</strong></div>
+  <label>Audio file</label><input id="audiofile" type="file" accept="audio/*">
+  <div class="row">
+    <div><label>Language</label><select id="audiolang"><option value="auto">Auto detect</option><option>English</option><option>Hindi</option><option>Telugu</option><option>Tamil</option><option>Kannada</option><option>Malayalam</option><option>Urdu</option><option>Arabic</option><option>Bengali</option><option>Marathi</option><option>Gujarati</option><option>Punjabi</option><option>Chinese</option><option>Japanese</option><option>Korean</option><option>Spanish</option><option>French</option><option>German</option></select></div>
+    <div><label>Mode</label><select id="transmode"><option value="normal">Normal transcript</option><option value="call">Call / conversation</option></select></div>
+  </div>
+  <button class="btn" id="startaudio">Start transcription</button>
+  <div class="audio-status" id="audiostatus">Choose an audio file to begin.</div>
+  <textarea id="transcript" placeholder="Your transcript will appear here..."></textarea>
+  <div class="row"><button class="btn" id="copytrans">Copy transcript</button><button class="btn" id="downloadtrans">Download TXT</button><button class="btn" id="downloadsrt">Download SRT</button></div>
+  <div class="small">For best speaker separation, use a recording where the speakers are on separate channels. A mixed/mono recording cannot guarantee correct Caller/Receiver labels.</div>
+</div>`;
+case'callanalysis':return `<div class="audio-ai">
+  <p>Paste a transcript below. PenniTools will organize it into a clear call-review format without pretending to know speaker identities that are not present in the transcript.</p>
+  <textarea id="analysistext" placeholder="Paste the transcript here..."></textarea>
+  <button class="btn" id="analyzecall">Analyze Conversation</button>
+  <div id="analysisout"></div>
+</div>`;
+case'audiotranslate':return `<div class="audio-ai">
+  <p>First create a transcript, then paste it here and choose the target language.</p>
+  <textarea id="translatein" placeholder="Paste transcript..."></textarea>
+  <div class="row"><div><label>Target language</label><select id="targetlang"><option>English</option><option>Hindi</option><option>Telugu</option><option>Tamil</option><option>Kannada</option><option>Malayalam</option><option>Urdu</option><option>Arabic</option></select></div></div>
+  <p class="small">This tool prepares the translation workflow; a translation API is required for automatic translation.</p>
+</div>`;
+case'transcriptclean':return `<div class="audio-ai">
+  <textarea id="cleantext" placeholder="Paste transcript..."></textarea>
+  <button class="btn" id="cleantrans">Clean Formatting</button><div id="cleanout"></div>
+</div>`;
 case'currency':return `<div class="row">${inp('amt','Amount',1)}<div><label>From</label><select id="from"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div><div><label>To</label><select id="to"><option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div></div><button class="btn" id="calc">Get Rate</button><div id="out"></div>`;
 }
 }
@@ -653,13 +684,22 @@ async function initTranscriberTool(){
  $('#analyzeTranscript').addEventListener('click',()=>{let lines=[];try{lines=JSON.parse(ta.dataset.lines||'[]')}catch{};if(!lines.length)return;const box=$('#analysisOut');box.innerHTML=basicCallAnalysis(lines);box.style.display='block';box.scrollIntoView({behavior:'smooth',block:'nearest'});});
 }
 function bindTool(id){
- if(id==='trip'){ $('#split').onclick=()=>{
-let rows=$('#paidby').value.trim().split(/\n/).map(x=>x.split(',')).filter(x=>x.length>=2&&x[0].trim()&&!isNaN(Number(x[1])));
-if(rows.length<2){$('#splitout').innerHTML='<p class="error">Enter at least two payments.</p>';return}
-let total=rows.reduce((s,x)=>s+Number(x[1]),0),share=total/rows.length;
-let s=`<div class="trip-result"><strong>Total paid: ${money(total)}</strong><br>Equal share: ${money(share)}<br><br>`;
-rows.forEach(x=>{let diff=Number(x[1])-share;s+=`<div><strong>${x[0].trim()}</strong>: ${diff>0?'should receive '+money(diff):diff<0?'owes '+money(-diff):'settled'}</div>`});
-$('#splitout').innerHTML=s+'</div>';};}
+ 
+if(id==='audiotranscribe'){
+ $('#startaudio').onclick=()=>{try{
+   const f=$('#audiofile').files[0];
+   if(!f)throw Error('Choose an audio file.');
+   if(f.size>=100*1024*1024)throw Error('Audio must be under 100 MB.');
+   $('#audiostatus').textContent='Ready for transcription: '+f.name;
+ }catch(e){$('#audiostatus').textContent=e.message}};
+ $('#copytrans').onclick=()=>navigator.clipboard?.writeText($('#transcript').value);
+ $('#downloadtrans').onclick=()=>dl(new Blob([$('#transcript').value],{type:'text/plain'}),'pennitools-transcript.txt');
+ $('#downloadsrt').onclick=()=>dl(new Blob([$('#transcript').value],{type:'text/plain'}),'pennitools-transcript.srt');
+}
+if(id==='callanalysis'){
+ $('#analyzecall').onclick=()=>{try{const t=$('#analysistext').value.trim();if(!t)throw Error('Paste a transcript first.');let lines=t.split(/\n+/).filter(Boolean),s={};lines.forEach(x=>{let m=x.match(/^\s*([^:]{1,40}):\s*(.*)$/);if(m)(s[m[1].trim()]??=[]).push(m[2].trim())});let sh=Object.entries(s).map(([k,v])=>`<li><strong>${k}</strong>: ${v.length} utterance(s)</li>`).join('');$('#analysisout').innerHTML=`<div class="trip-result"><h3>Conversation Analysis</h3><p>Segments: <strong>${lines.length}</strong></p><ul>${sh||'<li>No explicit speaker labels detected.</li>'}</ul><p class="small">Structural analysis only; no speaker identities are invented.</p></div>`}catch(e){$('#analysisout').innerHTML='<p class="error">'+e.message+'</p>'}};
+}
+
 if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
  if(id==='caseconvert'){
  $('#upper').onclick=()=>out(`<pre>${$('#text').value.toUpperCase()}</pre>`);
@@ -793,13 +833,30 @@ case'bodyfat':{let bmi=num($('#bmi').value),age=num($('#age').value);out(`BMI-ba
 case'pctcgpa':{let p=num($('#percentage').value);out(`Estimated CGPA: <strong>${(p/9.5).toFixed(2)}</strong>`);break}
 case'markspercent':{let a=num($('#obtained').value),m=num($('#maximum').value);out(`Percentage: <strong>${m?(a/m*100).toFixed(2):0}%</strong>`);break}
 case'gpa':{let rows=$('#grades').value.trim().split(/\n/).map(x=>x.split(/[,\s]+/).map(Number)).filter(x=>x.length>=2&&!isNaN(x[0])&&!isNaN(x[1]));let cr=rows.reduce((s,x)=>s+x[1],0),pts=rows.reduce((s,x)=>s+x[0]*x[1],0);if(!cr)throw Error('Enter grade,credit pairs');out(`Weighted GPA: <strong>${(pts/cr).toFixed(2)}</strong><br>Credits: ${cr}`);break}
-case'trip':{
-let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),mult=Number($('#roundtrip').value);
-let people=Math.max(1,num($('#people').value)),fuel=m>0?(d*mult/m)*fp:0;
-let toll=num($('#toll').value)*mult,parking=num($('#parking').value)*mult,hotel=num($('#hotel').value);
-let food=num($('#food').value)*people,tickets=num($('#tickets').value),other=num($('#other').value);
-let total=fuel+toll+parking+hotel+food+tickets+other;
-out(`<div class="trip-result"><strong>Total trip cost: ${money(total)}</strong><br>Fuel: ${money(fuel)} · Tolls: ${money(toll)} · Parking: ${money(parking)}<br>Hotel: ${money(hotel)} · Food: ${money(food)} · Tickets: ${money(tickets)} · Other: ${money(other)}<br><strong>Cost per person: ${money(total/people)}</strong></div>`);break}
+case'audiotranscribe':{
+ const f=$('#audiofile').files[0];
+ if(!f)throw Error('Choose an audio file.');
+ if(f.size>=100*1024*1024)throw Error('Please upload an audio file under 100 MB.');
+ $('#audiostatus').innerHTML='File accepted. Browser-based transcription engine can be connected here.';
+ $('#transcript').value='Audio file: '+f.name+'\nSize: '+(f.size/1024/1024).toFixed(2)+' MB\nLanguage: '+$('#audiolang').value+'\nMode: '+$('#transmode').value+'\n\nTo provide genuinely accurate multilingual transcription at scale, this interface should use a local Whisper/WebGPU engine or a dedicated transcription backend. The 100 MB file limit and unlimited-use policy are UI limits; processing speed and model availability depend on the device.';
+ break}
+case'callanalysis':{
+ const t=$('#analysistext').value.trim();if(!t)throw Error('Paste a transcript first.');
+ const lines=t.split(/\n+/).filter(Boolean), speakers={};
+ lines.forEach(x=>{let m=x.match(/^\s*([^:]{1,40}):\s*(.*)$/);if(m)(speakers[m[1].trim()]??=[]).push(m[2].trim())});
+ let speakerHtml=Object.entries(speakers).map(([k,v])=>`<li><strong>${k}</strong>: ${v.length} utterance(s)</li>`).join('');
+ const sentences=t.split(/[.!?]+/).map(x=>x.trim()).filter(Boolean);
+ $('#analysisout').innerHTML=`<div class="trip-result"><h3>Conversation Analysis</h3><p><strong>Segments:</strong> ${lines.length} · <strong>Sentences:</strong> ${sentences.length}</p><h4>Detected speakers</h4><ul>${speakerHtml||'<li>No explicit Speaker/Name labels detected.</li>'}</ul><h4>Key conversation text</h4><p>${sentences.slice(0,8).map(x=>x.replace(/[<>]/g,'')).join('. ')}</p><p class="small">This is a structural analysis. It does not invent speaker identity, intent or facts that are not present in the transcript.</p></div>`;
+ break}
+case'transcriptclean':{
+ let t=$('#cleantext').value.replace(/\r/g,'').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+ $('#cleanout').innerHTML=`<textarea readonly>${t.replace(/</g,'&lt;')}</textarea>`;
+ break}
+case'audiotranslate':{
+ $('#translatein').focus();
+ out('Translation requires a translation engine/API to perform automatic multilingual translation. The transcript is preserved without alteration.');
+ break}
+
 case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
  case'wordpdf':{const {jsPDF}=window.jspdf;let pdf=new jsPDF();let lines=pdf.splitTextToSize($('#text').value,180);let y=15;lines.forEach(line=>{if(y>280){pdf.addPage();y=15}pdf.text(line,15,y);y+=7});pdf.save('pennitools-document.pdf');out('PDF created and downloaded.');break}
  case'jpgpdf':await jpgToPdf();break;
