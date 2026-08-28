@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="PenniTools - free calculators and everyday online tools for India.">
 <meta name="theme-color" content="#155eef">
-<title>PenniTools — Everyday Calculators & Tools</title>
+<title>PenniTools — Everyday Calculators & Tools</title><meta name="description" content="PenniTools offers free calculators and practical tools for finance, vehicles, carpentry, documents, images, audio and everyday tasks in India.">
 <style>
 :root{--navy:#0b1530;--blue:#2563eb;--blue2:#4f46e5;--cyan:#06b6d4;--ink:#101828;--muted:#667085;--bg:#f6f8fc;--card:#fff;--line:#e7ebf3;--shadow:0 16px 45px rgba(16,24,40,.09)}
 *{box-sizing:border-box}
@@ -329,6 +329,28 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .pdf-editor .secondary{background:#eef2f7;color:#1d2939;border:1px solid #d0d5dd}
 
 </style>
+
+<style>
+.trust-hero{margin:24px 0;padding:28px;border-radius:26px;background:linear-gradient(135deg,#0f3c91,#2563eb 55%,#5b7cfa);color:#fff;box-shadow:0 18px 45px rgba(37,99,235,.18)}
+.trust-hero h2{font-size:clamp(27px,5vw,42px);margin:8px 0;letter-spacing:-1.2px}
+.trust-hero p{max-width:760px;margin:0;color:rgba(255,255,255,.86);line-height:1.65}
+.eyebrow{font-size:11px;letter-spacing:1.4px;font-weight:800;color:#3267d6}
+.trust-hero .eyebrow{color:#dbe8ff}
+.popular-section,.content-section{margin:26px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-head h2{margin:4px 0 0;font-size:28px}
+.section-hint{color:#667085;font-size:13px}
+.popular-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.popular-grid button{text-align:left;padding:18px;border:1px solid #e2e8f0;border-radius:18px;background:#fff;box-shadow:0 8px 25px rgba(15,23,42,.05);cursor:pointer;font:inherit}
+.popular-grid button:hover{border-color:#b8caf0;transform:translateY(-1px)}
+.popular-grid strong,.popular-grid small{display:block;margin-top:7px}.popular-grid small{color:#667085}
+.content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.content-grid article,.info-page{padding:22px;border:1px solid #e5e9f0;border-radius:20px;background:#fff}
+.content-grid h2{margin:6px 0}.content-grid h3{margin-top:0}.content-grid p,.info-page p{color:#596579;line-height:1.7}
+.info-page{margin:18px 0}.info-page h2{margin:6px 0 10px}
+.footer-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:15px}.footer-links a{color:inherit;text-decoration:none;opacity:.85}
+@media(max-width:700px){.popular-grid,.content-grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}}
+</style>
 </head>
 <body>
 <header>
@@ -339,6 +361,25 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
   <nav id="cats"></nav>
 </div>
 </header>
+<section class="trust-hero">
+  <div>
+    <span class="eyebrow">FREE • FAST • MOBILE FRIENDLY</span>
+    <h2>Everyday calculators and practical tools for India</h2>
+    <p>PenniTools helps you calculate money, vehicle, construction, document and everyday measurements in seconds. No account is required for the basic tools.</p>
+  </div>
+</section>
+<section class="popular-section">
+  <div class="section-head"><div><span class="eyebrow">POPULAR</span><h2>Tools people use most</h2></div><span class="section-hint">Choose a category below to explore</span></div>
+  <div class="popular-grid">
+    <button onclick="openTool('carpenterarea','Carpenter Area / Square Feet Calculator')">🪚 <strong>Square Feet</strong><small>Inches × inches → sq ft</small></button>
+    <button onclick="openTool('emi','EMI Calculator')">💰 <strong>EMI Calculator</strong><small>Estimate monthly loan payment</small></button>
+    <button onclick="openTool('fuel','Fuel Cost Calculator')">⛽ <strong>Fuel Cost</strong><small>Estimate your trip fuel cost</small></button>
+    <button onclick="openTool('tripcost','Trip Cost Calculator')">🚗 <strong>Trip Cost</strong><small>Plan your travel expenses</small></button>
+    <button onclick="openTool('pdfeditor','PDF Editor')">📄 <strong>PDF Editor</strong><small>Work with PDF files</small></button>
+    <button onclick="openTool('audiotranscribe','Audio Transcriber')">🎙️ <strong>Audio Transcriber</strong><small>Turn audio into text</small></button>
+  </div>
+</section>
+
 <div class="selector-wrap">
   <div class="selector-title">⚡ Open a calculator</div>
   <select id="toolSelect" class="tool-select" aria-label="Select a calculator or tool">
@@ -346,7 +387,24 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
   </select>
 </div>
 <main class="wrap" id="app"></main>
-<footer><div class="wrap">© 2026 PenniTools · Free browser-based tools</div></footer>
+
+<section class="content-section">
+  <div class="content-grid">
+    <article><span class="eyebrow">WHY PENNITOOLS</span><h2>Simple tools with clear answers</h2><p>PenniTools is designed for quick calculations on phones and computers. Each calculator explains the result and, where useful, shows the formula so you can check the answer yourself.</p></article>
+    <article><h3>🪚 Carpenter & Construction</h3><p>Calculate square feet from inches, feet, centimetres or millimetres. For example, 77 × 33 inches is 2,541 square inches, which is 17.646 square feet.</p></article>
+    <article><h3>💰 Money & Finance</h3><p>Use practical calculators for loans, salary, savings, taxes and other everyday financial estimates. Results are estimates and should be checked against your lender or official documents.</p></article>
+    <article><h3>🔒 Privacy-first tools</h3><p>Where a tool is designed to process a file in your browser, your selected file is not intentionally uploaded by PenniTools. Check each tool's instructions before using sensitive documents.</p></article>
+  </div>
+</section>
+<section id="about" class="info-page"><span class="eyebrow">ABOUT</span><h2>About PenniTools</h2><p>PenniTools is an independent collection of free calculators and practical online tools created to make everyday tasks easier. Our goal is to provide simple interfaces, transparent formulas and useful results without unnecessary complexity.</p></section>
+<section id="contact" class="info-page"><span class="eyebrow">CONTACT</span><h2>Contact PenniTools</h2><p>For feedback, broken tools, suggestions or partnership enquiries, please contact the PenniTools site owner using the contact method published on the website. Please do not send passwords, bank credentials or other sensitive information.</p></section>
+<section id="privacy" class="info-page"><span class="eyebrow">PRIVACY</span><h2>Privacy Policy</h2><p>PenniTools is designed to minimize unnecessary collection of personal information. Some tools may process files locally in your browser. Third-party services, analytics, advertising and embedded services may process information according to their own policies when they are enabled.</p><p>We do not ask users to enter passwords, banking credentials or payment card details into calculators. Do not submit sensitive personal information unless a future feature explicitly requires it and explains why.</p></section>
+<section id="terms" class="info-page"><span class="eyebrow">TERMS</span><h2>Terms & Conditions</h2><p>PenniTools provides calculators and tools for general informational and practical purposes. Results are estimates and are not professional financial, legal, medical, engineering or construction advice. You are responsible for checking important results before relying on them.</p></section>
+<section id="disclaimer" class="info-page"><span class="eyebrow">DISCLAIMER</span><h2>Disclaimer</h2><p>Calculator outputs can contain rounding or input-related errors. For regulated, financial, health, construction or other high-stakes decisions, verify the result with an appropriate professional or official source.</p></section>
+<section id="affiliate" class="info-page"><span class="eyebrow">DISCLOSURE</span><h2>Affiliate Disclosure</h2><p>PenniTools may eventually use affiliate links. If you purchase something through an eligible affiliate link, PenniTools may receive a commission at no additional cost to you. Affiliate recommendations will be relevant to the tool or topic being viewed.</p></section>
+<footer><div class="wrap">© 2026 PenniTools · Free browser-based tools</div><div class="footer-links">
+<a href="#about">About</a><a href="#contact">Contact</a><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#disclaimer">Disclaimer</a><a href="#affiliate">Affiliate Disclosure</a>
+</div></footer>
 
 <div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeTool()">×</button><div id="toolBody"></div></div></div>
 
