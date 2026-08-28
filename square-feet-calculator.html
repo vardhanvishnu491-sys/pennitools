@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Square Feet Calculator – Inches to Sq Ft | PenniTools</title>
+
+  <meta name="description" content="Free square feet calculator for carpenters and construction workers. Calculate square feet from inches, feet, or other measurements quickly and easily.">
+
+  <meta name="robots" content="index, follow">
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    header {
+      background: #155eef;
+      color: white;
+      padding: 22px 16px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 28px;
+    }
+
+    header p {
+      margin: 8px 0 0;
+      font-size: 15px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 25px auto;
+      padding: 0 16px;
+    }
+
+    .card {
+      background: white;
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 4px 18px rgba(0,0,0,0.08);
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-top: 15px;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 17px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 22px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #155eef;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .result {
+      margin-top: 22px;
+      padding: 18px;
+      background: #eef5ff;
+      border-radius: 12px;
+      text-align: center;
+      display: none;
+    }
+
+    .result strong {
+      display: block;
+      font-size: 28px;
+      color: #155eef;
+      margin-top: 8px;
+    }
+
+    .formula {
+      margin-top: 25px;
+      padding: 18px;
+      background: #f8f8f8;
+      border-radius: 12px;
+      line-height: 1.7;
+    }
+
+    .back {
+      display: inline-block;
+      margin-top: 20px;
+      color: #155eef;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 15px;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Square Feet Calculator</h1>
+  <p>Carpenter & Construction Calculator</p>
+</header>
+
+<div class="container">
+
+  <div class="card">
+
+    <label for="length">Length</label>
+    <input type="number" id="length" placeholder="Example: 77" step="any">
+
+    <label for="width">Width</label>
+    <input type="number" id="width" placeholder="Example: 33" step="any">
+
+    <label for="unit">Measurement Unit</label>
+    <select id="unit">
+      <option value="inches">Inches</option>
+      <option value="feet">Feet</option>
+    </select>
+
+    <button onclick="calculateArea()">Calculate Square Feet</button>
+
+    <div class="result" id="result">
+      Area
+      <strong id="answer"></strong>
+      <div id="calculation"></div>
+    </div>
+
+    <div class="formula">
+      <h3>How to calculate square feet</h3>
+
+      <p><strong>When measurements are in inches:</strong></p>
+
+      <p>
+        Length × Width ÷ 144 = Square Feet
+      </p>
+
+      <p>
+        Example:
+        <br>
+        77 × 33 = 2,541 square inches
+        <br>
+        2,541 ÷ 144 = <strong>17.65 sq ft</strong>
+      </p>
+
+      <p><strong>When measurements are in feet:</strong></p>
+
+      <p>
+        Length × Width = Square Feet
+      </p>
+    </div>
+
+    <a class="back" href="index.html">← Back to PenniTools</a>
+
+  </div>
+
+</div>
+
+<footer>
+  © 2026 PenniTools.in — Free calculators for India
+</footer>
+
+<script>
+function calculateArea() {
+
+  const length = parseFloat(document.getElementById("length").value);
+  const width = parseFloat(document.getElementById("width").value);
+  const unit = document.getElementById("unit").value;
+
+  if (isNaN(length) || isNaN(width) || length <= 0 || width <= 0) {
+    alert("Please enter valid length and width.");
+    return;
+  }
+
+  let area;
+
+  if (unit === "inches") {
+    area = (length * width) / 144;
+  } else {
+    area = length * width;
+  }
+
+  area = area.toFixed(2);
+
+  document.getElementById("answer").textContent = area + " sq ft";
+
+  if (unit === "inches") {
+    document.getElementById("calculation").textContent =
+      length + " × " + width + " ÷ 144 = " + area + " sq ft";
+  } else {
+    document.getElementById("calculation").textContent =
+      length + " × " + width + " = " + area + " sq ft";
+  }
+
+  document.getElementById("result").style.display = "block";
+}
+</script>
+
+</body>
+</html>
