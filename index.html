@@ -5,6 +5,17 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="PenniTools provides free calculators for construction, carpentry, area, length, tiles, paint, concrete, finance and everyday calculations in India.">
 <meta name="theme-color" content="#155eef">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="PenniTools">
+<link rel="canonical" href="https://pennitools.in/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pennitools.in/">
+<meta property="og:title" content="PenniTools – Free Construction, Carpenter & Everyday Calculators">
+<meta property="og:description" content="Free calculators and practical tools for construction, carpentry, finance, vehicles, documents and everyday calculations in India.">
+<meta property="og:site_name" content="PenniTools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PenniTools – Free Calculators & Practical Tools">
+<meta name="twitter:description" content="Free calculators for construction, carpentry, finance, vehicles, documents and everyday life in India.">
 <title>PenniTools – Free Construction, Carpenter & Everyday Calculators</title>
 <style>
 :root{--navy:#0b1530;--blue:#2563eb;--blue2:#4f46e5;--cyan:#06b6d4;--ink:#101828;--muted:#667085;--bg:#f6f8fc;--card:#fff;--line:#e7ebf3;--shadow:0 16px 45px rgba(16,24,40,.09)}
@@ -351,6 +362,21 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .footer-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:15px}.footer-links a{color:inherit;text-decoration:none;opacity:.85}
 @media(max-width:700px){.popular-grid,.content-grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}}
 </style>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"PenniTools",
+  "url":"https://pennitools.in/",
+  "description":"Free calculators and practical online tools for India.",
+  "potentialAction":{
+    "@type":"SearchAction",
+    "target":"https://pennitools.in/?q={search_term_string}",
+    "query-input":"required name=search_term_string"
+  }
+}
+</script>
 </head>
 <body>
 <header>
@@ -1257,7 +1283,22 @@ async function pdfToText(){
  const body=text.join('\n\n');
  if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
- const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title></head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
+ const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebSite",
+  "name":"PenniTools",
+  "url":"https://pennitools.in/",
+  "description":"Free calculators and practical online tools for India.",
+  "potentialAction":{
+    "@type":"SearchAction",
+    "target":"https://pennitools.in/?q={search_term_string}",
+    "query-input":"required name=search_term_string"
+  }
+}
+</script>
+</head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
  dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
  out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
 }
