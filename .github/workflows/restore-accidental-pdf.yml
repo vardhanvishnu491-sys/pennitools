@@ -1,0 +1,28 @@
+name: Restore accidental PDF editor change
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/restore-accidental-pdf.yml']
+permissions:
+  contents: write
+jobs:
+  restore:
+    if: ${{ !contains(github.event.head_commit.message, 'Restore accidental PDF editor change') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Revert accidental PDF editor commit
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git revert HEAD^ --no-edit
+          git push origin main
+      - name: Remove temporary workflow
+        run: |
+          rm -f .github/workflows/restore-accidental-pdf.yml
+          git add -A
+          git commit -m 'Remove temporary PDF restore workflow'
+          git push origin main
