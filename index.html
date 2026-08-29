@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta name="description" content="PenniTools provides free calculators for construction, carpentry, area, length, tiles, paint, concrete, finance and everyday calculations in India.">
 <meta name="theme-color" content="#155eef">
 <title>PenniTools – Free Construction, Carpenter & Everyday Calculators</title>
@@ -424,7 +425,9 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 
 <div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeTool()">×</button><div id="toolBody"></div></div></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">document.addEventListener('click',e=>{if(e.target?.id==='pdfEditorUndo'){if(pdfEditorItems.length){pdfEditorItems.pop();pdfEditorSelected=pdfEditorItems.length?pdfEditorItems[pdfEditorItems.length-1].index:-1;pdfEditorRenderItems();} }});
+document.addEventListener('change',e=>{if(e.target?.id==='pdfEditorAction'){const a=e.target.value;const fields=$('#pdfEditorFields'),rot=$('#pdfEditorRotate'),del=$('#pdfEditorDelete');if(fields)fields.style.display=(a==='delete'||a==='rotate')?'none':'block';if(rot)rot.style.display=a==='rotate'?'block':'none';if(del)del.style.display=a==='delete'?'block':'none';const info=$('#pdfEditorPlaceInfo');if(info)info.textContent=a==='edittext'?'Tap an existing word to edit it.':'Type text and tap the PDF to place it.';}});
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -617,19 +620,21 @@ case'carloan':return f(inp('p','Car loan amount',800000)+inp('r','Annual interes
 case'wordpdf':return `<label>Document text</label><textarea id="text">Type or paste your document here.</textarea><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
 case'transcribe':return `<div class="audio-transcriber"><div class="notice">🔒 <strong>Unlimited local transcription:</strong> upload as many files as you want. Each individual file must be <strong>under 100 MB</strong>. Audio is processed in your browser and is not sent to a PenniTools server.</div><div class="audio-drop" id="audioDrop"><div class="audio-icon">🎙️</div><h3>Audio → Accurate Transcript</h3><p>MP3, WAV, M4A, OGG, WebM, AAC and other browser-supported audio.</p><input id="audioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.webm,.aac"><label class="btn" for="audioFile">Choose audio</label><div id="audioName" class="small"></div></div><div class="audio-options row"><div><label>Spoken language</label><select id="audioLang"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="te">Telugu</option><option value="ta">Tamil</option><option value="kn">Kannada</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="bn">Bengali</option><option value="gu">Gujarati</option><option value="pa">Punjabi</option><option value="ur">Urdu</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ar">Arabic</option><option value="zh">Chinese</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></div><div><label>Accuracy</label><select id="audioModel"><option value="Xenova/whisper-tiny">Fast — Tiny</option><option value="Xenova/whisper-small">Balanced — Small</option><option value="onnx-community/whisper-large-v3-turbo" selected>High accuracy — Large v3 Turbo</option></select></div></div><div class="audio-options row"><div><label>Speaker mode</label><select id="speakerMode"><option value="mixed">Mixed audio — best-effort transcript</option><option value="stereo">Call recording — Caller / Receiver from stereo channels</option></select></div><div><label>Transcript detail</label><select id="transcriptDetail"><option value="segments" selected>Timestamped segments</option><option value="plain">Plain transcript</option></select></div></div><button class="btn" id="startTranscribe" disabled>Start high-accuracy transcription</button><div id="audioStatus" class="small"></div><div id="callNotice" class="notice" style="display:none"></div><textarea id="transcriptOut" placeholder="Your transcript will appear here…"></textarea><div id="analysisOut" class="analysis-box" style="display:none"></div><div class="audio-actions"><button class="btn secondary" id="copyTranscript" disabled>Copy transcript</button><button class="btn secondary" id="downloadTranscript" disabled>Download TXT</button><button class="btn secondary" id="downloadSrt" disabled>Download SRT</button><button class="btn secondary" id="analyzeTranscript" disabled>Analyze transcript</button></div><p class="small"><strong>Accuracy note:</strong> no speech-to-text system can guarantee 100% accuracy. Speaker labels are reliable when a call recording has separate stereo channels; if both people are mixed into one mono track, true caller/receiver separation requires a dedicated diarization model/server.</p></div>`;
 case'pdfeditor':return `<div class="pdf-editor">
-<div class="editor-help">📝 <strong>Visual PDF Editor</strong><br>Upload your PDF and edit it visually. Choose <strong>Edit existing text</strong> to tap a word/line and replace it, or choose <strong>Add text</strong> to place new text anywhere. Change font, size and colour before saving. Your original PDF is not changed.</div>
-<div class="drop"><b>Choose PDF</b><p class="small">The PDF is processed in your browser. Nothing is uploaded to PenniTools.</p><input id="pdfEditorFile" type="file" accept=".pdf,application/pdf" onchange="pdfEditorInfo(this)"><div id="pdfEditorInfo" class="small"></div></div>
+<div class="editor-help">📝 <strong>PDF Visual Editor</strong><br>Upload a PDF, tap text to select it, then replace it like a normal document. You can also add new text, change the font automatically or manually, change size/colour, move or delete an edit, and download the edited PDF.</div>
+<div class="drop"><b>Choose PDF</b><p class="small">Your PDF stays in your browser.</p><input id="pdfEditorFile" type="file" accept=".pdf,application/pdf" onchange="pdfEditorInfo(this)"><div id="pdfEditorInfo" class="small"></div></div>
 <div id="pdfEditorPreviewWrap" style="display:none;margin:16px 0">
-<label>PDF preview — tap to place text</label>
-<div class="pdf-editor-stage-wrap"><div id="pdfEditorStage" class="pdf-editor-stage"><canvas id="pdfEditorCanvas"></canvas><div id="pdfEditorTextLayer" class="pdf-editor-text-layer"></div><div id="pdfEditorOverlay" class="pdf-editor-overlay"></div></div></div>
-<div id="pdfEditorPlaceInfo" class="small" style="margin-top:8px">Type your text below, then tap the PDF where you want it.</div>
+<div class="pdf-editor-toolbar row">
+<div><label>Mode</label><select id="pdfEditorAction"><option value="edittext">✏️ Edit existing text</option><option value="text">➕ Add new text</option><option value="rotate">↻ Rotate page</option><option value="delete">🗑 Delete pages</option><option value="watermark">💧 Watermark</option></select></div>
+<div><label>Page</label><input id="pdfEditorPage" type="number" min="1" value="1" onchange="pdfEditorRenderPage()"></div>
 </div>
-<div class="row"><div><label>Action</label><select id="pdfEditorAction"><option value="edittext">Edit existing text</option><option value="text">Add text</option><option value="rotate">Rotate page</option><option value="delete">Delete pages</option><option value="watermark">Add watermark</option></select></div><div><label>Page number</label><input id="pdfEditorPage" type="number" min="1" value="1" onchange="pdfEditorRenderPage()"></div></div>
-<div id="pdfEditorFields"><div class="row"><div><label>Text</label><input id="pdfEditorText" type="text" placeholder="Type or replace text" oninput="pdfEditorUpdateMarker()"></div><div><label>Font</label><select id="pdfEditorFont" onchange="pdfEditorUpdateMarker()"><option value="auto">Auto (match PDF)</option><option value="Helvetica">Helvetica</option><option value="Times-Roman">Times</option><option value="Courier">Courier</option></select></div></div><div class="row"><div><label>Font size</label><input id="pdfEditorSize" type="number" min="6" max="96" value="18" oninput="pdfEditorUpdateMarker()"></div><div><label>Text colour</label><input id="pdfEditorColor" type="color" value="#111827" style="height:44px;width:100%;padding:4px" oninput="pdfEditorUpdateMarker()"></div></div><input id="pdfEditorX" type="hidden" value="50"><input id="pdfEditorY" type="hidden" value="50"></div>
+<label>PDF preview</label><div class="pdf-editor-stage-wrap"><div id="pdfEditorStage" class="pdf-editor-stage"><canvas id="pdfEditorCanvas"></canvas><div id="pdfEditorTextLayer" class="pdf-editor-text-layer"></div><div id="pdfEditorOverlay" class="pdf-editor-overlay"></div></div></div>
+<div id="pdfEditorPlaceInfo" class="small" style="margin-top:8px">Tap an existing word to edit it.</div>
+</div>
+<div id="pdfEditorFields"><div class="row"><div><label>Text</label><input id="pdfEditorText" type="text" placeholder="Select text or type new text" oninput="pdfEditorUpdateMarker()"></div><div><label>Font</label><select id="pdfEditorFont" onchange="pdfEditorUpdateMarker()"><option value="auto">Auto — match PDF</option><option value="Helvetica">Helvetica</option><option value="Times-Roman">Times New Roman</option><option value="Courier">Courier</option><option value="Helvetica-Bold">Helvetica Bold</option><option value="Helvetica-Oblique">Helvetica Italic</option><option value="Times-Bold">Times Bold</option><option value="Times-Italic">Times Italic</option></select></div></div><div class="row"><div><label>Font size</label><input id="pdfEditorSize" type="number" min="6" max="96" value="18" oninput="pdfEditorUpdateMarker()"></div><div><label>Text colour</label><input id="pdfEditorColor" type="color" value="#111827" style="height:44px;width:100%;padding:4px" oninput="pdfEditorUpdateMarker()"></div></div></div>
 <div id="pdfEditorRotate" style="display:none"><label>Rotation</label><select id="pdfEditorAngle"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">270° clockwise</option></select></div>
-<div id="pdfEditorDelete" style="display:none"><label>Pages to delete</label><input id="pdfEditorPages" type="text" placeholder="Example: 2,4-6"><p class="small">You can remove multiple pages. Example: <strong>2,4-6</strong>.</p></div>
-<div id="pdfEditorTextActions" class="pdf-editor-actions"><button class="btn secondary" type="button" id="pdfEditorUndo">Undo last text</button><button class="btn secondary" type="button" id="pdfEditorClear">Clear placed text</button></div>
-<button class="btn" id="calc">Save &amp; Download Edited PDF</button><button class="btn secondary" type="button" onclick="resetPdfEditor()">Reset editor</button> <button class="btn secondary" type="button" onclick="pdfEditorApplyInput()">Update selected text</button> <button class="btn secondary" type="button" onclick="pdfEditorRemoveSelected()">Delete selected text</button><div id="out"></div></div>`;
+<div id="pdfEditorDelete" style="display:none"><label>Pages to delete</label><input id="pdfEditorPages" type="text" placeholder="Example: 2,4-6"></div>
+<div class="pdf-editor-actions"><button class="btn secondary" type="button" onclick="pdfEditorApplyInput()">Update selected</button><button class="btn secondary" type="button" onclick="pdfEditorRemoveSelected()">Delete selected</button><button class="btn secondary" type="button" id="pdfEditorUndo">Undo</button><button class="btn secondary" type="button" onclick="resetPdfEditor()">Reset</button></div>
+<button class="btn" id="calc">Save &amp; Download Edited PDF</button><div id="out"></div></div>`;
 case'pdfword':return `${fileBox('pdf','Choose PDF','Extract readable text into a Word-compatible .doc file')}<button class="btn" id="calc">Convert to Word</button><div id="out"></div>`;
 case'pdfjpg':return `${fileBox('pdf','Choose PDF','Convert every PDF page to JPG images (downloaded as a ZIP)')}<button class="btn" id="calc">Convert to JPG</button><div id="out"></div>`;
 case'jpgpdf':return `<div class="drop"><b>Choose images</b><p class="small">Create one PDF from one or more selected images. Select multiple images if needed.</p><input id="img" type="file" multiple accept="image/*"></div><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
@@ -1280,6 +1285,7 @@ let pdfEditorPdf=null;
 let pdfEditorItems=[];
 let pdfEditorSelected=-1;
 let pdfEditorRedactions=[];
+let pdfEditorScale=1;
 
 async function pdfEditorLoad(){
  const f=$('#pdfEditorFile')?.files?.[0];
@@ -1327,66 +1333,46 @@ function pdfEditorRenderItems(){
 }
 function pdfEditorRenderTextLayer(page,viewport){
  const layer=$('#pdfEditorTextLayer'); if(!layer)return; layer.innerHTML='';
+ layer.style.width=viewport.width+'px'; layer.style.height=viewport.height+'px';
  page.getTextContent().then(tc=>pdfEditorPdfJs.renderTextLayer({textContentSource:tc,container:layer,viewport,textDivs:[]}).promise).then(()=>{
    layer.querySelectorAll('span').forEach(span=>{
+     span.style.pointerEvents='auto';
      span.addEventListener('pointerdown',ev=>{
-       if($('#pdfEditorAction').value!=='edittext')return;
+       if($('#pdfEditorAction')?.value!=='edittext')return;
        ev.preventDefault();ev.stopPropagation();
        const r=span.getBoundingClientRect(), cr=$('#pdfEditorCanvas').getBoundingClientRect();
-       const pageNo=Number($('#pdfEditorPage').value)||1;
-       const x=(r.left-cr.left)*($('#pdfEditorCanvas').width/cr.width)/pdfEditorScale;
-       const y=($('#pdfEditorCanvas').height-(r.bottom-cr.top)*($('#pdfEditorCanvas').height/cr.height))/pdfEditorScale;
-       const displaySize=parseFloat(getComputedStyle(span).fontSize)||18;
-       $('#pdfEditorText').value=span.textContent.trim(); $('#pdfEditorSize').value=Math.round(displaySize);
-       $('#pdfEditorFont').value='auto';
-       $('#pdfEditorX').value=Math.round(x); $('#pdfEditorY').value=Math.round(y);
-       pdfEditorRedactions.push({page:pageNo,x,y,width:r.width*($('#pdfEditorCanvas').width/cr.width)/pdfEditorScale,height:r.height*($('#pdfEditorCanvas').height/cr.height)/pdfEditorScale});
-       const item={index:Date.now()+Math.random(),page:pageNo,x,y,text:span.textContent.trim(),size:Math.max(6,Math.min(96,displaySize)),displaySize,color:$('#pdfEditorColor').value,font:'auto',replace:true,redaction:pdfEditorRedactions[pdfEditorRedactions.length-1]};
-       pdfEditorItems.push(item);pdfEditorSelected=item.index;
-       $('#pdfEditorPlaceInfo').textContent='Selected existing text. Change the text, font or size below. Tap another text to edit it.';
+       const sx=cr.width?$('#pdfEditorCanvas').width/cr.width:1, sy=cr.height?$('#pdfEditorCanvas').height/cr.height:1;
+       const x=(r.left-cr.left)*sx/pdfEditorScale;
+       const y=($('#pdfEditorCanvas').height-(r.bottom-cr.top)*sy)/pdfEditorScale;
+       const displaySize=Math.max(6,Math.min(96,parseFloat(getComputedStyle(span).fontSize)||18));
+       const text=span.textContent||'';
+       if(!text.trim())return;
+       const old=pdfEditorItems.find(x=>x.sourceSpan===span && x.page===Number($('#pdfEditorPage').value));
+       if(old){pdfEditorSelected=old.index; $('#pdfEditorText').value=old.text; $('#pdfEditorSize').value=old.size; $('#pdfEditorColor').value=old.color; $('#pdfEditorFont').value=old.font||'auto'; pdfEditorRenderItems(); return;}
+       const item={index:Date.now()+Math.random(),page:Number($('#pdfEditorPage').value)||1,x,y,text:text.trim(),originalText:text.trim(),size:displaySize,displaySize,color:$('#pdfEditorColor').value,font:'auto',replace:true,sourceSpan:span,redaction:{x,y,width:r.width*sx/pdfEditorScale,height:r.height*sy/pdfEditorScale}};
+       pdfEditorItems.push(item); pdfEditorSelected=item.index;
+       $('#pdfEditorText').value=item.text; $('#pdfEditorSize').value=Math.round(displaySize); $('#pdfEditorFont').value='auto';
+       $('#pdfEditorPlaceInfo').textContent='Selected existing text. Change the Text box, font or size, then tap Update selected.';
        pdfEditorRenderItems();
      });
    });
- }).catch(()=>{});
+ }).catch(err=>console.warn('PDF text layer unavailable',err));
 }
-async function pdfEditorRenderPage(){
- const f=$('#pdfEditorFile')?.files?.[0];if(!f)return;
- const pdfjs=await pdfEditorGetPdfJs();
- if(!pdfEditorPdf)pdfEditorPdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
- const pageNo=Math.max(1,Math.min(pdfEditorPdf.numPages,Number($('#pdfEditorPage')?.value)||1)); $('#pdfEditorPage').value=pageNo;
- const page=await pdfEditorPdf.getPage(pageNo),base=page.getViewport({scale:1});
- const wrap=$('.pdf-editor-stage-wrap'),maxWidth=Math.max(260,Math.min(760,(wrap?.clientWidth||760)-20));
- const scale=Math.min(1.6,maxWidth/base.width),viewport=page.getViewport({scale}); pdfEditorScale=scale;
- const canvas=$('#pdfEditorCanvas');canvas.width=Math.floor(viewport.width);canvas.height=Math.floor(viewport.height);
- await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
- $('#pdfEditorPreviewWrap').style.display='block';
- const layer=$('#pdfEditorTextLayer'); if(layer){layer.style.width=canvas.width+'px';layer.style.height=canvas.height+'px';}
- pdfEditorRenderTextLayer(page,viewport); pdfEditorRenderItems();
+function pdfEditorRenderItems(){
+ const overlay=$('#pdfEditorOverlay'),canvas=$('#pdfEditorCanvas'); if(!overlay||!canvas)return; overlay.innerHTML='';
+ const pageNo=Number($('#pdfEditorPage').value)||1;
+ pdfEditorPageItems(pageNo).forEach(item=>{
+  const el=document.createElement('div'); el.className='pdf-text-item'+(item.index===pdfEditorSelected?' selected':''); el.textContent=item.text;
+  el.style.left=(item.x*pdfEditorScale/canvas.width*100)+'%';
+  el.style.top=((canvas.height-item.y*pdfEditorScale)/canvas.height*100)+'%';
+  el.style.fontSize=Math.max(10,Math.min(72,(item.displaySize||item.size)*pdfEditorScale))+'px';
+  el.style.color=item.color; el.dataset.index=item.index;
+  el.addEventListener('pointerdown',pdfEditorStartDrag); overlay.appendChild(el);
+ });
 }
-async function pdfEditorCanvasClick(ev){
- const canvas=$('#pdfEditorCanvas'),f=$('#pdfEditorFile')?.files?.[0];if(!canvas||!f)return;if(ev.target!==canvas)return;
- if($('#pdfEditorAction').value==='edittext'){$('#pdfEditorPlaceInfo').textContent='Tap an existing word or text line on the PDF to edit it.';return;}
- const text=$('#pdfEditorText').value.trim();if(!text){$('#pdfEditorPlaceInfo').textContent='Please type the text first, then tap the PDF.';$('#pdfEditorText').focus();return}
- const rect=canvas.getBoundingClientRect(),sx=ev.clientX-rect.left,sy=ev.clientY-rect.top,px=sx*(canvas.width/rect.width)/pdfEditorScale,py=(canvas.height-sy*(canvas.height/rect.height))/pdfEditorScale;
- const size=Math.max(6,Math.min(96,Number($('#pdfEditorSize').value)||18));
- const item={index:Date.now()+Math.random(),page:Number($('#pdfEditorPage').value)||1,x:px,y:py,text,size,displaySize:size,color:$('#pdfEditorColor').value,font:$('#pdfEditorFont')?.value||'auto'};
- pdfEditorItems.push(item);pdfEditorSelected=item.index;$('#pdfEditorX').value=Math.round(px);$('#pdfEditorY').value=Math.round(py);
- $('#pdfEditorPlaceInfo').textContent='Text placed. You can drag it, edit the text, or add another text.';pdfEditorRenderItems();
-}
-function pdfEditorStartDrag(ev){
- ev.preventDefault();ev.stopPropagation();const el=ev.currentTarget,idx=Number(el.dataset.index),item=pdfEditorItems.find(x=>String(x.index)===String(idx));if(!item)return;
- pdfEditorSelected=item.index;$('#pdfEditorText').value=item.text;$('#pdfEditorSize').value=Math.round(item.size);$('#pdfEditorColor').value=item.color;
- const canvas=$('#pdfEditorCanvas'),rect=canvas.getBoundingClientRect();el.setPointerCapture?.(ev.pointerId);
- const move=e=>{const sx=Math.max(0,Math.min(rect.width,e.clientX-rect.left)),sy=Math.max(0,Math.min(rect.height,e.clientY-rect.top));item.x=sx*(canvas.width/rect.width)/pdfEditorScale;item.y=(canvas.height-sy*(canvas.height/rect.height))/pdfEditorScale;$('#pdfEditorX').value=Math.round(item.x);$('#pdfEditorY').value=Math.round(item.y);el.style.left=(item.x/canvas.width*100)+'%';el.style.top=((canvas.height-item.y)/canvas.height*100)+'%'};
- const up=()=>{window.removeEventListener('pointermove',move);window.removeEventListener('pointerup',up)};window.addEventListener('pointermove',move);window.addEventListener('pointerup',up);
-}
-function pdfEditorRemoveSelected(){
- if(pdfEditorSelected<0){$('#pdfEditorPlaceInfo').textContent='Select a text item first.';return}
- pdfEditorItems=pdfEditorItems.filter(x=>x.index!==pdfEditorSelected);pdfEditorSelected=-1;pdfEditorRenderItems();
-}
-function pdfEditorApplyInput(){
- const item=pdfEditorItems.find(x=>x.index===pdfEditorSelected); if(!item)return;
- item.text=$('#pdfEditorText').value; item.size=Math.max(6,Math.min(96,Number($('#pdfEditorSize').value)||18)); item.displaySize=item.size; item.color=$('#pdfEditorColor').value; item.font=$('#pdfEditorFont')?.value||'auto'; pdfEditorRenderItems();
+function pdfEditorUpdateMarker(){
+ const item=pdfEditorItems.find(x=>x.index===pdfEditorSelected);
+ if(item){item.text=$('#pdfEditorText')?.value||'';item.size=Math.max(6,Math.min(96,Number($('#pdfEditorSize')?.value)||18));item.displaySize=item.size;item.color=$('#pdfEditorColor')?.value||'#111827';item.font=$('#pdfEditorFont')?.value||'auto';pdfEditorRenderItems();}
 }
 function hexRgb(hex){const h=(hex||'#111827').replace('#',''),n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);return PDFLib.rgb(((n>>16)&255)/255,((n>>8)&255)/255,((n&255)/255))}
 
@@ -1408,7 +1394,7 @@ async function editPdf(){
    if(!items.length)throw Error('Select or place at least one text item on the PDF first.');
    for(const item of items){
     if(item.replace&&item.redaction){const rr=item.redaction;page.drawRectangle({x:rr.x,y:rr.y,width:Math.max(rr.width, item.text.length*item.size*.45),height:Math.max(rr.height,item.size*1.25),color:PDFLib.rgb(1,1,1)});}
-    let font; const fn=item.font||'auto'; if(fn==='Times-Roman')font=PDFLib.StandardFonts.TimesRoman; else if(fn==='Courier')font=PDFLib.StandardFonts.Courier; else font=PDFLib.StandardFonts.Helvetica;
+    let font; const fn=item.font||'auto'; if(fn==='Times-Roman')font=PDFLib.StandardFonts.TimesRoman; else if(fn==='Times-Bold')font=PDFLib.StandardFonts.TimesBold; else if(fn==='Times-Italic')font=PDFLib.StandardFonts.TimesItalic; else if(fn==='Courier')font=PDFLib.StandardFonts.Courier; else if(fn==='Helvetica-Bold')font=PDFLib.StandardFonts.HelveticaBold; else if(fn==='Helvetica-Oblique')font=PDFLib.StandardFonts.HelveticaOblique; else font=PDFLib.StandardFonts.Helvetica;
     page.drawText(item.text,{x:item.x,y:item.y,size:item.size,color:hexRgb(item.color),font});
    }
   }
