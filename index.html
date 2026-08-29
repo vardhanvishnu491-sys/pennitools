@@ -393,13 +393,19 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .pdf-edit-status{font-size:13px;color:#667085}
 @media(max-width:620px){.pdf-edit-stage-wrap{max-height:60vh}.pdf-edit-toolbar{padding:8px}.pdf-edit-control select{max-width:150px}}
 </style>
+
+<style id="site-trustbar">
+.site-trustbar{margin:0 auto 28px;width:min(1160px,calc(100% - 32px));padding:14px 18px;border:1px solid #dbe5f4;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.05);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;color:#475467;font-size:14px}.site-trustbar strong{color:#101828}.site-trustbar a{color:#2457c6;font-weight:750;text-decoration:none}.site-trustbar a:hover{text-decoration:underline}.site-trustbar .dot{color:#98a2b3}@media(max-width:620px){.site-trustbar{width:calc(100% - 22px);font-size:13px;text-align:center}}
+</style>
+
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PenniTools","url":"https://pennitools.in/","description":"Free calculators and practical browser-based tools for construction, carpentry, finance, vehicles, documents and everyday tasks.","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pennitools.in/?q={search_term_string}"},"query-input":"required name=search_term_string"}}</script>
 </head>
 <body>
 <header>
 <div class="wrap">
   <div class="brand"><span>Penni</span>Tools</div>
   <div class="tag">Simple tools. Everyday solutions for India.</div>
-  <input id="search" class="search" placeholder="Search calculators and tools…">
+  <input aria-label="Search PenniTools tools" id="search" class="search" placeholder="Search calculators and tools…">
   <nav id="cats"></nav>
 </div>
 </header>
@@ -1272,7 +1278,9 @@ async function pdfToText(){
  if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
  const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
-</head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
+</head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}
+<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>
+</body></html>`;
  dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
  out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
 }
@@ -1358,7 +1366,7 @@ function pdfEditorApplyStyle(item,el){
   el.style.fontSize=(item.size||12)+'px';
   el.style.fontWeight=item.bold?'700':'400';
   el.style.fontStyle=item.italic?'italic':'normal';
-  el.style.color='#111827';
+  el.style.color=item.color||'#111827';
   el.style.minWidth=Math.max(4,(item.width||20)*pdfEditorZoom)+'px';
 }
 let pdfEditorZoom=1;
