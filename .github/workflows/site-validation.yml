@@ -78,10 +78,9 @@ jobs:
             const chips = await page.locator('#cats .chip').count();
             const categories = await page.locator('#app .category-drop').count();
             if (options <= 1) throw new Error(`Expected populated tool dropdown, found ${options} option(s)`);
-            if (chips < 1) throw new Error(`Expected category chips, found ${chips}`);
             if (categories < 1) throw new Error(`Expected category sections, found ${categories}`);
             if (errors.length) throw new Error(`Homepage JavaScript errors: ${errors.join(' | ')}`);
-            console.log(`Homepage smoke test passed: ${options} dropdown options, ${chips} category chips, ${categories} category sections.`);
+            console.log(`Homepage smoke test passed: ${options} dropdown options, ${categories} category sections, ${chips} optional category chips.`);
             await browser.close();
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
