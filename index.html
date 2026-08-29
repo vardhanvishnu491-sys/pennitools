@@ -507,7 +507,7 @@ const tools=[
 ['Job','Leave Salary Calculator','Estimate salary value for paid leave days.','leave'],
 ['Everyday','Age Calculator','Calculate age from date of birth.','age'],
 ['Everyday','Date Difference','Calculate days between two dates.','datediff'],
-['Everyday','Percentage Calculator','Calculate percentages quickly.','percentage'],
+['Everyday','Percentage Calculator','Calculate percentages quickly.','percentagecalc'],
 ['Everyday','Discount Calculator','Calculate discount and final price.','discount'],
 ['Everyday','Unit Converter','Convert common length, weight and temperature units.','unit'],
 ['Everyday','Currency Converter','Convert currencies using a live public rate service when available.','currency'],
@@ -1111,7 +1111,8 @@ case'feetinch':{
  case'experience':case'datediff':{let a=new Date($('#start').value),b=new Date($('#end').value),days=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${days} days</strong><br>Approximately ${(days/365.25).toFixed(2)} years`);break}
  case'leave':out(`Estimated leave value: <strong>${money(num($('#salary').value)/num($('#workdays').value)*num($('#days').value))}</strong>`);break;
  case'age':{let d=new Date($('#dob').value),a=new Date($('#asof').value),y=a.getFullYear()-d.getFullYear(),m=a.getMonth()-d.getMonth(),day=a.getDate()-d.getDate();if(day<0){m--;day+=new Date(a.getFullYear(),a.getMonth(),0).getDate()}if(m<0){y--;m+=12}out(`Age: <strong>${y} years, ${m} months, ${day} days</strong>`);break}
- case'percentage':out(`<strong>${(num($('#value').value)/num($('#total').value)*100).toFixed(2)}%</strong>`);break;
+ case'percentagecalc':{let v=num($('#value').value),t=num($('#total').value);if(t===0)throw Error('Total cannot be zero.');out(`<strong>${(v/t*100).toFixed(2)}%</strong>`);break;}
+case'percentage':out(`<strong>${(num($('#value').value)/num($('#total').value)*100).toFixed(2)}%</strong>`);break;
  case'discount':{let p=num($('#price').value),d=num($('#discount').value),save=p*d/100;out(`Final price: <strong>${money(p-save)}</strong><br>You save: ${money(save)}`);break}
  case'unit':{let c=$('#uc').value,v=num($('#uv').value),a=$('#uf').value,b=$('#ut').value,res=convertUnit(c,v,a,b);out(`<strong>${res}</strong> ${b}`);break}
  case'simpleint':{let p=num($('#p').value),r=num($('#r').value),t=num($('#t').value),i=p*r*t/100;out(`Simple interest: <strong>${money(i)}</strong><br>Maturity amount: <strong>${money(p+i)}</strong>`);break}
@@ -1176,7 +1177,7 @@ case'countdown':{let d=new Date($('#date').value),ms=d-Date.now();if(ms<0){out('
 case'duration':{let x=num($('#h1').value)*60+num($('#m1').value)+num($('#h2').value)*60+num($('#m2').value);out(`Total duration: <strong>${Math.floor(x/60)}h ${x%60}m</strong>`);break}
 case'randomnum':{let a=Math.ceil(num($('#min').value)),b=Math.floor(num($('#max').value));if(b<a)throw Error('Maximum must be greater than minimum');out(`Random number: <strong>${Math.floor(Math.random()*(b-a+1))+a}</strong>`);break}
 case'numwords':{let n=Math.floor(num($('#amount').value));if(n<0||n>999999999999)throw Error('Enter 0 to 999,999,999,999');out(`<strong>${indianWords(n)}</strong>`);break}
-case'pcttotal':{let a=num($('#part').value),b=num($('#total').value);out(`<strong>${b?((a/b)*100).toFixed(2):0}%</strong>`);break}
+case'pcttotal':{let a=num($('#part').value),b=num($('#total').value);if(b===0)throw Error('Total cannot be zero.');out(`<strong>${(a/b*100).toFixed(2)}%</strong>`);break}
 case'ratio':{let a=Math.abs(Math.round(num($('#a').value))),b=Math.abs(Math.round(num($('#b').value)));let g=hcf(a,b);out(`Simplified ratio: <strong>${a/g}:${b/g}</strong>`);break}
 case'lcmhcf':{let a=Math.round(num($('#a').value)),b=Math.round(num($('#b').value)),g=hcf(a,b),l=Math.abs(a*b)/g;out(`HCF: <strong>${g}</strong><br>LCM: <strong>${l}</strong>`);break}
 case'priceweight':{let p=num($('#price').value),g=num($('#grams').value);out(`Price per 100g: <strong>${money(p/g*100)}</strong><br>Price per kg: ${money(p/g*1000)}`);break}
