@@ -1,0 +1,1515 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PenniTools provides free calculators for construction, carpentry, area, length, tiles, paint, concrete, finance and everyday calculations in India.">
+<meta name="theme-color" content="#155eef">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
+<meta name="author" content="PenniTools">
+<link rel="canonical" href="https://pennitools.in/">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://pennitools.in/">
+<meta property="og:title" content="PenniTools – Free Construction, Carpenter & Everyday Calculators">
+<meta property="og:description" content="Free calculators and practical tools for construction, carpentry, finance, vehicles, documents and everyday calculations in India.">
+<meta property="og:site_name" content="PenniTools">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="PenniTools – Free Calculators & Practical Tools">
+<meta name="twitter:description" content="Free calculators for construction, carpentry, finance, vehicles, documents and everyday life in India.">
+<title>PenniTools – Free Construction, Carpenter & Everyday Calculators</title>
+<style>
+:root{--navy:#0b1530;--blue:#2563eb;--blue2:#4f46e5;--cyan:#06b6d4;--ink:#101828;--muted:#667085;--bg:#f6f8fc;--card:#fff;--line:#e7ebf3;--shadow:0 16px 45px rgba(16,24,40,.09)}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;line-height:1.55}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 8% 8%,rgba(37,99,235,.08),transparent 24%),radial-gradient(circle at 92% 22%,rgba(6,182,212,.07),transparent 23%)}
+.wrap{width:min(1160px,calc(100% - 32px));margin:auto}
+header{position:relative;overflow:hidden;padding:28px 0 82px;color:#fff;background:linear-gradient(135deg,#071633,#123b91 52%,#2563eb);box-shadow:0 12px 35px rgba(11,21,48,.18)}
+header:after{content:"";position:absolute;left:-4%;right:-4%;bottom:-72px;height:125px;background:var(--bg);border-radius:50% 50% 0 0/70% 70% 0 0}
+.brand{font-size:clamp(34px,6vw,54px);font-weight:900;letter-spacing:-2.5px;margin-top:5px}.brand span{color:#91c7ff}
+.tag{font-size:18px;color:rgba(255,255,255,.82);margin:4px 0 25px}
+.search{display:block;width:min(780px,100%);padding:17px 21px;border:0;border-radius:16px;font-size:17px;color:var(--ink);outline:none;box-shadow:0 12px 30px rgba(0,0,0,.16)}
+.search:focus{box-shadow:0 0 0 4px rgba(147,197,253,.35),0 12px 30px rgba(0,0,0,.16)}
+#cats{display:flex;flex-wrap:wrap;gap:9px;margin-top:18px}
+.chip{border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.11);color:#fff;padding:9px 14px;border-radius:999px;font-weight:750;cursor:pointer;backdrop-filter:blur(8px)}
+.chip:hover,.chip.active{background:#fff;color:#123b91}
+.selector-wrap{position:relative;z-index:5;margin:-22px auto 20px;width:min(1160px,calc(100% - 32px));padding:18px;background:#fff;border:1px solid var(--line);border-radius:20px;box-shadow:var(--shadow);display:flex;gap:12px;align-items:center}
+.selector-title{font-weight:850;white-space:nowrap}.tool-select{flex:1;min-width:0;padding:13px 15px;border:1px solid #d7deea;border-radius:12px;background:#fff;color:var(--ink);font-size:16px;outline:none}
+.tool-select:focus{border-color:#7aa2f7;box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+#app{padding-bottom:70px}
+.section{margin:36px 0 14px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:15px;margin-bottom:15px}
+.section h2{margin:0;font-size:clamp(25px,4vw,33px);letter-spacing:-1px}
+.section > p{margin:3px 0 0;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.card{display:flex;flex-direction:column;min-height:205px;padding:23px;background:var(--card);border:1px solid var(--line);border-radius:19px;box-shadow:0 5px 18px rgba(16,24,40,.045);transition:.2s}
+.card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#c9d7f6}
+.card h3{margin:0 0 7px;font-size:20px;letter-spacing:-.3px}.card p{margin:0 0 18px;color:var(--muted);flex:1}
+.btn{border:0;border-radius:11px;padding:11px 16px;background:linear-gradient(135deg,var(--blue),var(--blue2));color:#fff;font-weight:800;cursor:pointer;box-shadow:0 7px 16px rgba(37,99,235,.2)}
+.btn:hover{filter:brightness(1.05);transform:translateY(-1px)}
+.badge{display:inline-flex;width:max-content;padding:4px 9px;border-radius:999px;background:#edf4ff;color:#2457c6;font-size:12px;font-weight:800;margin-bottom:12px}
+.empty{padding:35px;text-align:center;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:18px}
+.modal{position:fixed;inset:0;z-index:20;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(7,15,35,.68);backdrop-filter:blur(6px)}
+.modal.show{display:flex}.panel{position:relative;width:min(680px,100%);max-height:90vh;overflow:auto;padding:28px;background:#fff;border-radius:24px;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.close{position:absolute;right:15px;top:13px;width:38px;height:38px;border:0;border-radius:50%;background:#eef2f7;color:#344054;font-size:25px;cursor:pointer}
+.panel h2{margin:0 42px 20px 0;font-size:27px}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.row>div{display:flex;flex-direction:column;gap:6px}.row label{font-size:14px;font-weight:750;color:#344054}.row input,.row select{padding:12px;border:1px solid #d7deea;border-radius:10px;font-size:16px}
+#calc{margin-top:17px}.notice{padding:13px 15px;border-radius:12px;background:#fff7e8;color:#8a5b00;border:1px solid #f6dfac;margin-bottom:15px}.small{font-size:13px;color:var(--muted)}#out{margin-top:17px;padding:15px;border-radius:13px;background:#f4f7ff;border:1px solid #dce6ff}
+footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}footer strong{color:#fff}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.wrap{width:min(100% - 22px,1160px)}header{padding:25px 0 70px}.tag{font-size:16px}.selector-wrap{width:calc(100% - 22px);margin:-18px auto 10px;display:block}.selector-title{display:block;margin-bottom:8px}.tool-select{width:100%}.grid{grid-template-columns:1fr}.card{min-height:180px}.row{grid-template-columns:1fr}.panel{padding:22px}.chip{padding:8px 11px;font-size:13px}}
+</style>
+
+<style>
+.category-dropdown{
+  margin:18px 0;
+  background:#fff;
+  border:1px solid #e5eaf3;
+  border-radius:20px;
+  box-shadow:0 7px 24px rgba(15,23,42,.06);
+  overflow:hidden;
+}
+.category-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:22px 24px;
+  border:0;
+  background:linear-gradient(180deg,#fff,#f9fbff);
+  color:#0b1220;
+  cursor:pointer;
+  text-align:left;
+}
+.category-title{
+  font-size:clamp(21px,4vw,29px);
+  font-weight:800;
+  letter-spacing:-.5px;
+}
+.category-chevron{
+  width:38px;
+  height:38px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  background:#eef4ff;
+  color:#2563eb;
+  font-size:25px;
+  line-height:1;
+  transition:transform .2s ease,background .2s ease;
+}
+.category-toggle[aria-expanded="true"] .category-chevron{
+  transform:rotate(180deg);
+  background:#2563eb;
+  color:#fff;
+}
+.category-content{
+  padding:0 20px 20px;
+  border-top:1px solid #edf0f5;
+}
+.category-content > p{
+  padding-top:16px;
+}
+.category-content .tool{
+  margin-top:14px;
+}
+</style>
+
+
+
+<style>
+.category-drop{
+  margin:18px 0;
+  border:1px solid #e2e8f0;
+  border-radius:24px;
+  background:rgba(255,255,255,.94);
+  box-shadow:0 10px 30px rgba(15,23,42,.07);
+  overflow:hidden;
+}
+.category-drop summary{
+  list-style:none;
+  cursor:pointer;
+  min-height:82px;
+  padding:20px 22px;
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:linear-gradient(135deg,#ffffff,#f7faff);
+}
+.category-drop summary::-webkit-details-marker{display:none}
+.cat-icon{
+  width:48px;height:48px;flex:0 0 48px;
+  display:grid;place-items:center;
+  border-radius:15px;background:#eef4ff;font-size:25px;
+}
+.category-drop summary span:nth-child(2){flex:1}
+.category-drop summary strong{
+  display:block;font-size:23px;line-height:1.2;
+  letter-spacing:-.4px;color:#0b1220;
+}
+.category-drop summary small{
+  display:block;margin-top:4px;color:#667085;font-size:14px;
+}
+.cat-arrow{
+  width:38px;height:38px;display:grid;place-items:center;
+  border-radius:50%;background:#eef4ff;color:#2563eb;
+  font-size:24px;transition:transform .2s ease;
+}
+.category-drop[open] .cat-arrow{transform:rotate(180deg);background:#2563eb;color:#fff}
+.category-tools{
+  padding:8px 18px 20px;
+  border-top:1px solid #edf1f6;
+}
+.category-tools .tool{
+  width:100%;
+  margin:12px 0 0;
+  min-height:0;
+}
+@media(max-width:620px){
+  .category-drop summary{padding:17px 15px;min-height:74px}
+  .cat-icon{width:42px;height:42px;flex-basis:42px;font-size:22px}
+  .category-drop summary strong{font-size:19px}
+  .category-drop summary small{font-size:13px}
+  .category-tools{padding:7px 10px 15px}
+}
+</style>
+
+
+<style>
+/* PenniTools category-only homepage */
+.category-drop{
+  margin:18px 0;
+  border:1px solid #dfe6f2;
+  border-radius:24px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 10px 32px rgba(15,23,42,.07);
+  overflow:hidden;
+  transition:box-shadow .2s ease,transform .2s ease;
+}
+.category-drop:hover{box-shadow:0 14px 38px rgba(15,23,42,.10)}
+.category-drop summary{
+  list-style:none;
+  cursor:pointer;
+  min-height:92px;
+  padding:20px 24px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  background:linear-gradient(135deg,#fff 0%,#f8fbff 100%);
+}
+.category-drop summary::-webkit-details-marker{display:none}
+.cat-icon{
+  width:54px;height:54px;flex:0 0 54px;
+  display:grid;place-items:center;
+  border-radius:17px;
+  background:linear-gradient(135deg,#eef4ff,#e9f8ff);
+  font-size:28px;
+}
+.cat-info{flex:1;min-width:0}
+.cat-info strong{
+  display:block;
+  color:#0b1220;
+  font-size:25px;
+  line-height:1.2;
+  letter-spacing:-.5px;
+}
+.cat-info small{
+  display:block;
+  margin-top:5px;
+  color:#667085;
+  font-size:14px;
+}
+.cat-arrow{
+  width:42px;height:42px;flex:0 0 42px;
+  display:grid;place-items:center;
+  border-radius:50%;
+  background:#eef4ff;
+  color:#2563eb;
+  font-size:27px;
+  transition:.2s ease;
+}
+.category-drop[open] .cat-arrow{
+  transform:rotate(180deg);
+  color:#fff;
+  background:linear-gradient(135deg,#2563eb,#4f46e5);
+}
+.category-tools{
+  padding:0 20px 20px;
+  border-top:1px solid #edf1f6;
+  background:#fbfcff;
+}
+.category-tools .card{
+  margin-top:16px;
+}
+@media(max-width:620px){
+  .category-drop{border-radius:19px;margin:13px 0}
+  .category-drop summary{min-height:78px;padding:16px 15px;gap:12px}
+  .cat-icon{width:45px;height:45px;flex-basis:45px;border-radius:14px;font-size:23px}
+  .cat-info strong{font-size:19px}
+  .cat-info small{font-size:12px}
+  .cat-arrow{width:36px;height:36px;flex-basis:36px;font-size:23px}
+  .category-tools{padding:0 11px 14px}
+}
+</style>
+
+
+<style>
+.audio-transcriber{display:flex;flex-direction:column;gap:15px}.audio-drop{border:2px dashed #b8c9ea;border-radius:18px;padding:25px;text-align:center;background:linear-gradient(135deg,#f8fbff,#f2f7ff)}.audio-icon{font-size:42px}.audio-drop h3{margin:5px 0}.audio-drop p{color:var(--muted);margin:0 0 15px}.audio-drop input{position:absolute;left:-9999px}.audio-options{margin-top:2px}.audio-transcriber textarea{min-height:260px;width:100%;padding:15px;border:1px solid #d7deea;border-radius:13px;font:15px/1.6 inherit;resize:vertical}.audio-actions{display:flex;gap:10px;flex-wrap:wrap}.btn.secondary{background:#eef4ff;color:#2457c6;box-shadow:none}.audio-transcriber .notice{margin:0}.audio-transcriber select{padding:12px;border:1px solid #d7deea;border-radius:10px;background:#fff;font-size:15px}.analysis-box{border:1px solid #d7deea;border-radius:16px;padding:18px;background:linear-gradient(135deg,#f8fbff,#fff)}.analysis-box h3{margin-top:0}.analysis-box h4{margin-bottom:6px}.analysis-box ul{margin-top:6px;padding-left:22px}
+</style>
+
+<style>
+.audio-ai{padding:18px;border:1px solid #dfe6f2;border-radius:20px;background:linear-gradient(135deg,#fff,#f7faff)}
+.audio-limit{padding:13px 15px;border-radius:13px;background:#eef6ff;color:#164e9b;margin-bottom:15px}
+.audio-ai input[type=file]{width:100%;padding:12px;border:1px dashed #b9c7df;border-radius:12px;background:#fff}
+.audio-ai textarea{min-height:170px;margin-top:14px}
+.audio-status{margin:14px 0;padding:12px;border-radius:12px;background:#f5f7fb;color:#475467}
+.audio-ai .btn{margin:6px 5px 0 0}
+
+/* PenniTools V9 — clean category-first homepage */
+#cats{display:none!important}
+.category-note{
+  display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+  margin-top:18px;padding:11px 15px;
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:14px;background:rgba(255,255,255,.09);
+  color:#fff;font-size:14px;backdrop-filter:blur(10px);
+}
+.category-note-text{opacity:.72}
+.category-drop{
+  margin:18px 0;
+  border:1px solid #dfe6f1;
+  border-radius:24px;
+  background:rgba(255,255,255,.97);
+  box-shadow:0 12px 34px rgba(15,23,42,.07);
+  overflow:hidden;
+  transition:box-shadow .2s ease,border-color .2s ease,transform .2s ease;
+}
+.category-drop:hover{border-color:#cbd8ee;box-shadow:0 16px 42px rgba(15,23,42,.10)}
+.category-drop[open]{border-color:#b9cdf4;box-shadow:0 18px 50px rgba(37,99,235,.10)}
+.category-drop summary{
+  list-style:none;cursor:pointer;min-height:94px;padding:20px 22px;
+  display:flex;align-items:center;gap:15px;
+  background:linear-gradient(135deg,#fff,#f7faff);
+  -webkit-tap-highlight-color:transparent;
+}
+.category-drop summary::-webkit-details-marker{display:none}
+.cat-icon{
+  width:54px;height:54px;flex:0 0 54px;display:grid;place-items:center;
+  border-radius:17px;background:linear-gradient(135deg,#edf4ff,#e8ecff);
+  font-size:28px;box-shadow:inset 0 0 0 1px rgba(37,99,235,.06)
+}
+.cat-info{flex:1;min-width:0}
+.cat-info strong{display:block;font-size:22px;letter-spacing:-.4px}
+.cat-info small{display:block;margin-top:3px;color:#667085;font-size:13px}
+.cat-arrow{
+  width:40px;height:40px;display:grid;place-items:center;flex:0 0 40px;
+  border-radius:50%;background:#eef4ff;color:#2457c6;font-size:24px;
+  transition:transform .22s ease,background .22s ease,color .22s ease;
+}
+.category-drop[open] .cat-arrow{transform:rotate(180deg);background:#2563eb;color:#fff}
+.category-tools{
+  padding:0 20px 20px;
+  border-top:1px solid #edf1f6;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;
+}
+.category-tools .card{margin-top:15px}
+.category-tools .badge{margin-bottom:10px}
+.category-tools .btn{width:100%;margin-top:auto}
+@media(max-width:900px){.category-tools{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){
+  .category-note{font-size:13px}
+  .category-note-text{width:100%;padding-left:23px}
+  .category-drop{border-radius:20px}
+  .category-drop summary{min-height:82px;padding:16px}
+  .cat-icon{width:48px;height:48px;flex-basis:48px;font-size:24px}
+  .cat-info strong{font-size:19px}
+  .cat-info small{font-size:12px;line-height:1.35}
+  .cat-arrow{width:36px;height:36px;flex-basis:36px}
+  .category-tools{grid-template-columns:1fr;padding:0 14px 14px}
+  .category-tools .card{margin-top:12px}
+}
+
+.app-intro{margin:30px 0 8px}
+.app-intro h2{margin:0;font-size:clamp(25px,4vw,34px);letter-spacing:-1px}
+.app-intro p{margin:5px 0 0;color:var(--muted)}
+
+.pdf-editor .notice{margin-bottom:15px}
+.pdf-editor .drop{margin-bottom:15px}
+.pdf-editor input[type=color]{cursor:pointer}
+.pdf-editor .secondary{background:#eef2f7;color:#1d2939;border:1px solid #d0d5dd}
+
+</style>
+
+<style>
+.trust-hero{margin:24px 0;padding:28px;border-radius:26px;background:linear-gradient(135deg,#0f3c91,#2563eb 55%,#5b7cfa);color:#fff;box-shadow:0 18px 45px rgba(37,99,235,.18)}
+.trust-hero h2{font-size:clamp(27px,5vw,42px);margin:8px 0;letter-spacing:-1.2px}
+.trust-hero p{max-width:760px;margin:0;color:rgba(255,255,255,.86);line-height:1.65}
+.eyebrow{font-size:11px;letter-spacing:1.4px;font-weight:800;color:#3267d6}
+.trust-hero .eyebrow{color:#dbe8ff}
+.popular-section,.content-section{margin:26px 0}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:14px}
+.section-head h2{margin:4px 0 0;font-size:28px}
+.section-hint{color:#667085;font-size:13px}
+.popular-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.popular-grid button{text-align:left;padding:18px;border:1px solid #e2e8f0;border-radius:18px;background:#fff;box-shadow:0 8px 25px rgba(15,23,42,.05);cursor:pointer;font:inherit}
+.popular-grid button:hover{border-color:#b8caf0;transform:translateY(-1px)}
+.popular-grid strong,.popular-grid small{display:block;margin-top:7px}.popular-grid small{color:#667085}
+.content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.content-grid article,.info-page{padding:22px;border:1px solid #e5e9f0;border-radius:20px;background:#fff}
+.content-grid h2{margin:6px 0}.content-grid h3{margin-top:0}.content-grid p,.info-page p{color:#596579;line-height:1.7}
+.info-page{margin:18px 0}.info-page h2{margin:6px 0 10px}
+.footer-links{display:flex;flex-wrap:wrap;gap:16px;margin-top:15px}.footer-links a{color:inherit;text-decoration:none;opacity:.85}
+@media(max-width:700px){.popular-grid,.content-grid{grid-template-columns:1fr}.section-head{align-items:start;flex-direction:column}}
+</style>
+
+
+<style>
+.pdf-editor{display:flex;flex-direction:column;gap:14px}
+.pdf-editor .notice{margin:0}
+.pdf-edit-toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;padding:10px;border:1px solid #dfe6f2;border-radius:14px;background:#f7f9fc}
+.pdf-edit-toolbar .btn{min-width:0}
+.pdf-edit-toolbar .btn.active{outline:3px solid rgba(37,99,235,.18);transform:none}
+.pdf-edit-control{display:flex;align-items:center;gap:6px}
+.pdf-edit-control label{font-size:12px;font-weight:800;color:#475467}
+.pdf-edit-control select,.pdf-edit-control input{padding:9px 10px;border:1px solid #d0d5dd;border-radius:9px;background:#fff;font-size:14px}
+.pdf-edit-control input[type=number]{width:76px}
+.pdf-edit-control input[type=color]{width:44px;height:38px;padding:3px}
+.pdf-edit-pages{display:flex;gap:8px;overflow:auto;padding:5px 2px 8px}
+.pdf-edit-page-thumb{flex:0 0 92px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;padding:4px;cursor:pointer}
+.pdf-edit-page-thumb.selected{border-color:#2563eb;box-shadow:0 0 0 3px rgba(37,99,235,.12)}
+.pdf-edit-page-thumb canvas{display:block;width:100%;height:auto}
+.pdf-edit-page-thumb div{text-align:center;font-size:11px;font-weight:800;color:#475467;padding-top:3px}
+.pdf-edit-stage-wrap{border:1px solid #dfe6f2;border-radius:16px;background:#eef2f7;padding:10px;overflow:auto;max-height:68vh}
+.pdf-edit-stage{position:relative;width:max-content;margin:auto;background:#fff;box-shadow:0 8px 28px rgba(15,23,42,.14);touch-action:none}
+.pdf-edit-stage canvas{display:block;background:#fff}
+.pdf-edit-text-layer{position:absolute;inset:0;pointer-events:none}
+.pdf-edit-text{position:absolute;margin:0;padding:0 2px;border:1px solid transparent;background:transparent;color:transparent;white-space:pre;line-height:1;min-width:4px;min-height:8px;pointer-events:auto;cursor:text;overflow:visible;transform-origin:left top}
+.pdf-edit-text.selected{border-color:#2563eb;background:rgba(37,99,235,.08);color:rgba(0,0,0,.01)}
+.pdf-edit-text.changed{background:rgba(255,249,196,.65)}
+.pdf-edit-text.deleted{text-decoration:line-through;opacity:.45;background:rgba(239,68,68,.08)}
+.pdf-edit-text:focus{outline:none;border-color:#2563eb;background:rgba(255,255,255,.9);color:#111827}
+.pdf-edit-hint{padding:10px 12px;border-radius:12px;background:#eef6ff;color:#164e9b;font-size:13px}
+.pdf-edit-status{font-size:13px;color:#667085}
+@media(max-width:620px){.pdf-edit-stage-wrap{max-height:60vh}.pdf-edit-toolbar{padding:8px}.pdf-edit-control select{max-width:150px}}
+</style>
+</head>
+<body>
+<header>
+<div class="wrap">
+  <div class="brand"><span>Penni</span>Tools</div>
+  <div class="tag">Simple tools. Everyday solutions for India.</div>
+  <input id="search" class="search" placeholder="Search calculators and tools…">
+  <nav id="cats"></nav>
+</div>
+</header>
+<section class="trust-hero">
+  <div>
+    <span class="eyebrow">FREE • FAST • MOBILE FRIENDLY</span>
+    <h2>Everyday calculators and practical tools for India</h2>
+    <p>PenniTools helps you calculate money, vehicle, construction, document and everyday measurements in seconds. No account is required for the basic tools.</p>
+  </div>
+</section>
+<section class="popular-section">
+  <div class="section-head"><div><span class="eyebrow">POPULAR</span><h2>Tools people use most</h2></div><span class="section-hint">Choose a category below to explore</span></div>
+  <div class="popular-grid">
+    <button onclick="openTool('carpenterarea','Carpenter Area / Square Feet Calculator')">🪚 <strong>Square Feet</strong><small>Inches × inches → sq ft</small></button>
+    <button onclick="openTool('emi','EMI Calculator')">💰 <strong>EMI Calculator</strong><small>Estimate monthly loan payment</small></button>
+    <button onclick="openTool('fuel','Fuel Cost Calculator')">⛽ <strong>Fuel Cost</strong><small>Estimate your trip fuel cost</small></button>
+    <button onclick="openTool('tripcost','Trip Cost Calculator')">🚗 <strong>Trip Cost</strong><small>Plan your travel expenses</small></button>
+    <button onclick="openTool('pdfeditor','PDF Editor')">📄 <strong>PDF Editor</strong><small>Work with PDF files</small></button>
+    <button onclick="openTool('audiotranscribe','Audio Transcriber')">🎙️ <strong>Audio Transcriber</strong><small>Turn audio into text</small></button>
+  </div>
+</section>
+
+<div class="selector-wrap">
+  <div class="selector-title">⚡ Open a calculator</div>
+  <select id="toolSelect" class="tool-select" aria-label="Select a calculator or tool">
+    <option value="">Select a calculator or tool…</option>
+  </select>
+</div>
+<main class="wrap" id="app"></main>
+
+<section class="content-section">
+  <div class="content-grid">
+    <article><span class="eyebrow">WHY PENNITOOLS</span><h2>Simple tools with clear answers</h2><p>PenniTools is designed for quick calculations on phones and computers. Each calculator explains the result and, where useful, shows the formula so you can check the answer yourself.</p></article>
+    <article><h3>🪚 Carpenter & Construction</h3><p>Calculate square feet from inches, feet, centimetres or millimetres. For example, 77 × 33 inches is 2,541 square inches, which is 17.646 square feet.</p></article>
+    <article><h3>💰 Money & Finance</h3><p>Use practical calculators for loans, salary, savings, taxes and other everyday financial estimates. Results are estimates and should be checked against your lender or official documents.</p></article>
+    <article><h3>🔒 Privacy-first tools</h3><p>Where a tool is designed to process a file in your browser, your selected file is not intentionally uploaded by PenniTools. Check each tool's instructions before using sensitive documents.</p></article>
+  </div>
+</section>
+<section id="about" class="info-page"><span class="eyebrow">ABOUT</span><h2>About PenniTools</h2><p>PenniTools is an independent collection of free calculators and practical online tools created to make everyday tasks easier. Our goal is to provide simple interfaces, transparent formulas and useful results without unnecessary complexity.</p></section>
+<section id="contact" class="info-page"><span class="eyebrow">CONTACT</span><h2>Contact PenniTools</h2><p>For feedback, broken tools, suggestions or partnership enquiries, please contact the PenniTools site owner using the contact method published on the website. Please do not send passwords, bank credentials or other sensitive information.</p></section>
+<section id="privacy" class="info-page"><span class="eyebrow">PRIVACY</span><h2>Privacy Policy</h2><p>PenniTools is designed to minimize unnecessary collection of personal information. Some tools may process files locally in your browser. Third-party services, analytics, advertising and embedded services may process information according to their own policies when they are enabled.</p><p>We do not ask users to enter passwords, banking credentials or payment card details into calculators. Do not submit sensitive personal information unless a future feature explicitly requires it and explains why.</p></section>
+<section id="terms" class="info-page"><span class="eyebrow">TERMS</span><h2>Terms & Conditions</h2><p>PenniTools provides calculators and tools for general informational and practical purposes. Results are estimates and are not professional financial, legal, medical, engineering or construction advice. You are responsible for checking important results before relying on them.</p></section>
+<section id="disclaimer" class="info-page"><span class="eyebrow">DISCLAIMER</span><h2>Disclaimer</h2><p>Calculator outputs can contain rounding or input-related errors. For regulated, financial, health, construction or other high-stakes decisions, verify the result with an appropriate professional or official source.</p></section>
+<section id="affiliate" class="info-page"><span class="eyebrow">DISCLOSURE</span><h2>Affiliate Disclosure</h2><p>PenniTools may eventually use affiliate links. If you purchase something through an eligible affiliate link, PenniTools may receive a commission at no additional cost to you. Affiliate recommendations will be relevant to the tool or topic being viewed.</p></section>
+<footer><div class="wrap">© 2026 PenniTools · Free browser-based tools</div><div class="footer-links">
+<a href="#about">About</a><a href="#contact">Contact</a><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#disclaimer">Disclaimer</a><a href="#affiliate">Affiliate Disclosure</a>
+</div></footer>
+
+<div id="modal" class="modal"><div class="panel"><button class="close" onclick="closeTool()">×</button><div id="toolBody"></div></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
+const cats=['All','Money & Finance','Document & Image','Audio & AI','Vehicle','Job','Everyday','Carpenter & Construction','Health & Fitness','Education'];
+const tools=[
+['Money & Finance','CTC → In-Hand Salary','Estimate monthly take-home salary.','ctc'],
+['Money & Finance','EMI Calculator','Calculate EMI, interest and repayment.','emi'],
+['Money & Finance','PF Calculator','Estimate employee and employer PF.','pf'],
+['Money & Finance','GST Calculator','Add or remove GST from a price.','gst'],
+['Money & Finance','Income Tax Calculator','Estimate Indian income tax with editable slabs.','tax'],
+['Money & Finance','Salary Hike Calculator','Calculate revised salary after a hike.','hike'],
+['Money & Finance','Loan Eligibility Calculator','Estimate a loan amount from income and EMI capacity.','elig'],
+['Money & Finance','SIP Calculator','Estimate SIP maturity and gains.','sip'],
+['Money & Finance','FD Calculator','Estimate fixed-deposit maturity.','fd'],
+['Money & Finance','RD Calculator','Estimate recurring-deposit maturity.','rd'],
+['Money & Finance','Gratuity Calculator','Estimate gratuity under the standard 15/26 formula.','gratuity'],
+['Money & Finance','PPF Calculator','Estimate PPF maturity with annual contributions.','ppf'],
+['Money & Finance','NPS Calculator','Estimate NPS corpus from monthly investment.','nps'],
+['Money & Finance','Home Loan Calculator','Calculate home-loan EMI and repayment.','home'],
+['Document & Image','Word → PDF','Print/save a text document as PDF.','wordpdf'],
+['Document & Image','PDF → Word','Extract PDF text into an editable document.','pdfword'],
+['Document & Image','PDF → JPG','Render PDF pages as JPG images.','pdfjpg'],
+['Document & Image','JPG → PDF','Turn images into a PDF.','jpgpdf'],
+['Document & Image','PDF Compressor','Reduce PDF size where possible.','pdfcompress'],
+['Document & Image','Merge PDF','Merge multiple PDFs into one.','mergepdf'],
+['Document & Image','Split PDF','Extract selected PDF pages.','splitpdf'],
+['Document & Image','PDF Page Remover','Remove selected pages from a PDF.','removePages'],
+['Document & Image','PDF Editor','Edit a PDF in your browser: add text, rotate pages, remove pages and add watermarks.','pdfeditor'],
+['Document & Image','PDF Page Reorder','Reorder PDF pages.','reorder'],
+['Document & Image','PDF Lock / Unlock','Create a copy or export a PDF.','pdflock'],
+['Document & Image','Image Cropper','Crop an image and download it.','crop'],
+['Document & Image','Image Resizer','Resize an image by width/height.','resize'],
+['Document & Image','Image Compressor','Compress a JPG/PNG in your browser.','compress'],
+['Document & Image','JPG ↔ PNG','Convert between common image formats.','convert'],
+['Document & Image','Signature Maker','Draw a signature and download PNG.','signature'],
+['Document & Image','Passport Photo Maker','Create a standard 35×45 mm style photo.','passport'],
+['Vehicle','Mileage Calculator','Calculate vehicle mileage and fuel use.','mileage'],
+['Vehicle','Fuel Cost Calculator','Estimate fuel required and trip cost.','fuel'],
+['Vehicle','EV Charging Cost Calculator','Estimate EV charging cost.','ev'],
+['Vehicle','Trip Cost Calculator','Split a trip cost between passengers.','trip'],
+['Vehicle','Car Loan EMI','Calculate car-loan EMI.','carloan'],
+['Vehicle','Insurance Calculator','Estimate annual insurance premium.','insurance'],
+['Job','Increment Calculator','Calculate revised salary after an increment.','increment'],
+['Job','Notice Period Calculator','Calculate last working day from a notice period.','notice'],
+['Job','Experience Calculator','Calculate experience between two dates.','experience'],
+['Job','Leave Salary Calculator','Estimate salary value for paid leave days.','leave'],
+['Everyday','Age Calculator','Calculate age from date of birth.','age'],
+['Everyday','Date Difference','Calculate days between two dates.','datediff'],
+['Everyday','Percentage Calculator','Calculate percentages quickly.','percentage'],
+['Everyday','Discount Calculator','Calculate discount and final price.','discount'],
+['Everyday','Unit Converter','Convert common length, weight and temperature units.','unit'],
+['Everyday','Currency Converter','Convert currencies using a live public rate service when available.','currency'],
+['Money & Finance','Simple Interest Calculator','Calculate simple interest and maturity amount.','simpleint'],
+['Money & Finance','Compound Interest Calculator','Calculate compound interest and maturity amount.','compoundint'],
+['Money & Finance','Inflation Calculator','Estimate future value after inflation.','inflation'],
+['Money & Finance','CAGR Calculator','Calculate compound annual growth rate.','cagr'],
+['Money & Finance','Loan Comparison Calculator','Compare two loans by EMI and total interest.','loancompare'],
+['Money & Finance','Salary Breakdown Calculator','Break annual salary into monthly gross and deductions.','salarybreak'],
+['Document & Image','PDF Page Numbering','Add page numbers to every PDF page.','pagenumber'],
+['Document & Image','Rotate PDF','Rotate all PDF pages by 90, 180 or 270 degrees.','rotatepdf'],
+['Vehicle','Petrol vs Diesel Cost','Compare running cost of petrol and diesel vehicles.','petroldiesel'],
+['Vehicle','EV vs Petrol Cost','Compare estimated EV and petrol running costs.','evpetrol'],
+['Vehicle','Car Depreciation Calculator','Estimate vehicle value after depreciation.','depreciation'],
+['Job','Working Days Calculator','Count working days between two dates.','workingdays'],
+['Job','Overtime Calculator','Estimate overtime pay from salary and hours.','overtime'],
+['Everyday','BMI Calculator','Calculate BMI from height and weight.','bmi'],
+['Everyday','Tip Calculator','Calculate tip and split the bill.','tip'],
+['Everyday','Time Zone Converter','Convert a time between common time zones.','timezone'],
+['Money & Finance','Loan Interest Calculator','Calculate total interest and repayment.','loaninterest'],
+['Money & Finance','Monthly Budget Calculator','Plan monthly income, savings and expenses.','budget'],
+['Money & Finance','Net Worth Calculator','Estimate assets minus liabilities.','networth'],
+['Money & Finance','Emergency Fund Calculator','Estimate months of expenses covered by savings.','emergency'],
+['Money & Finance','Simple ROI Calculator','Calculate return on an investment.','roi'],
+['Money & Finance','Markup Calculator','Calculate selling price from cost and markup.','markup'],
+['Money & Finance','Margin Calculator','Calculate profit margin from cost and selling price.','margin'],
+['Money & Finance','GST Split Calculator','Calculate taxable value and GST from a total price.','gstsplit'],
+['Money & Finance','Salary to Monthly Calculator','Convert annual salary to monthly salary.','annualmonthly'],
+['Money & Finance','Salary to Annual Calculator','Convert monthly salary to annual salary.','monthlyannual'],
+['Vehicle','Mileage Calculator','Calculate vehicle mileage from fuel used.','mileagecalc'],
+['Vehicle','Fuel Required Calculator','Calculate fuel needed for a trip.','fuelrequired'],
+['Vehicle','Road Trip Cost Splitter','Split trip cost between passengers.','tripsplit'],
+['Vehicle','EMI vs Cash Calculator','Compare vehicle loan cost with cash purchase.','emivscash'],
+['Vehicle','Car Loan Interest Calculator','Estimate total interest on a car loan.','carinterest'],
+['Vehicle','EV Charging Cost Calculator','Estimate the cost of charging an EV.','evcharge'],
+['Vehicle','EV Range Calculator','Estimate range from battery capacity and efficiency.','evrange'],
+['Vehicle','Toll Cost Per Person','Split toll cost among passengers.','tollsplit'],
+['Everyday','Age in Days Calculator','Estimate age in total days.','agedays'],
+['Everyday','Leap Year Checker','Check whether a year is a leap year.','leap'],
+['Everyday','Days in Month','Find the number of days in a month.','monthdays'],
+['Everyday','Week Number Calculator','Find the ISO week number for a date.','weeknum'],
+['Everyday','Countdown Calculator','Calculate time remaining until a date/time.','countdown'],
+['Everyday','Time Duration Calculator','Add hours and minutes.','duration'],
+['Everyday','Random Number Generator','Generate random numbers in a chosen range.','randomnum'],
+['Everyday','Number to Words (India)','Convert an amount into Indian number words.','numwords'],
+['Everyday','Percentage of Total','Find what percentage one number is of another.','pcttotal'],
+['Everyday','Ratio Calculator','Simplify and compare two ratios.','ratio'],
+['Everyday','LCM & HCF Calculator','Find LCM and HCF of two numbers.','lcmhcf'],
+['Everyday','Unit Price by Weight','Compare price per gram or kilogram.','priceweight'],
+
+['Carpenter & Construction','Feet & Inches Calculator','Convert feet/inches, calculate decimal feet and total length.','feetinch'],
+['Carpenter & Construction','Carpenter Area / Square Feet Calculator','Calculate square feet from length × width measurements, including multiple pieces.','carpenterarea'],
+['Carpenter & Construction','Board Foot Calculator','Calculate lumber volume in board feet and estimate quantity.','boardfoot'],
+['Carpenter & Construction','Wood / Lumber Cost Calculator','Estimate total wood cost from size, quantity and price per unit.','woodcost'],
+['Carpenter & Construction','Cut List Calculator','Calculate total material length and estimated waste from a simple cut list.','cutlist'],
+['Carpenter & Construction','Room Area & Material Calculator','Calculate floor/wall area and estimate material quantity.','roommaterial'],
+['Carpenter & Construction','Staircase Calculator','Estimate risers, treads and staircase run from floor height.','stair'],
+
+['Job','Notice Period Calculator','Find your last working date from a notice period.','noticecalc'],
+['Job','Experience Calculator','Calculate years and months of experience.','experiencecalc'],
+['Job','Overtime Pay Calculator','Estimate overtime pay from hourly salary.','otpay'],
+['Job','Leave Balance Calculator','Calculate remaining leave balance.','leavebalance'],
+['Health & Fitness','Calorie Deficit Calculator','Estimate a daily calorie target from maintenance calories.','caldeficit'],
+['Health & Fitness','Water Intake Calculator','Estimate daily water intake from body weight.','water'],
+['Health & Fitness','Body Fat Estimate','Estimate body-fat percentage using BMI inputs.','bodyfat'],
+['Education','Percentage to CGPA','Convert percentage to CGPA using a common 10-point formula.','pctcgpa'],
+['Education','Marks Percentage Calculator','Calculate percentage from marks obtained and maximum marks.','markspercent'],
+['Education','GPA Calculator','Calculate weighted GPA from grades and credits.','gpa'],
+['Audio & AI','Audio → Text Transcriber','Transcribe audio in many languages with timestamps. Per-file limit: under 100 MB.','audiotranscribe'],
+['Audio & AI','Call Transcript Analyzer','Organize a call transcript into speakers, topics, action items and key moments.','callanalysis'],
+['Audio & AI','Audio → Translation','Create a translated text version of an audio transcript.','audiotranslate'],
+['Audio & AI','Audio Transcript Cleaner','Clean spacing, punctuation and obvious formatting without changing the words.','transcriptclean'],
+
+];
+
+function render(){
+ const q=($('#search').value||'').toLowerCase().trim(), active=window.cat||'All';
+ const groups={};
+ tools.filter(t=>(active==='All'||t[0]===active)&&t.slice(1,3).join(' ').toLowerCase().includes(q))
+   .forEach(t=>(groups[t[0]]??=[]).push(t));
+ const order=['Money & Finance','Vehicle','Job','Everyday','Carpenter & Construction','Audio & AI','Document & Image','Health & Fitness','Education'];
+ const icons={'Money & Finance':'💰','Vehicle':'🚗','Job':'💼','Everyday':'✨','Carpenter & Construction':'🪚','Audio & AI':'🎙️','Document & Image':'📄','Health & Fitness':'❤️','Education':'🎓'};
+ const descriptions={
+   'Money & Finance':'Salary, loans, savings, tax and investment calculators',
+   'Vehicle':'Fuel, mileage, EV, trip and vehicle cost tools',
+   'Job':'Salary, notice period, experience and workplace tools',
+   'Everyday':'Useful calculators for everyday life',
+   'Carpenter & Construction':'Measurements, lumber, cut lists, materials and stair planning',
+   'Audio & AI':'Transcription, conversation and audio productivity tools',
+   'Document & Image':'PDF, document and image utilities',
+   'Health & Fitness':'Simple health and fitness estimators',
+   'Education':'Marks, GPA and study calculators'
+ };
+ const catsToShow=order.filter(g=>groups[g]?.length);
+ $('#app').innerHTML=catsToShow.map(g=>{
+   const arr=groups[g], isOpen=!!q;
+   return `<details class="category-drop" ${isOpen?'open':''}>
+     <summary>
+       <span class="cat-icon">${icons[g]||'🛠️'}</span>
+       <span class="cat-info"><strong>${g}</strong><small>${descriptions[g]} · ${arr.length} tools</small></span>
+       <span class="cat-arrow">⌄</span>
+     </summary>
+     <div class="category-tools">
+       ${arr.map(t=>`<article class="card"><span class="badge">${g}</span><h3>${t[1]}</h3><p>${t[2]}</p><button class="btn" onclick="openTool('${t[3]}','${t[1].replaceAll("'","")}')">Open calculator</button></article>`).join('')}
+     </div>
+   </details>`;
+ }).join('')||'<div class="empty"><strong>No matching tool found.</strong><br>Try a different search.</div>';
+}
+$('#cats').innerHTML='';
+$('#toolSelect').innerHTML='<option value="">Select a calculator or tool…</option>'+cats.filter(c=>c!=='All').map(c=>`<optgroup label="${c}">${tools.filter(t=>t[0]===c).map(t=>`<option value="${t[3]}">${t[1]}</option>`).join('')}</optgroup>`).join('');
+$('#toolSelect').addEventListener('change',function(){
+ const t=tools.find(x=>x[3]===this.value);
+ if(t){openTool(t[3],t[1]);this.value='';window.cat='All';render();}
+});
+$('#search').addEventListener('input',render); window.cat='All'; render();
+
+function openTool(id,title){ $('#modal').classList.add('show'); $('#toolBody').innerHTML=`<h2>${title}</h2>${toolHTML(id)}`; bindTool(id); }
+function closeTool(){ $('#modal').classList.remove('show'); $('#toolBody').innerHTML=''; }
+function f(fields,button='Calculate'){return `<div class="row">${fields}</div><button class="btn" id="calc">${button}</button><div id="out"></div>`}
+function inp(id,label,val='',type='number',step='any'){return `<div><label>${label}</label><input id="${id}" type="${type}" value="${val}" ${type==='number'?`step="${step}"`:''}></div>`}
+function toolHTML(id){
+const D={};
+switch(id){
+case'ctc':return f(inp('ctc','Annual CTC',600000)+inp('pfp','Employee PF %',12)+inp('taxp','Estimated deductions %',8));
+case'emi':return f(inp('p','Loan amount',1000000)+inp('r','Annual interest %',10)+inp('n','Tenure (months)',60));
+case'pf':return f(inp('basic','Monthly basic salary',30000)+inp('epf','Employee PF %',12)+inp('erpf','Employer PF %',12));
+case'gst':return f(inp('price','Amount',1000)+inp('rate','GST %',18));
+case'tax':return `<div class="notice">Estimate only. Indian tax rules can change. Enter your taxable income and use the editable slab assumptions below.</div>${f(inp('income','Annual taxable income',1000000)+inp('ded','Additional deductions',0)+inp('cess','Cess %',4))}<details><summary>Current default slab assumptions (new-regime style)</summary><p class="small">The calculator uses editable slabs in JavaScript. Verify your final tax with the official Income Tax Department before filing.</p></details>`;
+case'hike':return f(inp('salary','Current annual salary',600000)+inp('pct','Hike %',10));
+case'elig':return f(inp('income','Monthly net income',60000)+inp('existing','Existing monthly EMIs',10000)+inp('rate','Annual interest %',10)+inp('tenure','Tenure (months)',60)+inp('ratio','Max EMI ratio %',50));
+case'sip':return f(inp('sip','Monthly SIP',5000)+inp('rate','Expected annual return %',12)+inp('years','Years',10));
+case'fd':return f(inp('principal','FD principal',100000)+inp('rate','Annual interest %',7)+inp('years','Years',5)+inp('freq','Compounding periods/year',4));
+case'rd':return f(inp('monthly','Monthly RD',5000)+inp('rate','Annual interest %',7)+inp('months','Months',60));
+case'gratuity':return f(inp('last','Last drawn basic + DA/month',50000)+inp('years','Completed years',5));
+case'ppf':return f(inp('annual','Annual contribution',150000)+inp('rate','Annual interest %',7.1)+inp('years','Years',15));
+case'nps':return f(inp('monthly','Monthly contribution',5000)+inp('rate','Expected annual return %',10)+inp('years','Years',25)+inp('annuity','Annuity purchase %',40));
+case'home':return f(inp('p','Home loan amount',5000000)+inp('r','Annual interest %',8.5)+inp('n','Tenure (months)',240));
+case'carloan':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
+case'wordpdf':return `<label>Document text</label><textarea id="text">Type or paste your document here.</textarea><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'transcribe':return `<div class="audio-transcriber"><div class="notice">🔒 <strong>Unlimited local transcription:</strong> upload as many files as you want. Each individual file must be <strong>under 100 MB</strong>. Audio is processed in your browser and is not sent to a PenniTools server.</div><div class="audio-drop" id="audioDrop"><div class="audio-icon">🎙️</div><h3>Audio → Accurate Transcript</h3><p>MP3, WAV, M4A, OGG, WebM, AAC and other browser-supported audio.</p><input id="audioFile" type="file" accept="audio/*,.mp3,.wav,.m4a,.ogg,.webm,.aac"><label class="btn" for="audioFile">Choose audio</label><div id="audioName" class="small"></div></div><div class="audio-options row"><div><label>Spoken language</label><select id="audioLang"><option value="auto">Auto-detect</option><option value="en">English</option><option value="hi">Hindi</option><option value="te">Telugu</option><option value="ta">Tamil</option><option value="kn">Kannada</option><option value="ml">Malayalam</option><option value="mr">Marathi</option><option value="bn">Bengali</option><option value="gu">Gujarati</option><option value="pa">Punjabi</option><option value="ur">Urdu</option><option value="es">Spanish</option><option value="fr">French</option><option value="de">German</option><option value="it">Italian</option><option value="pt">Portuguese</option><option value="ru">Russian</option><option value="ar">Arabic</option><option value="zh">Chinese</option><option value="ja">Japanese</option><option value="ko">Korean</option></select></div><div><label>Accuracy</label><select id="audioModel"><option value="Xenova/whisper-tiny">Fast — Tiny</option><option value="Xenova/whisper-small">Balanced — Small</option><option value="onnx-community/whisper-large-v3-turbo" selected>High accuracy — Large v3 Turbo</option></select></div></div><div class="audio-options row"><div><label>Speaker mode</label><select id="speakerMode"><option value="mixed">Mixed audio — best-effort transcript</option><option value="stereo">Call recording — Caller / Receiver from stereo channels</option></select></div><div><label>Transcript detail</label><select id="transcriptDetail"><option value="segments" selected>Timestamped segments</option><option value="plain">Plain transcript</option></select></div></div><button class="btn" id="startTranscribe" disabled>Start high-accuracy transcription</button><div id="audioStatus" class="small"></div><div id="callNotice" class="notice" style="display:none"></div><textarea id="transcriptOut" placeholder="Your transcript will appear here…"></textarea><div id="analysisOut" class="analysis-box" style="display:none"></div><div class="audio-actions"><button class="btn secondary" id="copyTranscript" disabled>Copy transcript</button><button class="btn secondary" id="downloadTranscript" disabled>Download TXT</button><button class="btn secondary" id="downloadSrt" disabled>Download SRT</button><button class="btn secondary" id="analyzeTranscript" disabled>Analyze transcript</button></div><p class="small"><strong>Accuracy note:</strong> no speech-to-text system can guarantee 100% accuracy. Speaker labels are reliable when a call recording has separate stereo channels; if both people are mixed into one mono track, true caller/receiver separation requires a dedicated diarization model/server.</p></div>`;
+case'pdfeditor':return `<div class="pdf-editor">
+  <div class="notice">📝 <strong>PDF Editor</strong> — upload a PDF, then tap any text on the page to edit or delete it. You can also tap anywhere to add new text. Font size is detected automatically for existing text, and you can change the font, size, colour and style before saving.</div>
+  <div class="drop">
+    <b>Choose PDF</b>
+    <p class="small">The PDF is processed in your browser. Your original file is not changed.</p>
+    <input id="pdfEditorFile" type="file" accept=".pdf,application/pdf" onchange="pdfEditorInfo(this)">
+    <div id="pdfEditorInfo" class="small"></div>
+  </div>
+  <div class="pdf-edit-toolbar">
+    <button class="btn" type="button" id="pdfEditSelect">✏️ Select / Edit</button>
+    <button class="btn secondary" type="button" id="pdfEditAdd">＋ Add text</button>
+    <button class="btn secondary" type="button" id="pdfEditDelete">🗑 Delete selected</button>
+    <button class="btn secondary" type="button" id="pdfEditResetSelection">↩ Reset selected</button>
+    <div class="pdf-edit-control"><label>Font</label><select id="pdfEditorFont"><option value="auto">Auto</option><option value="Helvetica">Helvetica</option><option value="Times-Roman">Times</option><option value="Courier">Courier</option><option value="Arial">Arial</option></select></div>
+    <div class="pdf-edit-control"><label>Size</label><input id="pdfEditorSize" type="number" min="6" max="96" value="12"></div>
+    <div class="pdf-edit-control"><label>Colour</label><input id="pdfEditorColor" type="color" value="#111827"></div>
+    <button class="btn secondary" type="button" id="pdfEditBold">B</button>
+    <button class="btn secondary" type="button" id="pdfEditItalic"><i>I</i></button>
+    <button class="btn" type="button" id="pdfEditSave">⬇️ Save edited PDF</button>
+  </div>
+  <div class="pdf-edit-pages" id="pdfEditorPagesNav"></div>
+  <div class="pdf-edit-hint">Tap existing text to select it. Double-tap/click the text to type a replacement. Use <strong>Delete selected</strong> to remove it. Choose <strong>Add text</strong>, then tap anywhere on the page. Changes are only applied to the downloaded copy.</div>
+  <div class="pdf-edit-stage-wrap"><div id="pdfEditorStage" class="pdf-edit-stage"><canvas id="pdfEditorCanvas"></canvas><div id="pdfEditorTextLayer" class="pdf-edit-text-layer"></div></div></div>
+  <div id="pdfEditorStatus" class="pdf-edit-status"></div>
+  <div id="out"></div>
+</div>`;
+case'pdfword':return `${fileBox('pdf','Choose PDF','Extract readable text into a Word-compatible .doc file')}<button class="btn" id="calc">Convert to Word</button><div id="out"></div>`;
+case'pdfjpg':return `${fileBox('pdf','Choose PDF','Convert every PDF page to JPG images (downloaded as a ZIP)')}<button class="btn" id="calc">Convert to JPG</button><div id="out"></div>`;
+case'jpgpdf':return `<div class="drop"><b>Choose images</b><p class="small">Create one PDF from one or more selected images. Select multiple images if needed.</p><input id="img" type="file" multiple accept="image/*"></div><button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'pdfcompress':return `${fileBox('pdf','Choose PDF','Re-save the PDF to reduce size where possible')}<button class="btn" id="calc">Compress PDF</button><div id="out"></div>`;
+case'mergepdf':return `${fileBox('pdfs','Choose PDFs','Merge multiple PDFs in the order you select them')}<button class="btn" id="calc">Merge PDFs</button><div id="out"></div>`;
+case'splitpdf':return `${fileBox('pdf','Choose PDF','Extract selected pages')}${inp('pages','Pages (e.g. 1,3-5)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'removePages':return `${fileBox('pdf','Choose PDF','Remove selected pages')}${inp('pages','Pages to remove (e.g. 2,4)','2')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'reorder':return `${fileBox('pdf','Choose PDF','Reorder pages')}${inp('order','New order (e.g. 3,1,2)','1')}<button class="btn" id="calc">Create PDF</button><div id="out"></div>`;
+case'pdflock':return `<div class="notice">🔐 <strong>PDF Lock / Unlock</strong> — password-protect your PDF or remove a password when you know the existing password. Processing happens in your browser; the PDF is not uploaded.</div>
+<div class="drop">
+  <b>Choose PDF</b>
+  <p class="small">Select a PDF you own or are authorized to modify.</p>
+  <input id="pdfLockFile" type="file" accept=".pdf,application/pdf">
+</div>
+<div class="row">
+  <div><label>Action</label><select id="pdfLockMode">
+    <option value="lock">🔒 Lock / Password protect</option>
+    <option value="unlock">🔓 Unlock / Remove password</option>
+  </select></div>
+  <div><label>Password</label><input id="pdfLockPassword" type="password" autocomplete="new-password" placeholder="Enter password"></div>
+</div>
+<div id="pdfLockConfirmWrap"><label>Confirm new password</label><input id="pdfLockConfirm" type="password" autocomplete="new-password" placeholder="Re-enter password"></div>
+<p id="pdfLockStatus" class="small"></p>
+<button class="btn" id="calc">Process PDF</button><div id="out"></div>`;
+case'crop':return `${fileBox('img','Choose image','Crop using X/Y and width/height in pixels')}<div class="row">${inp('x','X',0)+inp('y','Y',0)+inp('cw','Width',500)+inp('ch','Height',500)}</div><button class="btn" id="calc">Crop & Download</button><div id="out"></div>`;
+case'resize':return `${fileBox('img','Choose image','Resize image')}${f(inp('w','Width px',800)+inp('h','Height px',600)+inp('quality','JPG quality',0.85,'number',0.01),'Resize & Download')}`;
+case'compress':return `${fileBox('img','Choose image','Compress image')}${inp('quality','JPG quality',0.7,'number',0.01)}<button class="btn" id="calc">Compress & Download</button><div id="out"></div>`;
+case'convert':return `${fileBox('img','Choose image','Convert image')}<label>Output</label><select id="fmt"><option value="image/png">PNG</option><option value="image/jpeg">JPG</option></select><button class="btn" id="calc">Convert & Download</button><div id="out"></div>`;
+case'signature':return `<canvas id="sig" width="700" height="260" style="width:100%;border:1px solid #d0d5dd;border-radius:12px;touch-action:none;background:white"></canvas><p class="small">Draw with your finger or mouse.</p><button class="btn" id="calc">Download Signature</button>`;
+case'passport':return `${fileBox('img','Choose photo','Creates a 35×45 ratio image')}${inp('pw','Width px',413)+inp('ph','Height px',531)}<button class="btn" id="calc">Create Photo</button><div id="out"></div>`;
+case'mileage':return f(inp('distance','Distance (km)',100)+inp('fuel','Fuel used (litres)',8));
+case'fuel':return f(inp('distance','Distance (km)',300)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',100));
+case'ev':return f(inp('battery','Battery capacity (kWh)',40)+inp('from','Start charge %',20)+inp('to','End charge %',90)+inp('tariff','Electricity price/kWh',10));
+case'trip':return f(inp('distance','Distance km',300)+inp('mileage','Mileage km/l',15)+inp('fuelprice','Fuel price/litre',100)+inp('toll','Tolls',300)+inp('people','People',4));
+case'insurance':return f(inp('idv','Insured declared value',700000)+inp('rate','Premium rate %',2)+inp('gst','GST %',18));
+case'increment':return f(inp('salary','Current annual salary',600000)+inp('pct','Increment %',10));
+case'notice':return f(inp('start','Start date',new Date().toISOString().slice(0,10),'date')+inp('days','Notice period days',30));
+case'experience':return f(inp('start','Start date','2020-01-01','date')+inp('end','End date',new Date().toISOString().slice(0,10),'date'));
+case'leave':return f(inp('salary','Monthly salary',50000)+inp('days','Paid leave days',10)+inp('workdays','Working days/month',26));
+case'age':return f(inp('dob','Date of birth','1993-01-01','date')+inp('asof','As of',new Date().toISOString().slice(0,10),'date'));
+case'datediff':return f(inp('start','Start date',new Date().toISOString().slice(0,10),'date')+inp('end','End date',new Date().toISOString().slice(0,10),'date'));
+case'percentage':return f(inp('value','Value',25)+inp('total','Total',200));
+case'discount':return f(inp('price','Original price',1000)+inp('discount','Discount %',20));
+case'unit':return `<div class="row"><div><label>Category</label><select id="uc"><option>Length</option><option>Weight</option><option>Temperature</option></select></div><div><label>Value</label><input id="uv" type="number" value="1"></div></div><div class="row"><div><label>From</label><select id="uf"></select></div><div><label>To</label><select id="ut"></select></div></div><button class="btn" id="calc">Convert</button><div id="out"></div>`;
+case'simpleint':return f(inp('p','Principal',100000)+inp('r','Annual interest %',8)+inp('t','Time (years)',3));
+case'compoundint':return f(inp('p','Principal',100000)+inp('r','Annual interest %',8)+inp('t','Time (years)',5)+inp('n','Compounds/year',4));
+case'inflation':return f(inp('p','Current amount',100000)+inp('r','Inflation %',6)+inp('t','Years',10));
+case'cagr':return f(inp('startv','Starting value',100000)+inp('endv','Ending value',200000)+inp('years','Years',5));
+case'loancompare':return `<div class="row">${inp('p1','Loan A amount',1000000)+inp('r1','Loan A rate %',10)+inp('n1','Loan A months',60)+inp('p2','Loan B amount',1000000)+inp('r2','Loan B rate %',11)+inp('n2','Loan B months',60)}</div><button class="btn" id="calc">Compare Loans</button><div id="out"></div>`;
+case'salarybreak':return f(inp('annual','Annual CTC',1200000)+inp('pf','Employee PF %',12)+inp('tax','Estimated monthly tax',5000)+inp('other','Other monthly deductions',1000));
+case'pagenumber':return `${fileBox('pdf','Choose PDF','Add page numbers to the bottom of every page')}<button class="btn" id="calc">Add Page Numbers</button><div id="out"></div>`;
+case'rotatepdf':return `${fileBox('pdf','Choose PDF','Rotate every page')}<label>Rotation</label><select id="angle"><option value="90">90°</option><option value="180">180°</option><option value="270">270°</option></select><button class="btn" id="calc">Rotate PDF</button><div id="out"></div>`;
+case'petroldiesel':return `<div class="row">${inp('distance','Monthly distance (km)',1500)+inp('petrolm','Petrol mileage (km/l)',15)+inp('dieselm','Diesel mileage (km/l)',20)+inp('petrolp','Petrol price/litre',105)+inp('dieselp','Diesel price/litre',92)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'evpetrol':return `<div class="row">${inp('distance','Monthly distance (km)',1500)+inp('evkm','EV efficiency (km/kWh)',7)+inp('evrate','Electricity ₹/kWh',10)+inp('petrolm','Petrol mileage (km/l)',15)+inp('petrolp','Petrol price/litre',105)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'depreciation':return f(inp('price','Purchase price',1000000)+inp('rate','Annual depreciation %',10)+inp('years','Years',5));
+case'workingdays':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><label><input id="sat" type="checkbox"> Include Saturdays</label><button class="btn" id="calc">Count Working Days</button><div id="out"></div>`;
+case'overtime':return f(inp('salary','Monthly salary',30000)+inp('days','Working days/month',26)+inp('hours','Normal hours/day',8)+inp('ot','Overtime hours',10)+inp('mult','Overtime multiplier',2));
+case'bmi':return f(inp('weight','Weight (kg)',70)+inp('height','Height (cm)',170));
+case'tip':return f(inp('bill','Bill amount',1000)+inp('tip','Tip %',10)+inp('people','People',2));
+case'timezone':return `<div class="row">${inp('time','Time','','time')}<div><label>From</label><select id="tzfrom"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div><div><label>To</label><select id="tzto"><option value="Asia/Kolkata">India</option><option value="Asia/Dubai">Dubai</option><option value="Asia/Singapore">Singapore</option><option value="Europe/London">London</option><option value="America/New_York">New York</option><option value="America/Los_Angeles">Los Angeles</option></select></div></div><button class="btn" id="calc">Convert Time</button><div id="out"></div>`;
+case'percentage':return f(inp('value','Value',100)+inp('pct','Percentage',10));
+case'discount':return f(inp('price','Original price',1000)+inp('discount','Discount %',10));
+case'breakeven':return f(inp('fixed','Fixed costs',100000)+inp('price','Selling price/unit',1000)+inp('variable','Variable cost/unit',600));
+case'savingsgoal':return f(inp('target','Savings target',100000)+inp('saved','Already saved',10000)+inp('months','Months',12));
+case'prepay':return `<div class="row">${inp('p','Outstanding loan',1000000)+inp('r','Annual interest %',10)+inp('n','Remaining months',48)+inp('extra','Extra payment now',100000)}</div><button class="btn" id="calc">Estimate Saving</button><div id="out"></div>`;
+case'fuelmonthly':return f(inp('km','Monthly distance (km)',1500)+inp('mileage','Mileage (km/l)',15)+inp('price','Fuel price/litre',105));
+case'unitprice':return `<div class="row">${inp('p1','Product A price',100)+inp('q1','Product A quantity',1)+inp('p2','Product B price',120)+inp('q2','Product B quantity',1)}</div><button class="btn" id="calc">Compare</button><div id="out"></div>`;
+case'traveltime':return f(inp('distance','Distance (km)',100)+inp('speed','Average speed (km/h)',50));
+case'tollfuel':return `<div class="row">${inp('distance','Distance (km)',500)+inp('mileage','Mileage (km/l)',15)+inp('fuelprice','Fuel price/litre',105)+inp('toll','Tolls',500)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'runningcost':return `<div class="row">${inp('km','Monthly distance (km)',1500)+inp('fuelcost','Fuel cost/month',8000)+inp('service','Service & maintenance/month',2500)+inp('insurance','Insurance/month',1500)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'age':return `<div class="row">${inp('dob','Date of birth','','date')}<div><label>Calculate on</label><input id="asof" type="date"></div></div><button class="btn" id="calc">Calculate Age</button><div id="out"></div>`;
+case'datediff2':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><button class="btn" id="calc">Calculate Difference</button><div id="out"></div>`;
+case'daysuntil':return `<div>${inp('date','Target date','','date')}</div><button class="btn" id="calc">Count Days</button><div id="out"></div>`;
+case'pctchange':return f(inp('old','Old value',100)+inp('newv','New value',120));
+case'average':return `<label>Numbers</label><textarea id="values" placeholder="10, 20, 30, 40"></textarea><button class="btn" id="calc">Calculate Average</button><div id="out"></div>`;
+case'textcounter':return `<label>Text</label><textarea id="text" placeholder="Paste or type text here"></textarea><button class="btn" id="calc">Count</button><div id="out"></div>`;
+case'caseconvert':return `<label>Text</label><textarea id="text" placeholder="Type text here"></textarea><div class="row"><button class="btn" id="upper">UPPERCASE</button><button class="btn" id="lower">lowercase</button><button class="btn" id="title">Title Case</button></div><div id="out"></div>`;
+case'password':return `<div class="row">${inp('len','Password length',16)}</div><label><input id="symbols" type="checkbox" checked> Include symbols</label><button class="btn" id="calc">Generate Password</button><div id="out"></div>`;
+case'splitbill':return f(inp('bill','Bill amount',1000)+inp('tip','Tip %',10)+inp('people','People',4));
+case'hourlysalary':return `<div class="row">${inp('salary','Salary amount',600000)+inp('months','Months covered',12)+inp('days','Working days/month',26)+inp('hours','Hours/day',8)}</div><button class="btn" id="calc">Calculate Hourly Rate</button><div id="out"></div>`;
+case'loaninterest':return f(inp('p','Loan amount',1000000)+inp('r','Annual interest %',10)+inp('n','Tenure (months)',60));
+case'budget':return f(inp('income','Monthly income',60000)+inp('savings','Savings target',10000)+inp('expenses','Monthly expenses',35000));
+case'networth':return f(inp('assets','Total assets',1000000)+inp('liabilities','Total liabilities',300000));
+case'emergency':return f(inp('savings','Emergency savings',100000)+inp('expenses','Monthly essential expenses',25000));
+case'roi':return f(inp('invested','Amount invested',100000)+inp('returned','Amount received',125000));
+case'markup':return f(inp('cost','Cost price',1000)+inp('markup','Markup %',20));
+case'margin':return f(inp('cost','Cost price',800)+inp('sale','Selling price',1000));
+case'gstsplit':return f(inp('total','Total price including GST',1180)+inp('rate','GST %',18));
+case'annualmonthly':return f(inp('annual','Annual salary',600000));
+case'monthlyannual':return f(inp('monthly','Monthly salary',50000));
+case'mileagecalc':return f(inp('distance','Distance travelled (km)',300)+inp('fuel','Fuel used (litres)',20));
+case'fuelrequired':return f(inp('distance','Trip distance (km)',500)+inp('mileage','Mileage (km/l)',15));
+case'tripsplit':return f(inp('fuel','Fuel cost',2000)+inp('toll','Toll cost',500)+inp('people','Passengers',4));
+case'emivscash':return f(inp('price','Vehicle price',1000000)+inp('down','Down payment',200000)+inp('rate','Loan interest %',9)+inp('months','Tenure (months)',60));
+case'carinterest':return f(inp('p','Car loan amount',800000)+inp('r','Annual interest %',9)+inp('n','Tenure (months)',60));
+case'evcharge':return f(inp('battery','Battery capacity (kWh)',40)+inp('rate','Electricity rate/kWh',10)+inp('loss','Charging loss %',10));
+case'evrange':return f(inp('battery','Battery capacity (kWh)',40)+inp('eff','Efficiency (km/kWh)',6));
+case'tollsplit':return f(inp('toll','Toll amount',500)+inp('people','People',4));
+case'agedays':return `<div class="row">${inp('dob','Date of birth','','date')+inp('asof','Calculate on','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'leap':return f(inp('year','Year',2028));
+case'monthdays':return `<div class="row">${inp('year','Year',2026)}<div><label>Month</label><select id="month">${Array.from({length:12},(_,i)=>`<option value="${i+1}">${i+1}</option>`).join('')}</select></div></div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'weeknum':return `<div>${inp('date','Date','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'countdown':return `<div>${inp('date','Target date/time','','datetime-local')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'duration':return f(inp('h1','Hours 1',1)+inp('m1','Minutes 1',30)+inp('h2','Hours 2',2)+inp('m2','Minutes 2',45));
+case'randomnum':return f(inp('min','Minimum',1)+inp('max','Maximum',100));
+case'numwords':return f(inp('amount','Amount',125000));
+case'pcttotal':return f(inp('part','Part',25)+inp('total','Total',100));
+case'ratio':return f(inp('a','First value',20)+inp('b','Second value',30));
+case'lcmhcf':return f(inp('a','First number',12)+inp('b','Second number',18));
+case'priceweight':return f(inp('price','Price',200)+inp('grams','Weight in grams',500));
+case'carpenterarea':return `<div class="notice">📏 <strong>Carpenter Area Calculator</strong><br>For example: 77 in × 33 in = 2,541 sq in ÷ 144 = 17.646 sq ft.</div>
+<div class="row">
+  ${inp('caLength','Length',77)}
+  ${inp('caWidth','Width',33)}
+  <div><label>Measurement unit</label><select id="caUnit"><option value="in">Inches</option><option value="ft">Feet</option><option value="cm">Centimetres</option><option value="mm">Millimetres</option></select></div>
+  ${inp('caQty','Quantity / pieces',1)}
+</div>
+<button class="btn" id="calc">Calculate Square Feet</button>
+<div id="out"></div>
+<p class="small">Formula: area in square feet = length × width converted to feet. For inch measurements, divide square inches by 144.</p>`;
+case'feetinch':return `<div class="notice">📏 Enter measurements in feet and inches. The calculator also shows decimal feet and total inches.</div>
+<div class="row">${inp('fiFeet','Feet',8)}${inp('fiInches','Inches',6)}</div>
+<button class="btn" id="calc">Calculate Length</button><div id="out"></div>`;
+case'boardfoot':return `<div class="notice">🪵 Board feet = thickness(in) × width(in) × length(ft) ÷ 12.</div>
+<div class="row">${inp('bfThickness','Thickness (in)',2)}${inp('bfWidth','Width (in)',8)}${inp('bfLength','Length (ft)',10)}${inp('bfQty','Quantity',1)}</div>
+<button class="btn" id="calc">Calculate Board Feet</button><div id="out"></div>`;
+case'woodcost':return `<div class="notice">💰 Estimate lumber cost from dimensions, quantity and price per board foot.</div>
+<div class="row">${inp('wcThickness','Thickness (in)',2)}${inp('wcWidth','Width (in)',8)}${inp('wcLength','Length (ft)',10)}${inp('wcQty','Quantity',5)}${inp('wcPrice','Price per board foot (₹)',80)}</div>
+<button class="btn" id="calc">Calculate Wood Cost</button><div id="out"></div>`;
+case'cutlist':return `<div class="notice">✂️ Enter up to 10 cuts. Use the same unit for all lengths. The result includes estimated waste.</div>
+<div class="row">${inp('clStock','Available stock length',8)}${inp('clWaste','Estimated waste %',10)}</div>
+<label>Cut lengths (comma separated)</label><textarea id="clCuts" placeholder="2.5, 1.2, 0.8, 2.5"></textarea>
+<button class="btn" id="calc">Calculate Cut List</button><div id="out"></div>`;
+case'roommaterial':return `<div class="notice">🏠 Calculate floor area and estimate the number of tiles/sheets required, including waste.</div>
+<div class="row">${inp('rmLength','Room length (ft)',12)}${inp('rmWidth','Room width (ft)',10)}${inp('rmMatL','Material length (ft)',2)}${inp('rmMatW','Material width (ft)',2)}${inp('rmWaste','Waste %',10)}</div>
+<button class="btn" id="calc">Calculate Material</button><div id="out"></div>`;
+case'stair':return `<div class="notice">🪜 A practical estimate only. Verify stair dimensions against local building rules and site conditions before construction.</div>
+<div class="row">${inp('stHeight','Floor-to-floor height (ft)',10)}${inp('stRiser','Target riser height (in)',7)}${inp('stTread','Tread depth (in)',10)}</div>
+<button class="btn" id="calc">Calculate Staircase</button><div id="out"></div>`;
+
+case'noticecalc':return `<div class="row">${inp('start','Notice start date','','date')+inp('days','Notice period (days)',30)}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'experiencecalc':return `<div class="row">${inp('start','Start date','','date')+inp('end','End date','','date')}</div><button class="btn" id="calc">Calculate</button><div id="out"></div>`;
+case'otpay':return f(inp('monthly','Monthly salary',50000)+inp('hours','Overtime hours',10)+inp('mult','Overtime multiplier',2));
+case'leavebalance':return f(inp('allocated','Allocated leave',24)+inp('used','Leave used',8));
+case'caldeficit':return f(inp('maintenance','Maintenance calories',2200)+inp('deficit','Deficit %',15));
+case'water':return f(inp('weight','Weight (kg)',70)+inp('ml','ml per kg',35));
+case'bodyfat':return f(inp('bmi','BMI',25)+inp('age','Age',30));
+case'pctcgpa':return f(inp('percentage','Percentage',80));
+case'markspercent':return f(inp('obtained','Marks obtained',80)+inp('maximum','Maximum marks',100));
+case'gpa':return `<label>Grades and credits</label><textarea id="grades" placeholder="8,3&#10;9,4&#10;7,3"></textarea><p class="small">One grade and credit per line, e.g. 8,3</p><button class="btn" id="calc">Calculate GPA</button><div id="out"></div>`;
+case'audiotranscribe':return toolHTML('transcribe');
+case'callanalysis':return `<div class="audio-ai">
+  <p>Paste a transcript below. PenniTools will organize it into a clear call-review format without pretending to know speaker identities that are not present in the transcript.</p>
+  <textarea id="analysistext" placeholder="Paste the transcript here..."></textarea>
+  <button class="btn" id="analyzecall">Analyze Conversation</button>
+  <div id="analysisout"></div>
+</div>`;
+case'audiotranslate':return `<div class="audio-ai">
+  <p>First create a transcript, then paste it here and choose the target language.</p>
+  <textarea id="translatein" placeholder="Paste transcript..."></textarea>
+  <div class="row"><div><label>Target language</label><select id="targetlang"><option>English</option><option>Hindi</option><option>Telugu</option><option>Tamil</option><option>Kannada</option><option>Malayalam</option><option>Urdu</option><option>Arabic</option></select></div></div>
+  <p class="small">This tool prepares the translation workflow; a translation API is required for automatic translation.</p>
+</div>`;
+case'transcriptclean':return `<div class="audio-ai">
+  <textarea id="cleantext" placeholder="Paste transcript..."></textarea>
+  <button class="btn" id="cleantrans">Clean Formatting</button><div id="cleanout"></div>
+</div>`;
+case'currency':return `<div class="row">${inp('amt','Amount',1)}<div><label>From</label><select id="from"><option>INR</option><option>USD</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div><div><label>To</label><select id="to"><option>USD</option><option>INR</option><option>EUR</option><option>GBP</option><option>AED</option><option>SGD</option><option>AUD</option><option>CAD</option></select></div></div><button class="btn" id="calc">Get Rate</button><div id="out"></div>`;
+}
+}
+function fileBox(id,label,desc){return `<div class="drop"><b>${label}</b><p class="small">${desc}</p><input id="${id}" type="file" ${id==='pdfs'?'multiple accept=".pdf,application/pdf"':id==='pdf'?'accept=".pdf,application/pdf"':'accept="image/*"'}></div>`}
+function imageTool(title,id){return fileBox('img','Choose image',title)+'<button class="btn" id="calc">Download</button><div id="out"></div>'}
+
+let transcriberPipeline=null;
+let transcriberLoading=false;
+async function initTranscriber(){
+ const status=$('#audioStatus');
+ if(transcriberLoading)return;
+ if(transcriberPipeline)return transcriberPipeline;
+ transcriberLoading=true;
+ try{
+   status.textContent='Loading the selected Whisper model… first use can take several minutes.';
+   const mod=await import('https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.7.2/+esm');
+   mod.env.allowLocalModels=false;
+   mod.env.useBrowserCache=true;
+   const model=$('#audioModel').value;
+   const configs=model.includes('large-v3-turbo')
+     ? [{device:'webgpu',dtype:{encoder_model:'fp16',decoder_model_merged:'q4'}},{device:'webgpu',dtype:'q4'},{dtype:'q8'}]
+     : [{device:'webgpu',dtype:'q8'},{dtype:'q8'}];
+   let lastErr;
+   for(const cfg of configs){
+     try{
+       transcriberPipeline=await mod.pipeline('automatic-speech-recognition',model,{...cfg,progress_callback:p=>{if(p&&p.status==='progress'&&typeof p.progress==='number')status.textContent=`Loading AI model… ${Math.round(p.progress)}%`;}});
+       break;
+     }catch(e){lastErr=e;}
+   }
+   if(!transcriberPipeline)throw lastErr||new Error('Model unavailable');
+   status.textContent='AI model ready.';
+   return transcriberPipeline;
+ }catch(e){console.error(e);status.textContent='Could not load the AI model on this device. Try Balanced — Small, or use a newer browser/device.';throw e}
+ finally{transcriberLoading=false}
+}
+function fmtTime(sec){sec=Math.max(0,Number(sec)||0);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=Math.floor(sec%60);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+function chunksToLines(chunks,label){return (chunks||[]).filter(c=>c&&c.text).map(c=>{const t=c.timestamp||[];return {start:Number(t[0])||0,end:Number(t[1])||Number(t[0])||0,text:String(c.text).trim(),speaker:label||''};})}
+function makeTranscript(lines,plain=false){
+ lines=lines.filter(x=>x.text);
+ if(plain)return lines.map(x=>x.text).join(' ');
+ return lines.map(x=>`[${fmtTime(x.start)} - ${fmtTime(x.end)}]${x.speaker?` ${x.speaker}:`:''} ${x.text}`).join('\n');
+}
+function srtTime(sec){sec=Math.max(0,Number(sec)||0);const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=Math.floor(sec%60),ms=Math.floor((sec-Math.floor(sec))*1000);return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')},${String(ms).padStart(3,'0')}`}
+function makeSrt(lines){return lines.map((x,i)=>`${i+1}\n${srtTime(x.start)} --> ${srtTime(x.end)}\n${x.speaker?x.speaker+': ':''}${x.text}\n`).join('\n');}
+async function resampleChannel(buffer,channel){
+ const target=16000;
+ if(buffer.sampleRate===target)return buffer.getChannelData(channel).slice();
+ const frames=Math.ceil(buffer.duration*target);
+ const off=new OfflineAudioContext(1,frames,target);
+ const src=off.createBufferSource();
+ const one=off.createBuffer(1,buffer.length,buffer.sampleRate);one.copyToChannel(buffer.getChannelData(channel),0);
+ src.buffer=one;src.connect(off.destination);src.start();
+ const rendered=await off.startRendering();
+ return rendered.getChannelData(0).slice();
+}
+async function transcribeInput(pipe,input,lang,status,label){
+ const options={chunk_length_s:30,stride_length_s:5,return_timestamps:true,task:'transcribe'};
+ if(lang!=='auto')options.language=lang;
+ const result=await pipe(input,options,x=>{if(x?.status==='progress'&&typeof x.progress==='number')status.textContent=`Transcribing ${label||''}… ${Math.round(x.progress)}%`;});
+ return chunksToLines(result?.chunks,label);
+}
+function basicCallAnalysis(lines){
+ const text=lines.map(x=>x.text).join(' ');
+ const sentences=(text.match(/[^.!?]+[.!?]+/g)||text.split(/\n+/)).map(x=>x.trim()).filter(Boolean);
+ const actions=sentences.filter(s=>/\b(will|need to|needs to|should|must|send|share|call|contact|follow up|follow-up|confirm|schedule|arrange|provide|check|pay|refund|email|message)\b/i.test(s)).slice(0,12);
+ const questions=sentences.filter(s=>/\?\s*$/.test(s)).slice(0,10);
+ const speakers=[...new Set(lines.map(x=>x.speaker).filter(Boolean))];
+ return `<h3>📋 Call analysis</h3><p><strong>Speakers:</strong> ${speakers.length?speakers.join(', '):'Speaker identity not separated'} · <strong>Segments:</strong> ${lines.length}</p><h4>Key conversation points</h4><ul>${sentences.slice(0,12).map(s=>`<li>${s}</li>`).join('')||'<li>No clear sentences detected.</li>'}</ul><h4>Possible action items</h4><ul>${actions.map(s=>`<li>${s}</li>`).join('')||'<li>No obvious action items detected.</li>'}</ul><h4>Questions</h4><ul>${questions.map(s=>`<li>${s}</li>`).join('')||'<li>No questions detected.</li>'}</ul><p class="small">This section organizes the transcript using local rules; it is not a substitute for human review.</p>`;
+}
+async function initTranscriberTool(){
+ const file=$('#audioFile'), start=$('#startTranscribe'), name=$('#audioName'), status=$('#audioStatus'), ta=$('#transcriptOut');
+ file.addEventListener('change',()=>{const f=file.files[0];if(!f)return;if(f.size>=100*1024*1024){alert('Please choose an audio file smaller than 100 MB.');file.value='';start.disabled=true;name.textContent='';return}name.textContent=`${f.name} · ${(f.size/1024/1024).toFixed(1)} MB`;start.disabled=false;status.textContent='Ready. Unlimited uses are available; each file must be under 100 MB.';});
+ $('#audioModel').addEventListener('change',()=>{transcriberPipeline=null;});
+ start.addEventListener('click',async()=>{
+   const f=file.files[0];if(!f)return;
+   start.disabled=true;['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=true);ta.value='';$('#analysisOut').style.display='none';$('#callNotice').style.display='none';
+   try{
+     const pipe=await initTranscriber();const lang=$('#audioLang').value;const mode=$('#speakerMode').value;let lines=[];
+     status.textContent='Preparing audio…';
+     if(mode==='stereo'){
+       status.textContent='Checking call channels…';
+       const ctx=new (window.AudioContext||window.webkitAudioContext)();
+       const buffer=await ctx.decodeAudioData(await f.arrayBuffer());
+       if(buffer.numberOfChannels<2){$('#callNotice').style.display='block';$('#callNotice').textContent='⚠️ This recording is mono. True Caller/Receiver separation is not possible from a single mixed channel. The transcript will be generated as one speaker.';const url=URL.createObjectURL(f);lines=await transcribeInput(pipe,url,lang,status,'audio');URL.revokeObjectURL(url);}
+       else{
+         $('#callNotice').style.display='block';$('#callNotice').textContent='☎️ Stereo call mode: channel 1 is treated as Caller and channel 2 as Receiver. The original timing is preserved and both sides are merged chronologically.';
+         const a=await resampleChannel(buffer,0),b=await resampleChannel(buffer,1);
+         const caller=await transcribeInput(pipe,a,lang,status,'Caller');
+         const receiver=await transcribeInput(pipe,b,lang,status,'Receiver');
+         lines=caller.concat(receiver).sort((x,y)=>x.start-y.start);
+       }
+       try{await ctx.close()}catch{}
+     }else{
+       const url=URL.createObjectURL(f);lines=await transcribeInput(pipe,url,lang,status,'audio');URL.revokeObjectURL(url);
+     }
+     const plain=$('#transcriptDetail').value==='plain';ta.value=makeTranscript(lines,plain);ta.dataset.lines=JSON.stringify(lines);
+     status.textContent=`Complete — ${lines.length} timestamped segments. You can edit, copy or download the transcript.`;
+     ['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=!ta.value);
+   }catch(e){console.error(e);status.textContent='Transcription failed. If the file is very long, try Balanced — Small or a shorter audio file.';}
+   finally{start.disabled=false}
+ });
+ $('#copyTranscript').addEventListener('click',async()=>{await navigator.clipboard.writeText(ta.value);status.textContent='Transcript copied.'});
+ $('#downloadTranscript').addEventListener('click',()=>dl(new Blob([ta.value],{type:'text/plain;charset=utf-8'}),'pennitools-transcript.txt'));
+ $('#downloadSrt').addEventListener('click',()=>{let lines=[];try{lines=JSON.parse(ta.dataset.lines||'[]')}catch{};if(lines.length)dl(new Blob([makeSrt(lines)],{type:'application/x-subrip;charset=utf-8'}),'pennitools-transcript.srt')});
+ $('#analyzeTranscript').addEventListener('click',()=>{let lines=[];try{lines=JSON.parse(ta.dataset.lines||'[]')}catch{};if(!lines.length)return;const box=$('#analysisOut');box.innerHTML=basicCallAnalysis(lines);box.style.display='block';box.scrollIntoView({behavior:'smooth',block:'nearest'});});
+}
+function bindTool(id){
+ 
+if(id==='audiotranscribe'){ initTranscriberTool(); }
+if(id==='callanalysis'){
+ $('#analyzecall').onclick=()=>{try{const t=$('#analysistext').value.trim();if(!t)throw Error('Paste a transcript first.');let lines=t.split(/\n+/).filter(Boolean),s={};lines.forEach(x=>{let m=x.match(/^\s*([^:]{1,40}):\s*(.*)$/);if(m)(s[m[1].trim()]??=[]).push(m[2].trim())});let sh=Object.entries(s).map(([k,v])=>`<li><strong>${k}</strong>: ${v.length} utterance(s)</li>`).join('');$('#analysisout').innerHTML=`<div class="trip-result"><h3>Conversation Analysis</h3><p>Segments: <strong>${lines.length}</strong></p><ul>${sh||'<li>No explicit speaker labels detected.</li>'}</ul><p class="small">Structural analysis only; no speaker identities are invented.</p></div>`}catch(e){$('#analysisout').innerHTML='<p class="error">'+e.message+'</p>'}};
+}
+
+if(id==='pdfeditor'){
+  $('#pdfEditSelect').onclick=()=>pdfEditorSetMode('select');
+  $('#pdfEditAdd').onclick=()=>pdfEditorSetMode('add');
+  $('#pdfEditDelete').onclick=pdfEditorDeleteSelected;
+  $('#pdfEditResetSelection').onclick=pdfEditorResetSelected;
+  $('#pdfEditSave').onclick=pdfEditorExport;
+  $('#pdfEditorFont').onchange=()=>{if(pdfEditorSelected){pdfEditorSelected.font=$('#pdfEditorFont').value;pdfEditorMarkChanged(pdfEditorSelected);pdfEditorRenderTextLayer();}};
+  $('#pdfEditorSize').oninput=()=>{if(pdfEditorSelected){pdfEditorSelected.size=Math.max(6,Math.min(96,Number($('#pdfEditorSize').value)||12));pdfEditorMarkChanged(pdfEditorSelected);pdfEditorRenderTextLayer();}};
+  $('#pdfEditorColor').oninput=()=>{if(pdfEditorSelected){pdfEditorSelected.color=$('#pdfEditorColor').value;pdfEditorMarkChanged(pdfEditorSelected);pdfEditorRenderTextLayer();}};
+  $('#pdfEditBold').onclick=()=>{if(pdfEditorSelected){pdfEditorSelected.bold=!pdfEditorSelected.bold;pdfEditorMarkChanged(pdfEditorSelected);pdfEditorRenderTextLayer();}};
+  $('#pdfEditItalic').onclick=()=>{if(pdfEditorSelected){pdfEditorSelected.italic=!pdfEditorSelected.italic;pdfEditorMarkChanged(pdfEditorSelected);pdfEditorRenderTextLayer();}};
+  $('#pdfEditorStage').onclick=(ev)=>{
+    if(pdfEditorMode!=='add')return;
+    const r=$('#pdfEditorStage').getBoundingClientRect();pdfEditorAddAt(ev.clientX-r.left,ev.clientY-r.top);
+  };
+  pdfEditorSetMode('select');
+}
+if(id==='unit'){updateUnits();$('#uc').onchange=updateUnits}
+ if(id==='caseconvert'){
+ $('#upper').onclick=()=>out(`<pre>${$('#text').value.toUpperCase()}</pre>`);
+ $('#lower').onclick=()=>out(`<pre>${$('#text').value.toLowerCase()}</pre>`);
+ $('#title').onclick=()=>out(`<pre>${$('#text').value.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase())}</pre>`);
+}
+
+ if(id==='signature') initSig();
+ if(id==='transcribe') initTranscriberTool();
+ if(id==='pdflock'){
+ const mode=$('#pdfLockMode'), wrap=$('#pdfLockConfirmWrap');
+ const sync=()=>{wrap.style.display=mode.value==='lock'?'block':'none'; $('#pdfLockPassword').autocomplete=mode.value==='lock'?'new-password':'current-password';};
+ mode.onchange=sync; sync();
+}
+ $('#calc')?.addEventListener('click',()=>calculate(id));
+}
+function updateUnits(){
+ const cat=$('#uc').value, maps={Length:['m','km','cm','ft','in'],Weight:['kg','g','lb','oz'],Temperature:['C','F','K']}, a=maps[cat]; $('#uf').innerHTML=a.map(x=>`<option>${x}</option>`).join(''); $('#ut').innerHTML=a.map(x=>`<option>${x}</option>`).join('');
+}
+function hcf(a,b){a=Math.abs(Math.trunc(a));b=Math.abs(Math.trunc(b));while(b){let t=a%b;a=b;b=t}return a||1}
+function indianWords(n){
+ n=Math.trunc(n); if(n===0)return 'Zero';
+ const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+ const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+ function two(x){return x<20?ones[x]:tens[Math.floor(x/10)]+(x%10?' '+ones[x%10]:'')}
+ function part(x){let s='';if(x>=100){s+=ones[Math.floor(x/100)]+' Hundred';x%=100;if(x)s+=' '}if(x)s+=two(x);return s}
+ let out=''; const groups=[[1e9,'Crore'],[1e5,'Lakh'],[1e3,'Thousand'],[1e2,'Hundred']];
+ for(const [v,name] of groups){if(n>=v){let q=Math.floor(n/v);out+=(out?' ':'')+part(q)+' '+name;n%=v}}
+ if(n)out+=(out?' ':'')+part(n); return out;
+}
+function annuity(P,annual,months){let r=annual/1200,n=months;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
+function parsePages(s,max){let out=[];(s||'').split(',').forEach(x=>{x=x.trim();if(x.includes('-')){let [a,b]=x.split('-').map(Number);for(let i=a;i<=b;i++)out.push(i)}else{let n=Number(x);if(n)out.push(n)}});return [...new Set(out)].filter(n=>n>=1&&(!max||n<=max))}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function out(html){$('#out').innerHTML=`<div class="result">${html}</div>`}
+async function calculate(id){
+ try{
+ switch(id){
+case'pdflock':{
+ const file=$('#pdfLockFile')?.files?.[0], mode=$('#pdfLockMode')?.value, pass=$('#pdfLockPassword')?.value||'';
+ if(!file) throw Error('Choose a PDF first.');
+ if(!pass) throw Error(mode==='lock'?'Enter a password for the PDF.':'Enter the existing PDF password.');
+ if(mode==='lock' && pass!==($('#pdfLockConfirm')?.value||'')) throw Error('The password confirmation does not match.');
+ const status=$('#pdfLockStatus'); status.textContent='Loading PDF security engine…';
+ try{
+   const bytes=new Uint8Array(await file.arrayBuffer());
+   if(mode==='lock'){
+     const mod=await import('https://cdn.jsdelivr.net/npm/@pdfsmaller/pdf-encrypt@1.2.0/+esm');
+     status.textContent='Encrypting PDF…';
+     const encrypted=await mod.encryptPDF(bytes,pass,{algorithm:'AES-256'});
+     dl(new Blob([encrypted],{type:'application/pdf'}),file.name.replace(/\.pdf$/i,'')+'-protected.pdf');
+     status.textContent='Done — your protected PDF has been downloaded.';
+     out(`<strong>PDF locked successfully.</strong><br>Open the downloaded file with the password you entered.`);
+   }else{
+     const mod=await import('https://cdn.jsdelivr.net/npm/@pdfsmaller/pdf-decrypt@1.0.1/+esm');
+     status.textContent='Checking password and decrypting PDF…';
+     const plain=await mod.decryptPDF(bytes,pass);
+     dl(new Blob([plain],{type:'application/pdf'}),file.name.replace(/\.pdf$/i,'')+'-unlocked.pdf');
+     status.textContent='Done — password removed from the downloaded copy.';
+     out(`<strong>PDF unlocked successfully.</strong><br>The downloaded copy no longer requires the password.`);
+   }
+ }catch(e){
+   console.error(e);
+   const msg=String(e?.message||e);
+   if(/incorrect password/i.test(msg)) throw Error('Incorrect PDF password.');
+   if(/secure|crypto|webcrypto/i.test(msg)) throw Error('Secure browser encryption is unavailable. Open PenniTools over HTTPS.');
+   throw Error('PDF security operation failed: '+msg);
+ }
+ break}
+
+ case'ctc':{let c=num($('#ctc').value),pf=num($('#pfp').value),tx=num($('#taxp').value);out(`Estimated monthly in-hand: <strong>${money(c*(1-pf/100-tx/100)/12)}</strong><br><span class="small">Estimate only; actual salary depends on payroll, tax regime and benefits.</span>`);break}
+ case'emi':{let e=annuity(num($('#p').value),num($('#r').value),num($('#n').value)),n=num($('#n').value);out(`Monthly EMI: <strong>${money(e)}</strong><br>Total interest: ${money(e*n-num($('#p').value))}<br>Total repayment: ${money(e*n)}`);break}
+ case'pf':{let b=num($('#basic').value),ee=b*num($('#epf').value)/100,er=b*num($('#erpf').value)/100;out(`Employee PF: <strong>${money(ee)}/month</strong><br>Employer PF contribution: ${money(er)}/month<br>Combined: ${money(ee+er)}/month`);break}
+ case'gst':{let p=num($('#price').value),r=num($('#rate').value);out(`With GST: <strong>${money(p*(1+r/100))}</strong><br>GST amount: ${money(p*r/100)}<br>Price before GST: ${money(p/(1+r/100))}`);break}
+ case'tax':{let x=Math.max(0,num($('#income').value)-num($('#ded').value)), slabs=[[400000,0],[400000,.05],[400000,.10],[400000,.15],[400000,.20],[Infinity,.30]],tax=0,prev=0;for(const [cap,rate] of slabs){let part=Math.max(0,Math.min(x,prev+cap)-prev);tax+=part*rate;prev+=cap;if(x<=prev)break}let cess=tax*num($('#cess').value)/100;out(`Estimated tax before cess: <strong>${money(tax)}</strong><br>Cess: ${money(cess)}<br>Total estimate: <strong>${money(tax+cess)}</strong><br><span class="small">Simplified slab estimate; verify current exemptions, rebate, surcharge and final rules.</span>`);break}
+ case'hike':case'increment':{let s=num($('#salary').value),p=num($('#pct').value);out(`Revised salary: <strong>${money(s*(1+p/100))}/year</strong><br>Increase: ${money(s*p/100)}<br>Monthly revised: ${money(s*(1+p/100)/12)}`);break}
+ case'elig':{let inc=num($('#income').value),emi=Math.max(0,inc*num($('#ratio').value)/100-num($('#existing').value)),P=annuity(1,num($('#rate').value),num($('#tenure').value));out(`Estimated additional EMI capacity: <strong>${money(emi)}</strong><br>Estimated loan amount: <strong>${money(emi/P)}</strong>`);break}
+ case'sip':{let m=num($('#sip').value),r=num($('#rate').value)/1200,n=num($('#years').value)*12,fv=r?m*((Math.pow(1+r,n)-1)/r)*(1+r):m*n;out(`Maturity: <strong>${money(fv)}</strong><br>Invested: ${money(m*n)}<br>Estimated gains: ${money(fv-m*n)}`);break}
+ case'fd':{let p=num($('#principal').value),r=num($('#rate').value)/100,f=num($('#freq').value),y=num($('#years').value),fv=p*Math.pow(1+r/f,f*y);out(`Maturity: <strong>${money(fv)}</strong><br>Interest: ${money(fv-p)}`);break}
+ case'rd':{let m=num($('#monthly').value),r=num($('#rate').value)/400,n=num($('#months').value),fv=m*((Math.pow(1+r,n)-1)/r)*(1+r);out(`Approx maturity: <strong>${money(fv)}</strong><br>Deposits: ${money(m*n)}<br>Interest: ${money(fv-m*n)}`);break}
+ case'gratuity':{let b=num($('#last').value),y=num($('#years').value),g=b*15/26*y;out(`Estimated gratuity: <strong>${money(g)}</strong>`);break}
+ case'ppf':{let a=num($('#annual').value),r=num($('#rate').value)/100,n=num($('#years').value),fv=a*((Math.pow(1+r,n)-1)/r);out(`Estimated maturity: <strong>${money(fv)}</strong><br>Total contributions: ${money(a*n)}`);break}
+ case'nps':{let m=num($('#monthly').value),r=num($('#rate').value)/1200,n=num($('#years').value)*12,fv=r?m*((Math.pow(1+r,n)-1)/r)*(1+r):m*n,an=fv*num($('#annuity').value)/100;out(`Estimated corpus: <strong>${money(fv)}</strong><br>Illustrative annuity portion: ${money(an)}<br>Remaining corpus: ${money(fv-an)}`);break}
+ case'home':case'carloan':{let e=annuity(num($('#p').value),num($('#r').value),num($('#n').value)),n=num($('#n').value);out(`EMI: <strong>${money(e)}</strong><br>Total interest: ${money(e*n-num($('#p').value))}`);break}
+ case'mileage':out(`Mileage: <strong>${(num($('#distance').value)/num($('#fuel').value)).toFixed(2)} km/l</strong><br>Fuel used per 100 km: ${(num($('#fuel').value)/num($('#distance').value)*100).toFixed(2)} L`);break;
+ case'fuel':{let d=num($('#distance').value),m=num($('#mileage').value),p=num($('#price').value),l=d/m;out(`Fuel needed: <strong>${l.toFixed(2)} L</strong><br>Trip cost: <strong>${money(l*p)}</strong>`);break}
+ case'ev':{let k=num($('#battery').value),pct=Math.max(0,num($('#to').value)-num($('#from').value))/100,cost=k*pct*num($('#tariff').value);out(`Energy used: <strong>${(k*pct).toFixed(2)} kWh</strong><br>Charging cost: <strong>${money(cost)}</strong>`);break}
+ case'trip':{let l=num($('#distance').value)/num($('#mileage').value),total=l*num($('#fuelprice').value)+num($('#toll').value),people=Math.max(1,num($('#people').value));out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
+ case'insurance':{let idv=num($('#idv').value),prem=idv*num($('#rate').value)/100,tot=prem*(1+num($('#gst').value)/100);out(`Estimated premium: <strong>${money(tot)}</strong><br>Base premium: ${money(prem)}<br>GST: ${money(tot-prem)}`);break}
+ case'carpenterarea':{
+   const L=num($('#caLength').value), W=num($('#caWidth').value), Q=Math.max(1,Math.floor(num($('#caQty').value)||1)), unit=$('#caUnit').value;
+   if(L<=0||W<=0) throw Error('Enter positive length and width.');
+   const factor={in:1/12,ft:1,cm:1/30.48,mm:1/304.8}[unit];
+   const lft=L*factor, wft=W*factor, oneSqFt=lft*wft, totalSqFt=oneSqFt*Q;
+   const oneSqIn=oneSqFt*144, totalSqIn=oneSqIn*Q;
+   out(`<div class="trip-result"><h3>Square Feet Result</h3>
+   <p><strong>${L} ${unit} × ${W} ${unit}</strong></p>
+   <p>Area per piece: <strong>${oneSqIn.toFixed(3)} sq in ÷ 144 = ${oneSqFt.toFixed(3)} sq ft</strong></p>
+   <p>Quantity: <strong>${Q}</strong></p>
+   <p>Total area: <strong>${totalSqFt.toFixed(3)} sq ft</strong></p>
+   <p class="small">Rounded: <strong>${totalSqFt.toFixed(2)} sq ft</strong></p>
+   </div>`);
+   break}
+case'feetinch':{
+   let ft=num($('#fiFeet').value), inches=num($('#fiInches').value);
+   let totalIn=ft*12+inches, dec=totalIn/12;
+   out(`Total length: <strong>${Math.floor(totalIn/12)} ft ${ (totalIn%12).toFixed(2) } in</strong><br>Decimal feet: <strong>${dec.toFixed(3)} ft</strong><br>Total inches: <strong>${totalIn.toFixed(2)} in</strong>`);
+   break}
+ case'boardfoot':{
+   let t=num($('#bfThickness').value),w=num($('#bfWidth').value),l=num($('#bfLength').value),q=Math.max(1,num($('#bfQty').value));
+   let one=t*w*l/12,total=one*q;
+   out(`Board feet per piece: <strong>${one.toFixed(2)}</strong><br>Total board feet: <strong>${total.toFixed(2)}</strong><br>Pieces: ${q}`);
+   break}
+ case'woodcost':{
+   let t=num($('#wcThickness').value),w=num($('#wcWidth').value),l=num($('#wcLength').value),q=Math.max(1,num($('#wcQty').value)),p=num($('#wcPrice').value);
+   let bf=t*w*l/12*q,cost=bf*p;
+   out(`Total lumber: <strong>${bf.toFixed(2)} board ft</strong><br>Estimated wood cost: <strong>${money(cost)}</strong><br>Average cost/piece: ${money(cost/q)}`);
+   break}
+ case'cutlist':{
+   let stock=Math.max(0,num($('#clStock').value)),waste=Math.max(0,num($('#clWaste').value));
+   let cuts=($('#clCuts').value||'').split(',').map(Number).filter(x=>x>0);
+   if(!cuts.length)throw Error('Enter at least one cut length.');
+   let total=cuts.reduce((a,b)=>a+b,0),withWaste=total*(1+waste/100),stocks=stock?Math.ceil(withWaste/stock):0;
+   out(`Total cut length: <strong>${total.toFixed(3)}</strong><br>With ${waste}% waste: <strong>${withWaste.toFixed(3)}</strong><br>${stock?`Estimated stock pieces needed: <strong>${stocks}</strong>`:'Enter a stock length to estimate pieces.'}`);
+   break}
+ case'roommaterial':{
+   let L=num($('#rmLength').value),W=num($('#rmWidth').value),ml=num($('#rmMatL').value),mw=num($('#rmMatW').value),waste=Math.max(0,num($('#rmWaste').value));
+   let area=L*W,piece=ml*mw,needed=piece?Math.ceil(area*(1+waste/100)/piece):0;
+   out(`Room area: <strong>${area.toFixed(2)} sq ft</strong><br>Material area/piece: ${piece.toFixed(2)} sq ft<br>Estimated quantity: <strong>${needed}</strong> pieces<br>Includes ${waste}% waste.`);
+   break}
+ case'stair':{
+   let heightIn=num($('#stHeight').value)*12,target=num($('#stRiser').value),tread=num($('#stTread').value);
+   if(heightIn<=0||target<=0||tread<=0)throw Error('Enter positive measurements.');
+   let risers=Math.max(1,Math.ceil(heightIn/target)),actual=heightIn/risers,run=(risers-1)*tread;
+   out(`Number of risers: <strong>${risers}</strong><br>Actual riser height: <strong>${actual.toFixed(2)} in</strong><br>Approx. horizontal run: <strong>${(run/12).toFixed(2)} ft</strong> (${run.toFixed(1)} in)<br>Tread depth: ${tread.toFixed(2)} in`);
+   break}
+
+ case'notice':{let d=new Date($('#start').value);d.setDate(d.getDate()+num($('#days').value));out(`Estimated last working date: <strong>${d.toLocaleDateString('en-IN')}</strong>`);break}
+ case'experience':case'datediff':{let a=new Date($('#start').value),b=new Date($('#end').value),days=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${days} days</strong><br>Approximately ${(days/365.25).toFixed(2)} years`);break}
+ case'leave':out(`Estimated leave value: <strong>${money(num($('#salary').value)/num($('#workdays').value)*num($('#days').value))}</strong>`);break;
+ case'age':{let d=new Date($('#dob').value),a=new Date($('#asof').value),y=a.getFullYear()-d.getFullYear(),m=a.getMonth()-d.getMonth(),day=a.getDate()-d.getDate();if(day<0){m--;day+=new Date(a.getFullYear(),a.getMonth(),0).getDate()}if(m<0){y--;m+=12}out(`Age: <strong>${y} years, ${m} months, ${day} days</strong>`);break}
+ case'percentage':out(`<strong>${(num($('#value').value)/num($('#total').value)*100).toFixed(2)}%</strong>`);break;
+ case'discount':{let p=num($('#price').value),d=num($('#discount').value),save=p*d/100;out(`Final price: <strong>${money(p-save)}</strong><br>You save: ${money(save)}`);break}
+ case'unit':{let c=$('#uc').value,v=num($('#uv').value),a=$('#uf').value,b=$('#ut').value,res=convertUnit(c,v,a,b);out(`<strong>${res}</strong> ${b}`);break}
+ case'simpleint':{let p=num($('#p').value),r=num($('#r').value),t=num($('#t').value),i=p*r*t/100;out(`Simple interest: <strong>${money(i)}</strong><br>Maturity amount: <strong>${money(p+i)}</strong>`);break}
+case'compoundint':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),n=num($('#n').value),a=p*Math.pow(1+r/n,n*t);out(`Compound interest: <strong>${money(a-p)}</strong><br>Maturity amount: <strong>${money(a)}</strong>`);break}
+case'inflation':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),a=p*Math.pow(1+r,t);out(`Estimated future cost: <strong>${money(a)}</strong><br>Increase due to inflation: ${money(a-p)}`);break}
+case'cagr':{let s=num($('#startv').value),e=num($('#endv').value),y=num($('#years').value),c=(Math.pow(e/s,1/y)-1)*100;out(`CAGR: <strong>${c.toFixed(2)}%</strong>`);break}
+case'loancompare':{let a=annuity(num($('#p1').value),num($('#r1').value),num($('#n1').value)),b=annuity(num($('#p2').value),num($('#r2').value),num($('#n2').value)),ta=a*num($('#n1').value),tb=b*num($('#n2').value);out(`Loan A EMI: <strong>${money(a)}</strong> · Interest: ${money(ta-num($('#p1').value))}<br>Loan B EMI: <strong>${money(b)}</strong> · Interest: ${money(tb-num($('#p2').value))}<br><strong>${ta<tb?'Loan A':'Loan B'}</strong> has the lower total repayment.`);break}
+case'salarybreak':{let a=num($('#annual').value),m=a/12,p=m*num($('#pf').value)/100,t=num($('#tax').value),o=num($('#other').value);out(`Monthly gross: <strong>${money(m)}</strong><br>PF: ${money(p)} · Tax: ${money(t)} · Other: ${money(o)}<br>Estimated in-hand: <strong>${money(m-p-t-o)}</strong>`);break}
+case'pdfeditor':await editPdf();break;
+case'pagenumber':await pageNumberPdf();break;
+case'rotatepdf':await rotatePdf();break;
+case'petroldiesel':{let d=num($('#distance').value),pc=d/num($('#petrolm').value)*num($('#petrolp').value),dc=d/num($('#dieselm').value)*num($('#dieselp').value);out(`Petrol monthly cost: <strong>${money(pc)}</strong><br>Diesel monthly cost: <strong>${money(dc)}</strong><br>Estimated saving: <strong>${money(Math.abs(pc-dc))}</strong>`);break}
+case'evpetrol':{let d=num($('#distance').value),ec=d/num($('#evkm').value)*num($('#evrate').value),pc=d/num($('#petrolm').value)*num($('#petrolp').value);out(`EV monthly cost: <strong>${money(ec)}</strong><br>Petrol monthly cost: <strong>${money(pc)}</strong><br>EV saving: <strong>${money(pc-ec)}</strong>`);break}
+case'depreciation':{let p=num($('#price').value),r=num($('#rate').value)/100,y=num($('#years').value),v=p*Math.pow(1-r,y);out(`Estimated value after ${y} years: <strong>${money(v)}</strong><br>Estimated depreciation: ${money(p-v)}`);break}
+case'workingdays':{let a=new Date($('#start').value),b=new Date($('#end').value),sat=$('#sat').checked,c=0;for(let d=new Date(a);d<=b;d.setDate(d.getDate()+1)){let w=d.getDay();if(w!==0&&(sat||w!==6))c++}out(`Working days: <strong>${c}</strong>`);break}
+case'overtime':{let s=num($('#salary').value),d=num($('#days').value),h=num($('#hours').value),ot=num($('#ot').value),m=num($('#mult').value),rate=s/(d*h);out(`Approx hourly rate: ${money(rate)}<br>Overtime pay: <strong>${money(rate*m*ot)}</strong>`);break}
+case'bmi':{let w=num($('#weight').value),h=num($('#height').value)/100,b=w/(h*h),cat=b<18.5?'Underweight':b<25?'Normal':b<30?'Overweight':'Obesity';out(`BMI: <strong>${b.toFixed(1)}</strong><br>Category: <strong>${cat}</strong>`);break}
+case'tip':{let b=num($('#bill').value),p=num($('#tip').value),n=Math.max(1,num($('#people').value)),t=b*p/100;out(`Tip: <strong>${money(t)}</strong><br>Total bill: <strong>${money(b+t)}</strong><br>Per person: <strong>${money((b+t)/n)}</strong>`);break}
+case'timezone':{let t=$('#time').value;if(!t)throw Error('Choose a time');let [hh,mm]=t.split(':').map(Number),from=$('#tzfrom').value,to=$('#tzto').value,base=new Date();base.setUTCHours(hh,mm,0,0);function parts(zone){return Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:zone,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(base).filter(x=>x.type!=='literal').map(x=>[x.type,x.value]))}let fp=parts(from),target=new Date(Date.UTC(+fp.year,+fp.month-1,+fp.day,+fp.hour,+fp.minute));let tp=new Intl.DateTimeFormat('en-IN',{timeZone:to,hour:'2-digit',minute:'2-digit',hour12:true,timeZoneName:'short'}).format(target);out(`Converted time: <strong>${tp}</strong><br><span class="small">Source: ${from} → Destination: ${to}</span>`);break}
+case'percentage':{let v=num($('#value').value),p=num($('#pct').value);out(`${p}% of ${money(v)} = <strong>${money(v*p/100)}</strong>`);break}
+case'discount':{let p=num($('#price').value),d=num($('#discount').value),x=p*d/100;out(`Discount: <strong>${money(x)}</strong><br>Final price: <strong>${money(p-x)}</strong>`);break}
+case'breakeven':{let f=num($('#fixed').value),p=num($('#price').value),v=num($('#variable').value),u=p-v;out(u<=0?'Selling price must be greater than variable cost.':`Break-even units: <strong>${Math.ceil(f/u)}</strong><br>Contribution/unit: ${money(u)}`);break}
+case'savingsgoal':{let t=num($('#target').value),s=num($('#saved').value),m=num($('#months').value),need=Math.max(0,t-s);out(`Monthly saving needed: <strong>${money(need/Math.max(1,m))}</strong><br>Remaining target: ${money(need)}`);break}
+case'prepay':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),x=Math.min(p,Math.max(0,num($('#extra').value))),e=annuity(p,r,n),oldInt=e*n-p,rem=p-x,newE=annuity(rem,r,n),newInt=newE*n-rem,saved=oldInt-newInt;out(`Current EMI: <strong>${money(e)}</strong><br>After extra payment, estimated EMI: <strong>${money(newE)}</strong><br>Estimated interest saving: <strong>${money(saved)}</strong>`);break}
+case'fuelmonthly':{let km=num($('#km').value),m=num($('#mileage').value),p=num($('#price').value),c=km/m*p;out(`Monthly fuel needed: ${(km/m).toFixed(2)} L<br>Monthly fuel cost: <strong>${money(c)}</strong>`);break}
+case'unitprice':{let a=num($('#p1').value)/num($('#q1').value),b=num($('#p2').value)/num($('#q2').value);out(`Product A: <strong>${money(a)}</strong> per unit<br>Product B: <strong>${money(b)}</strong> per unit<br>Better value: <strong>${a<b?'Product A':'Product B'}</strong>`);break}
+case'traveltime':{let d=num($('#distance').value),s=num($('#speed').value),h=d/s,hrs=Math.floor(h),mins=Math.round((h-hrs)*60);out(`Estimated travel time: <strong>${hrs}h ${mins}m</strong>`);break}
+case'tollfuel':{let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),t=num($('#toll').value),fuel=d/m*fp;out(`Fuel cost: ${money(fuel)}<br>Tolls: ${money(t)}<br>Total trip cost: <strong>${money(fuel+t)}</strong>`);break}
+case'runningcost':{let c=num($('#fuelcost').value)+num($('#service').value)+num($('#insurance').value);out(`Estimated monthly running cost: <strong>${money(c)}</strong><br>Estimated annual cost: ${money(c*12)}`);break}
+case'age':{let d=new Date($('#dob').value),a=new Date($('#asof').value||Date.now());if(isNaN(d)||isNaN(a)||a<d)throw Error('Check the dates');let y=a.getFullYear()-d.getFullYear(),m=a.getMonth()-d.getMonth(),day=a.getDate()-d.getDate();if(day<0){m--;day+=new Date(a.getFullYear(),a.getMonth(),0).getDate()}if(m<0){y--;m+=12}out(`Age: <strong>${y} years, ${m} months, ${day} days</strong>`);break}
+case'datediff2':{let a=new Date($('#start').value),b=new Date($('#end').value),d=Math.round(Math.abs(b-a)/86400000);out(`Difference: <strong>${d} days</strong>`);break}
+case'daysuntil':{let d=new Date($('#date').value);let a=new Date();a.setHours(0,0,0,0);let x=Math.ceil((d-a)/86400000);out(x<0?`That date was <strong>${Math.abs(x)} days ago</strong>`:`Days remaining: <strong>${x}</strong>`);break}
+case'pctchange':{let a=num($('#old').value),b=num($('#newv').value);if(a===0)throw Error('Old value cannot be zero');out(`Percentage change: <strong>${((b-a)/a*100).toFixed(2)}%</strong>`);break}
+case'average':{let a=($('#values').value.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);if(!a.length)throw Error('Enter numbers');let s=a.reduce((x,y)=>x+y,0);out(`Average: <strong>${(s/a.length).toFixed(2)}</strong><br>Numbers counted: ${a.length}`);break}
+case'textcounter':{let t=$('#text').value,w=(t.trim().match(/\S+/g)||[]).length,c=[...t].length,l=t? t.split(/\r?\n/).length:0;out(`Words: <strong>${w}</strong><br>Characters: <strong>${c}</strong><br>Lines: <strong>${l}</strong>`);break}
+case'password':{let n=Math.max(4,Math.min(128,Math.floor(num($('#len').value)||16))),chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789'+($('#symbols').checked?'!@#$%^&*_-+=?':'');let a=new Uint32Array(n);crypto.getRandomValues(a);let pw=[...a].map(x=>chars[x%chars.length]).join('');out(`<code>${pw}</code><br><button class="btn" onclick="navigator.clipboard?.writeText('${pw}')">Copy</button>`);break}
+case'splitbill':{let b=num($('#bill').value),t=b*num($('#tip').value)/100,n=Math.max(1,num($('#people').value)),total=b+t;out(`Total: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/n)}</strong>`);break}
+case'hourlysalary':{let s=num($('#salary').value),months=num($('#months').value),days=num($('#days').value),hours=num($('#hours').value),h=s/(months*days*hours);out(`Estimated hourly salary: <strong>${money(h)}</strong><br>Estimated daily salary: ${money(h*hours)}`);break}
+case'loaninterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`EMI: <strong>${money(e)}</strong><br>Total repayment: ${money(e*n)}<br>Total interest: <strong>${money(e*n-p)}</strong>`);break}
+case'budget':{let i=num($('#income').value),s=num($('#savings').value),e=num($('#expenses').value);out(`Unallocated amount: <strong>${money(i-s-e)}</strong><br>Savings rate: ${i?((s/i)*100).toFixed(1):0}%`);break}
+case'networth':{let a=num($('#assets').value),l=num($('#liabilities').value);out(`Estimated net worth: <strong>${money(a-l)}</strong>`);break}
+case'emergency':{let s=num($('#savings').value),e=num($('#expenses').value);out(`Emergency fund coverage: <strong>${(s/e).toFixed(1)} months</strong>`);break}
+case'roi':{let a=num($('#invested').value),b=num($('#returned').value);out(`Profit/loss: <strong>${money(b-a)}</strong><br>ROI: <strong>${a?((b-a)/a*100).toFixed(2):0}%</strong>`);break}
+case'markup':{let c=num($('#cost').value),p=num($('#markup').value);out(`Selling price: <strong>${money(c*(1+p/100))}</strong>`);break}
+case'margin':{let c=num($('#cost').value),s=num($('#sale').value);out(`Profit: ${money(s-c)}<br>Profit margin: <strong>${s?((s-c)/s*100).toFixed(2):0}%</strong>`);break}
+case'gstsplit':{let t=num($('#total').value),r=num($('#rate').value),base=t/(1+r/100);out(`Taxable value: <strong>${money(base)}</strong><br>GST: ${money(t-base)}`);break}
+case'annualmonthly':out(`Monthly salary: <strong>${money(num($('#annual').value)/12)}</strong>`);break
+case'monthlyannual':out(`Annual salary: <strong>${money(num($('#monthly').value)*12)}</strong>`);break
+case'mileagecalc':{let d=num($('#distance').value),f=num($('#fuel').value);out(`Mileage: <strong>${(d/f).toFixed(2)} km/l</strong>`);break}
+case'fuelrequired':{let d=num($('#distance').value),m=num($('#mileage').value);out(`Fuel required: <strong>${(d/m).toFixed(2)} litres</strong>`);break}
+case'tripsplit':{let x=num($('#fuel').value)+num($('#toll').value),n=Math.max(1,num($('#people').value));out(`Total trip cost: ${money(x)}<br>Per person: <strong>${money(x/n)}</strong>`);break}
+case'emivscash':{let price=num($('#price').value),down=num($('#down').value),r=num($('#rate').value),n=num($('#months').value),p=price-down,e=annuity(p,r,n);out(`Loan amount: ${money(p)}<br>EMI: <strong>${money(e)}</strong><br>Total loan repayment: ${money(e*n)}<br>Cash purchase: ${money(price)}`);break}
+case'carinterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`Total interest: <strong>${money(e*n-p)}</strong>`);break}
+case'evcharge':{let b=num($('#battery').value),r=num($('#rate').value),l=num($('#loss').value),cost=b*(1+l/100)*r;out(`Estimated charging cost: <strong>${money(cost)}</strong>`);break}
+case'evrange':{let b=num($('#battery').value),e=num($('#eff').value);out(`Estimated range: <strong>${(b*e).toFixed(0)} km</strong>`);break}
+case'tollsplit':{let t=num($('#toll').value),n=Math.max(1,num($('#people').value));out(`Per person toll: <strong>${money(t/n)}</strong>`);break}
+case'agedays':{let d=new Date($('#dob').value),a=new Date($('#asof').value||Date.now());out(`Approximate age: <strong>${Math.floor((a-d)/86400000).toLocaleString('en-IN')} days</strong>`);break}
+case'leap':{let y=Math.floor(num($('#year').value));out(`${y} is <strong>${(y%4===0&&y%100!==0)||y%400===0?'a leap year':'not a leap year'}</strong>.`);break}
+case'monthdays':{let y=num($('#year').value),m=num($('#month').value);out(`<strong>${new Date(y,m,0).getDate()} days</strong> in month ${m}.`);break}
+case'weeknum':{let d=new Date($('#date').value);let x=new Date(Date.UTC(d.getFullYear(),d.getMonth(),d.getDate()));let day=x.getUTCDay()||7;x.setUTCDate(x.getUTCDate()+4-day);let y=new Date(Date.UTC(x.getUTCFullYear(),0,1));let w=Math.ceil((((x-y)/86400000)+1)/7);out(`ISO week: <strong>${w}</strong>`);break}
+case'countdown':{let d=new Date($('#date').value),ms=d-Date.now();if(ms<0){out('The target time has passed.');break}let days=Math.floor(ms/86400000);ms%=86400000;let h=Math.floor(ms/3600000);ms%=3600000;let mi=Math.floor(ms/60000);out(`Time remaining: <strong>${days}d ${h}h ${mi}m</strong>`);break}
+case'duration':{let x=num($('#h1').value)*60+num($('#m1').value)+num($('#h2').value)*60+num($('#m2').value);out(`Total duration: <strong>${Math.floor(x/60)}h ${x%60}m</strong>`);break}
+case'randomnum':{let a=Math.ceil(num($('#min').value)),b=Math.floor(num($('#max').value));if(b<a)throw Error('Maximum must be greater than minimum');out(`Random number: <strong>${Math.floor(Math.random()*(b-a+1))+a}</strong>`);break}
+case'numwords':{let n=Math.floor(num($('#amount').value));if(n<0||n>999999999999)throw Error('Enter 0 to 999,999,999,999');out(`<strong>${indianWords(n)}</strong>`);break}
+case'pcttotal':{let a=num($('#part').value),b=num($('#total').value);out(`<strong>${b?((a/b)*100).toFixed(2):0}%</strong>`);break}
+case'ratio':{let a=Math.abs(Math.round(num($('#a').value))),b=Math.abs(Math.round(num($('#b').value)));let g=hcf(a,b);out(`Simplified ratio: <strong>${a/g}:${b/g}</strong>`);break}
+case'lcmhcf':{let a=Math.round(num($('#a').value)),b=Math.round(num($('#b').value)),g=hcf(a,b),l=Math.abs(a*b)/g;out(`HCF: <strong>${g}</strong><br>LCM: <strong>${l}</strong>`);break}
+case'priceweight':{let p=num($('#price').value),g=num($('#grams').value);out(`Price per 100g: <strong>${money(p/g*100)}</strong><br>Price per kg: ${money(p/g*1000)}`);break}
+case'noticecalc':{let d=new Date($('#start').value),n=num($('#days').value);d.setDate(d.getDate()+n);out(`Estimated last working date: <strong>${d.toLocaleDateString('en-IN')}</strong>`);break}
+case'experiencecalc':{let a=new Date($('#start').value),b=new Date($('#end').value),months=(b.getFullYear()-a.getFullYear())*12+b.getMonth()-a.getMonth()-(b.getDate()<a.getDate()?1:0);out(`Experience: <strong>${Math.floor(months/12)} years, ${months%12} months</strong>`);break}
+case'otpay':{let s=num($('#monthly').value),h=num($('#hours').value),mult=num($('#mult').value),rate=s/(26*8);out(`Overtime pay: <strong>${money(rate*h*mult)}</strong>`);break}
+case'leavebalance':{let a=num($('#allocated').value),u=num($('#used').value);out(`Remaining leave: <strong>${Math.max(0,a-u)}</strong> days`);break}
+case'caldeficit':{let m=num($('#maintenance').value),d=num($('#deficit').value);out(`Suggested calorie target: <strong>${Math.round(m*(1-d/100))} kcal/day</strong>`);break}
+case'water':{let w=num($('#weight').value),ml=num($('#ml').value);out(`Estimated daily water: <strong>${(w*ml/1000).toFixed(2)} litres</strong>`);break}
+case'bodyfat':{let bmi=num($('#bmi').value),age=num($('#age').value);out(`BMI-based estimate: <strong>${(1.2*bmi+0.23*age-10.8-5.4).toFixed(1)}%</strong><br><span class="small">Very rough estimate; formulas vary by sex and method.</span>`);break}
+case'pctcgpa':{let p=num($('#percentage').value);out(`Estimated CGPA: <strong>${(p/9.5).toFixed(2)}</strong>`);break}
+case'markspercent':{let a=num($('#obtained').value),m=num($('#maximum').value);out(`Percentage: <strong>${m?(a/m*100).toFixed(2):0}%</strong>`);break}
+case'gpa':{let rows=$('#grades').value.trim().split(/\n/).map(x=>x.split(/[,\s]+/).map(Number)).filter(x=>x.length>=2&&!isNaN(x[0])&&!isNaN(x[1]));let cr=rows.reduce((s,x)=>s+x[1],0),pts=rows.reduce((s,x)=>s+x[0]*x[1],0);if(!cr)throw Error('Enter grade,credit pairs');out(`Weighted GPA: <strong>${(pts/cr).toFixed(2)}</strong><br>Credits: ${cr}`);break}
+case'audiotranscribe':{
+ const f=$('#audiofile').files[0];
+ if(!f)throw Error('Choose an audio file.');
+ if(f.size>=100*1024*1024)throw Error('Please upload an audio file under 100 MB.');
+ $('#audiostatus').innerHTML='File accepted. Browser-based transcription engine can be connected here.';
+ $('#transcript').value='Audio file: '+f.name+'\nSize: '+(f.size/1024/1024).toFixed(2)+' MB\nLanguage: '+$('#audiolang').value+'\nMode: '+$('#transmode').value+'\n\nTo provide genuinely accurate multilingual transcription at scale, this interface should use a local Whisper/WebGPU engine or a dedicated transcription backend. The 100 MB file limit and unlimited-use policy are UI limits; processing speed and model availability depend on the device.';
+ break}
+case'callanalysis':{
+ const t=$('#analysistext').value.trim();if(!t)throw Error('Paste a transcript first.');
+ const lines=t.split(/\n+/).filter(Boolean), speakers={};
+ lines.forEach(x=>{let m=x.match(/^\s*([^:]{1,40}):\s*(.*)$/);if(m)(speakers[m[1].trim()]??=[]).push(m[2].trim())});
+ let speakerHtml=Object.entries(speakers).map(([k,v])=>`<li><strong>${k}</strong>: ${v.length} utterance(s)</li>`).join('');
+ const sentences=t.split(/[.!?]+/).map(x=>x.trim()).filter(Boolean);
+ $('#analysisout').innerHTML=`<div class="trip-result"><h3>Conversation Analysis</h3><p><strong>Segments:</strong> ${lines.length} · <strong>Sentences:</strong> ${sentences.length}</p><h4>Detected speakers</h4><ul>${speakerHtml||'<li>No explicit Speaker/Name labels detected.</li>'}</ul><h4>Key conversation text</h4><p>${sentences.slice(0,8).map(x=>x.replace(/[<>]/g,'')).join('. ')}</p><p class="small">This is a structural analysis. It does not invent speaker identity, intent or facts that are not present in the transcript.</p></div>`;
+ break}
+case'transcriptclean':{
+ let t=$('#cleantext').value.replace(/\r/g,'').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n').trim();
+ $('#cleanout').innerHTML=`<textarea readonly>${t.replace(/</g,'&lt;')}</textarea>`;
+ break}
+case'audiotranslate':{
+ $('#translatein').focus();
+ out('Translation requires a translation engine/API to perform automatic multilingual translation. The transcript is preserved without alteration.');
+ break}
+
+case'currency':{let a=num($('#amt').value),from=$('#from').value,to=$('#to').value;let r=await fetch(`https://api.frankfurter.app/latest?amount=1&from=${from}&to=${to}`).then(x=>x.json());let rate=r.rates[to];out(`<strong>${a*rate}</strong> ${to}<br>Rate: 1 ${from} = ${rate} ${to}<br><span class="small">Rate supplied by the public Frankfurter service.</span>`);break}
+ case'wordpdf':{const {jsPDF}=window.jspdf;let pdf=new jsPDF();let lines=pdf.splitTextToSize($('#text').value,180);let y=15;lines.forEach(line=>{if(y>280){pdf.addPage();y=15}pdf.text(line,15,y);y+=7});pdf.save('pennitools-document.pdf');out('PDF created and downloaded.');break}
+ case'jpgpdf':await jpgToPdf();break;
+ case'pdfword':await pdfToText();break;
+ case'pdfjpg':await pdfToJpg();break;
+ case'mergepdf':await mergePdfs();break;
+ case'splitpdf':await pdfPages(false);break;
+ case'removePages':await pdfPages(true);break;
+ case'reorder':await reorderPdf();break;
+ case'pdfcompress':await copyPdf();break;
+ case'pdflock':await copyPdf();break;
+ case'crop':await imageDownload('crop');break;
+ case'resize':await imageDownload('resize');break;
+ case'compress':await imageDownload('compress');break;
+ case'convert':await imageDownload('convert');break;
+ case'passport':await imageDownload('passport');break;
+ case'signature':$('#sig').toBlob(b=>dl(b,'pennitools-signature.png'),'image/png');out('Signature downloaded.');break;
+ }
+ }catch(e){out(`<span style="color:#b42318">Could not complete: ${e.message}</span>`)}
+}
+function convertUnit(c,v,a,b){
+if(a===b)return v;
+if(c==='Temperature'){let C=a==='C'?v:a==='F'?(v-32)*5/9:v-273.15;return b==='C'?C:b==='F'?C*9/5+32:C+273.15}
+const base={Length:{m:1,km:1000,cm:.01,ft:.3048,in:.0254},Weight:{kg:1,g:.001,lb:.45359237,oz:.0283495231}};return v*base[c][a]/base[c][b]
+}
+function initSig(){const c=$('#sig'),x=c.getContext('2d');x.lineWidth=3;x.lineCap='round';let on=false;c.addEventListener('pointerdown',e=>{on=true;x.beginPath();x.moveTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight)});c.addEventListener('pointermove',e=>{if(!on)return;x.lineTo(e.offsetX*c.width/c.clientWidth,e.offsetY*c.height/c.clientHeight);x.stroke()});window.addEventListener('pointerup',()=>on=false)}
+async function jpgToPdf(){let fs=[...($('#img')?.files||[])];if(!fs.length)throw Error('Choose at least one image');if(fs.length>30)throw Error('Please select up to 30 images at a time.');const {jsPDF}=window.jspdf;let pdf=new jsPDF({unit:'px',format:'a4'});for(let i=0;i<fs.length;i++){if(i)pdf.addPage();let data=await fileData(fs[i]),im=new Image();await new Promise(r=>{im.onload=r;im.src=data});let s=Math.min(pdf.internal.pageSize.getWidth()/im.width,pdf.internal.pageSize.getHeight()/im.height),w=im.width*s,h=im.height*s;pdf.addImage(data,(fs[i].type||'image/jpeg').includes('png')?'PNG':'JPEG',(pdf.internal.pageSize.getWidth()-w)/2,(pdf.internal.pageSize.getHeight()-h)/2,w,h)}pdf.save('pennitools-images.pdf');out('PDF created.')}
+async function fileData(f){return await new Promise((res,rej)=>{let r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(f)})}
+async function pdfDoc(){let f=$('#pdf').files[0];if(!f)throw Error('Choose a PDF');return await PDFLib.PDFDocument.load(await f.arrayBuffer())}
+async function pdfToBytes(doc){return await doc.save({useObjectStreams:true})}
+async function mergePdfs(){let fs=[...$('#pdfs').files];if(fs.length<1)throw Error('Choose PDFs');let outdoc=await PDFLib.PDFDocument.create();for(const f of fs){let d=await PDFLib.PDFDocument.load(await f.arrayBuffer()),pages=await outdoc.copyPages(d,d.getPageIndices());pages.forEach(p=>outdoc.addPage(p))}dl(new Blob([await outdoc.save()],{type:'application/pdf'}),'pennitools-merged.pdf');out('Merged successfully.')}
+async function pdfPages(remove){let d=await pdfDoc(),max=d.getPageCount(),sel=parsePages($('#pages').value,max);let keep=[...Array(max).keys()].filter(i=>remove?!sel.includes(i+1):sel.includes(i+1));if(!keep.length)throw Error('No pages left');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,keep);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-pages.pdf');out('PDF created.')}
+async function reorderPdf(){let d=await pdfDoc(),order=parsePages($('#order').value,d.getPageCount()).map(n=>n-1);if(order.length!==d.getPageCount())throw Error('Enter every page exactly once');let o=await PDFLib.PDFDocument.create(),p=await o.copyPages(d,order);p.forEach(x=>o.addPage(x));dl(new Blob([await o.save()],{type:'application/pdf'}),'pennitools-reordered.pdf');out('PDF reordered.')}
+async function copyPdf(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const original=await f.arrayBuffer();
+ const d=await PDFLib.PDFDocument.load(original,{updateMetadata:false});
+ const bytes=await d.save({useObjectStreams:true,addDefaultPage:false,updateFieldAppearances:false});
+ dl(new Blob([bytes],{type:'application/pdf'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-compressed.pdf');
+ const before=original.byteLength,after=bytes.byteLength,pct=before?((1-after/before)*100):0;
+ out(`<strong>PDF processed successfully.</strong><br>Original: ${(before/1024/1024).toFixed(2)} MB · Output: ${(after/1024/1024).toFixed(2)} MB · ${pct>=0?pct.toFixed(1)+'% smaller':'output is '+(-pct).toFixed(1)+'% larger'}<br><span class="small">Image-heavy scanned PDFs may not shrink much without lossy image compression.</span>`);
+}
+
+async function loadPdfJs(){
+ const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
+ pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+ return pdfjs;
+}
+async function pdfToText(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const pdfjs=await loadPdfJs();
+ const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ $('#out').innerHTML='<div class="result">Reading PDF…</div>';
+ let text=[];
+ for(let i=1;i<=pdf.numPages;i++){
+   const page=await pdf.getPage(i);
+   const content=await page.getTextContent();
+   const line=content.items.map(x=>x.str||'').join(' ').replace(/\s+/g,' ').trim();
+   text.push(`--- Page ${i} ---\n${line}`);
+ }
+ const body=text.join('\n\n');
+ if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
+ const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+ const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
+</head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
+ dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
+ out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
+}
+async function pdfToJpg(){
+ let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
+ const pdfjs=await loadPdfJs();
+ const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
+ $('#out').innerHTML='<div class="result">Rendering PDF pages…</div>';
+ if(typeof JSZip==='undefined')throw Error('JPG packaging library failed to load. Refresh and try again.');
+ const zip=new JSZip();
+ for(let i=1;i<=pdf.numPages;i++){
+   const page=await pdf.getPage(i),v=page.getViewport({scale:1.6});
+   const c=document.createElement('canvas'); c.width=Math.ceil(v.width); c.height=Math.ceil(v.height);
+   await page.render({canvasContext:c.getContext('2d'),viewport:v}).promise;
+   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
+   if(!blob)throw Error(`Could not render page ${i}.`);
+   zip.file(`page-${i}.jpg`,await blob.arrayBuffer());
+ }
+ const zipped=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+ dl(zipped,(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-jpg.zip');
+ out(`<strong>PDF converted to JPG successfully.</strong><br>${pdf.numPages} JPG page(s) are inside the downloaded ZIP.`);
+}
+
+let pdfEditorBytes=null;
+let pdfEditorOriginalName='pennitools-edited.pdf';
+let pdfEditorDoc=null;
+let pdfEditorPageData=[];
+let pdfEditorCurrentPage=1;
+let pdfEditorMode='select';
+let pdfEditorSelected=null;
+
+async function pdfEditorLoad(){
+  if(!pdfEditorBytes){
+    const f=$('#pdfEditorFile')?.files?.[0];
+    if(!f)throw Error('Choose a PDF first.');
+    if(f.size>50*1024*1024)throw Error('For the browser editor, please use a PDF up to 50 MB.');
+    pdfEditorBytes=new Uint8Array(await f.arrayBuffer());
+    pdfEditorOriginalName=(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-edited.pdf';
+  }
+  if(!pdfEditorDoc)pdfEditorDoc=await PDFLib.PDFDocument.load(pdfEditorBytes);
+  return pdfEditorDoc;
+}
+function pdfEditorState(pageNo){
+  if(!pdfEditorPageData[pageNo-1])pdfEditorPageData[pageNo-1]={items:[],loaded:false};
+  return pdfEditorPageData[pageNo-1];
+}
+function pdfEditorFontSize(item,viewport){
+  const t=item.transform||[1,0,0,1,0,0];
+  const base=Math.sqrt((t[2]||0)**2+(t[3]||0)**2)||Math.sqrt((t[0]||1)**2+(t[1]||0)**2)||item.height||12;
+  return Math.max(6,Math.min(96,base));
+}
+function pdfEditorFontCss(font){
+  if(font==='Times-Roman')return 'Times New Roman,Times,serif';
+  if(font==='Courier')return 'Courier New,Courier,monospace';
+  return 'Arial,Helvetica,sans-serif';
+}
+function pdfEditorHexRgb(hex){
+  const h=(hex||'#111827').replace('#','');
+  const n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);
+  return PDFLib.rgb(((n>>16)&255)/255,((n>>8)&255)/255,(n&255)/255);
+}
+function pdfEditorSyncControls(){
+  const x=pdfEditorSelected;
+  if(!x)return;
+  const font=$('#pdfEditorFont'),size=$('#pdfEditorSize'),color=$('#pdfEditorColor');
+  if(font)font.value=x.font||'auto';
+  if(size)size.value=Math.round(x.size||12);
+  if(color)color.value=x.color||'#111827';
+  $('#pdfEditBold')?.classList.toggle('active',!!x.bold);
+  $('#pdfEditItalic')?.classList.toggle('active',!!x.italic);
+}
+function pdfEditorSelect(item,el){
+  document.querySelectorAll('.pdf-edit-text.selected').forEach(x=>x.classList.remove('selected'));
+  pdfEditorSelected=item;
+  if(el)el.classList.add('selected');
+  pdfEditorSyncControls();
+  const s=$('#pdfEditorStatus'); if(s)s.textContent='Selected text. Tap again/double-tap to edit, or use the toolbar.';
+}
+function pdfEditorMarkChanged(item){item.changed=true;item.deleted=false;}
+function pdfEditorApplyStyle(item,el){
+  const family=pdfEditorFontCss(item.font||'auto');
+  el.style.fontFamily=family;
+  el.style.fontSize=(item.size||12)+'px';
+  el.style.fontWeight=item.bold?'700':'400';
+  el.style.fontStyle=item.italic?'italic':'normal';
+  el.style.color='#111827';
+  el.style.minWidth=Math.max(4,(item.width||20)*pdfEditorZoom)+'px';
+}
+let pdfEditorZoom=1;
+async function pdfEditorEnsurePage(pageNo){
+  const pdfjs=await loadPdfJs();
+  const pdf=await pdfjs.getDocument({data:pdfEditorBytes.slice()}).promise;
+  const page=await pdf.getPage(pageNo);
+  const viewport=page.getViewport({scale:1.35});
+  const stage=$('#pdfEditorStage'),canvas=$('#pdfEditorCanvas');
+  pdfEditorZoom=1;
+  canvas.width=Math.ceil(viewport.width);canvas.height=Math.ceil(viewport.height);
+  canvas.style.width=canvas.width+'px';canvas.style.height=canvas.height+'px';
+  stage.style.width=canvas.width+'px';stage.style.height=canvas.height+'px';
+  await page.render({canvasContext:canvas.getContext('2d'),viewport}).promise;
+  const state=pdfEditorState(pageNo);
+  if(!state.loaded){
+    const content=await page.getTextContent();
+    state.items=content.items.filter(x=>(x.str||'').length).map((x,idx)=>{
+      const t=x.transform||[1,0,0,1,0,0];
+      const pt=viewport.convertToViewportPoint(t[4],t[5]);
+      const sizePdf=pdfEditorFontSize(x,viewport), sizePx=sizePdf*1.35;
+      const widthPx=Math.max(4,(x.width||sizePdf*2)*1.35);
+      const heightPx=Math.max(sizePx,(x.height||sizePdf)*1.35);
+      return {id:'p'+pageNo+'t'+idx,page:pageNo,original:x.str,text:x.str,x:pt[0],y:Math.max(0,pt[1]-sizePx),width:widthPx,height:heightPx,size:sizePdf,font:'auto',color:'#111827',bold:false,italic:false,changed:false,deleted:false,autoSize:sizePdf};
+    });
+    state.loaded=true;
+  }
+  pdfEditorCurrentPage=pageNo;
+  pdfEditorRenderTextLayer();
+  pdfEditorRenderPageNav(pdf);
+  const input=$('#pdfEditorPage');if(input)input.value=pageNo;
+}
+function pdfEditorRenderTextLayer(){
+  const layer=$('#pdfEditorTextLayer'); if(!layer)return;
+  layer.innerHTML='';
+  const state=pdfEditorState(pdfEditorCurrentPage);
+  state.items.forEach(item=>{
+    if(item.deleted&&item.text==='')return;
+    const el=document.createElement('div');el.className='pdf-edit-text';
+    if(item===pdfEditorSelected)el.classList.add('selected');
+    if(item.changed)el.classList.add('changed');
+    if(item.deleted)el.classList.add('deleted');
+    el.textContent=item.text;
+    el.style.left=item.x+'px';el.style.top=item.y+'px';
+    el.style.width=Math.max(4,item.width||20)+'px';el.style.height=Math.max(8,item.height||item.size||12)+'px';
+    pdfEditorApplyStyle(item,el);
+    el.dataset.id=item.id;
+    el.onclick=(ev)=>{ev.stopPropagation();pdfEditorSelect(item,el)};
+    el.ondblclick=(ev)=>{ev.stopPropagation();pdfEditorSelect(item,el);el.contentEditable='true';el.focus();document.execCommand?.('selectAll',false,null)};
+    el.oninput=()=>{item.text=el.textContent;pdfEditorMarkChanged(item)};
+    el.onblur=()=>{el.contentEditable='false';item.text=el.textContent;pdfEditorMarkChanged(item);el.classList.toggle('changed',item.changed)};
+    layer.appendChild(el);
+  });
+}
+async function pdfEditorRenderPageNav(pdf){
+  const nav=$('#pdfEditorPagesNav');if(!nav)return;
+  nav.innerHTML='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const state=pdfEditorState(i), card=document.createElement('button');card.type='button';card.className='pdf-edit-page-thumb'+(i===pdfEditorCurrentPage?' selected':'');
+    const thumb=document.createElement('canvas');const page=await pdf.getPage(i);const vp=page.getViewport({scale:.22});thumb.width=Math.ceil(vp.width);thumb.height=Math.ceil(vp.height);card.appendChild(thumb);const lab=document.createElement('div');lab.textContent='Page '+i;card.appendChild(lab);nav.appendChild(card);
+    page.render({canvasContext:thumb.getContext('2d'),viewport:vp}).promise.catch(()=>{});
+    card.onclick=()=>{pdfEditorSelected=null;pdfEditorEnsurePage(i).catch(pdfEditorShowError)};
+  }
+}
+function pdfEditorShowError(e){console.error(e);const s=$('#pdfEditorStatus');if(s)s.textContent=String(e?.message||e);}
+async function pdfEditorInfo(input){
+  pdfEditorBytes=null;pdfEditorDoc=null;pdfEditorPageData=[];pdfEditorSelected=null;
+  const f=input.files[0],box=$('#pdfEditorInfo');
+  if(!f){box.textContent='';return}
+  if(f.size>50*1024*1024){box.textContent='File is over the 50 MB browser-editor limit.';return}
+  box.textContent=`Selected: ${f.name} · ${(f.size/1024/1024).toFixed(2)} MB · Loading editor…`;
+  try{
+    pdfEditorBytes=new Uint8Array(await f.arrayBuffer());pdfEditorOriginalName=(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-edited.pdf';
+    const pdfjs=await loadPdfJs(),pdf=await pdfjs.getDocument({data:pdfEditorBytes.slice()}).promise;
+    box.textContent=`Selected: ${f.name} · ${(f.size/1024/1024).toFixed(2)} MB · ${pdf.numPages} page(s)`;
+    await pdfEditorEnsurePage(1);
+    const s=$('#pdfEditorStatus');if(s)s.textContent='Editor ready — tap existing text to select it.';
+  }catch(e){pdfEditorShowError(e);pdfEditorBytes=null;box.textContent='Could not open this PDF. It may be encrypted or damaged.';}
+}
+function pdfEditorSetMode(mode){
+  pdfEditorMode=mode;
+  $('#pdfEditSelect')?.classList.toggle('active',mode==='select');
+  $('#pdfEditAdd')?.classList.toggle('active',mode==='add');
+  const s=$('#pdfEditorStatus');if(s)s.textContent=mode==='add'?'Add-text mode: tap anywhere on the page.':'Select/edit mode: tap existing text.';
+}
+function pdfEditorAddAt(x,y){
+  const state=pdfEditorState(pdfEditorCurrentPage);
+  const item={id:'p'+pdfEditorCurrentPage+'new'+Date.now()+Math.random().toString(16).slice(2),page:pdfEditorCurrentPage,original:'',text:'Type here',x,y,width:120,height:22,size:12,font:'auto',color:'#111827',bold:false,italic:false,changed:true,deleted:false,newItem:true};
+  state.items.push(item);pdfEditorSelected=item;pdfEditorRenderTextLayer();
+  const el=[...document.querySelectorAll('.pdf-edit-text')].find(e=>e.dataset.id===item.id);
+  if(el){pdfEditorSelect(item,el);el.contentEditable='true';el.focus();document.execCommand?.('selectAll',false,null)}
+  pdfEditorSetMode('select');
+}
+function pdfEditorDeleteSelected(){
+  if(!pdfEditorSelected){$('#pdfEditorStatus').textContent='Select some text first.';return;}
+  pdfEditorSelected.deleted=true;pdfEditorSelected.text='';pdfEditorSelected.changed=true;pdfEditorRenderTextLayer();
+  $('#pdfEditorStatus').textContent='Selected text removed. Tap Save edited PDF to apply it.';
+  pdfEditorSelected=null;
+}
+function pdfEditorResetSelected(){
+  if(!pdfEditorSelected)return;
+  pdfEditorSelected.text=pdfEditorSelected.original;pdfEditorSelected.deleted=false;pdfEditorSelected.changed=false;pdfEditorSelected.size=pdfEditorSelected.autoSize||pdfEditorSelected.size;pdfEditorRenderTextLayer();pdfEditorSelected=null;
+}
+async function pdfEditorExport(){
+  const save=$('#pdfEditSave');if(save)save.disabled=true;
+  try{
+    if(!pdfEditorBytes)throw Error('Choose a PDF first.');
+    const pdfjs=await loadPdfJs(),src=await pdfjs.getDocument({data:pdfEditorBytes.slice()}).promise;
+    const JsPDF=(window.jspdf&&window.jspdf.jsPDF)||window.jsPDF;if(!JsPDF)throw Error('PDF export library failed to load. Refresh and try again.');const outPdf=new JsPDF({unit:'pt',format:'a4',orientation:'portrait'});
+    for(let pageNo=1;pageNo<=src.numPages;pageNo++){
+      const page=await src.getPage(pageNo),baseVp=page.getViewport({scale:1.5}),wPt=baseVp.width/1.5,hPt=baseVp.height/1.5;
+      const c=document.createElement('canvas');c.width=Math.ceil(baseVp.width);c.height=Math.ceil(baseVp.height);await page.render({canvasContext:c.getContext('2d'),viewport:baseVp}).promise;
+      const ctx=c.getContext('2d'),state=pdfEditorState(pageNo);
+      // Hide/replace only text boxes the user changed or deleted. The original page stays intact otherwise.
+      for(const item of state.items){
+        if(!item.changed)continue;
+        const x=item.x/1.35*1.5,y=item.y/1.35*1.5,w=Math.max(4,item.width||20)/1.35*1.5,h=Math.max(item.size||12,item.height||12)/1.35*1.5;
+        ctx.save();ctx.fillStyle='#ffffff';ctx.fillRect(Math.max(0,x-2),Math.max(0,y-2),w+4,h+5);ctx.restore();
+      }
+      for(const item of state.items){
+        if(!item.changed||item.deleted||!item.text.trim())continue;
+        const x=item.x/1.35*1.5,y=(item.y+(item.size||12))/1.35*1.5;
+        ctx.save();ctx.fillStyle=item.color||'#111827';ctx.font=`${item.italic?'italic ':''}${item.bold?'700':'400'} ${Math.max(6,item.size||12)/1.35*1.5}px ${pdfEditorFontCss(item.font||'auto')}`;ctx.textBaseline='alphabetic';ctx.fillText(item.text,x,y);ctx.restore();
+      }
+      if(pageNo>1)outPdf.addPage([wPt,hPt]);else{outPdf.deletePage(1);outPdf.addPage([wPt,hPt]);}
+      outPdf.addImage(c.toDataURL('image/jpeg',.92),'JPEG',0,0,wPt,hPt);
+    }
+    const bytes=outPdf.output('arraybuffer');dl(new Blob([bytes],{type:'application/pdf'}),pdfEditorOriginalName);
+    const s=$('#pdfEditorStatus');if(s)s.textContent='Done — your edited PDF has been created. Note: the saved PDF is flattened for reliable editing of existing text.';
+    out('<strong>PDF saved successfully.</strong><br>Existing text you changed or deleted was replaced in the downloaded copy.');
+  }catch(e){pdfEditorShowError(e);out('<span class="error">PDF export failed: '+String(e?.message||e)+'</span>');}
+  finally{if(save)save.disabled=false;}
+}
+function resetPdfEditor(){
+  pdfEditorBytes=null;pdfEditorDoc=null;pdfEditorPageData=[];pdfEditorCurrentPage=1;pdfEditorSelected=null;
+  const f=$('#pdfEditorFile');if(f)f.value='';const i=$('#pdfEditorInfo');if(i)i.textContent='';const nav=$('#pdfEditorPagesNav');if(nav)nav.innerHTML='';const layer=$('#pdfEditorTextLayer');if(layer)layer.innerHTML='';const c=$('#pdfEditorCanvas');if(c)c.width=c.height=0;const s=$('#pdfEditorStatus');if(s)s.textContent='';if($('#out'))$('#out').innerHTML='';
+}
+async function pageNumberPdf(){
+ let d=await pdfDoc(),pages=d.getPages();
+ pages.forEach((p,i)=>{let s=p.getSize();p.drawText(String(i+1),{x:s.width/2-5,y:15,size:10})});
+ dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-numbered.pdf');out('Page numbers added.');
+}
+async function rotatePdf(){
+ let d=await pdfDoc(),a=Number($('#angle').value);
+ d.getPages().forEach(p=>p.setRotation(PDFLib.degrees((p.getRotation().angle+a)%360)));
+ dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-rotated.pdf');out(`Pages rotated by ${a}°.`);
+}
+async function imageDownload(mode){
+let f=$('#img').files[0];if(!f)throw Error('Choose an image');let src=await fileData(f),im=new Image();await new Promise(r=>{im.onload=r;im.src=src});let c=document.createElement('canvas'),ctx=c.getContext('2d');
+if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='crop'){let x=Math.max(0,num($('#x').value)),y=Math.max(0,num($('#y').value)),w=Math.min(num($('#cw').value)||im.width,im.width-x),h=Math.min(num($('#ch').value)||im.height,im.height-y);c.width=w;c.height=h;ctx.drawImage(im,x,y,w,h,0,0,w,h)}else{c.width=im.width;c.height=im.height;ctx.drawImage(im,0,0,c.width,c.height)}let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'||mode==='resize'?Math.max(.1,Math.min(1,num($('#quality').value)||.9)):.92;
+await new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(Error('Your browser could not create the output image.'));const ext=type==='image/png'?'png':'jpg';dl(b,`pennitools-${mode}.${ext}`);resolve()},type,q));
+out(`<strong>Image ${mode==='convert'?'converted':'processed'} successfully.</strong><br>Downloaded as ${type==='image/png'?'PNG':'JPG'}.`)}
+</script>
+</body></html>
