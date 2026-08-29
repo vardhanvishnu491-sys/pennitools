@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-
-  <url>
-    <loc>https://pennitools.in/</loc>
-  </url>
-
-  <url>
-    <loc>https://pennitools.in/square-feet-calculator.html</loc>
-  </url>
-
+  <url><loc>https://pennitools.in/</loc></url>
+  <url><loc>https://pennitools.in/square-feet-calculator.html</loc></url>
+  <url><loc>https://pennitools.in/tiles-calculator.html</loc></url>
+  <url><loc>https://pennitools.in/about.html</loc></url>
+  <url><loc>https://pennitools.in/privacy-policy.html</loc></url>
+  <url><loc>https://pennitools.in/terms.html</loc></url>
+  <url><loc>https://pennitools.in/disclaimer.html</loc></url>
 </urlset>
