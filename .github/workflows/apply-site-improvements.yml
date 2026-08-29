@@ -1,0 +1,47 @@
+name: Apply PenniTools site improvements
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  improve:
+    if: ${{ !contains(github.event.head_commit.message, 'Apply PenniTools site improvements') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch main homepage safely
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          original=s
+          marker='site-trustbar'
+          if marker not in s:
+              head_add='''\n<style id="site-trustbar">\n.site-trustbar{margin:0 auto 28px;width:min(1160px,calc(100% - 32px));padding:14px 18px;border:1px solid #dbe5f4;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(15,23,42,.05);display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;color:#475467;font-size:14px}.site-trustbar strong{color:#101828}.site-trustbar a{color:#2457c6;font-weight:750;text-decoration:none}.site-trustbar a:hover{text-decoration:underline}.site-trustbar .dot{color:#98a2b3}@media(max-width:620px){.site-trustbar{width:calc(100% - 22px);font-size:13px;text-align:center}}\n</style>\n'''
+              s=s.replace('</head>',head_add+'</head>',1)
+              body_add='''\n<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>\n'''
+              s=s.replace('</body>',body_add+'</body>',1)
+          if 'application/ld+json' not in s:
+              schema='''\n<script type="application/ld+json">{\"@context\":\"https://schema.org\",\"@type\":\"WebSite\",\"name\":\"PenniTools\",\"url\":\"https://pennitools.in/\",\"description\":\"Free calculators and practical browser-based tools for construction, carpentry, finance, vehicles, documents and everyday tasks.\",\"potentialAction\":{\"@type\":\"SearchAction\",\"target\":{\"@type\":\"EntryPoint\",\"urlTemplate\":\"https://pennitools.in/?q={search_term_string}\"},\"query-input\":\"required name=search_term_string\"}}</script>\n'''
+              s=s.replace('</head>',schema+'</head>',1)
+          s=s.replace("el.style.color='#111827';","el.style.color=item.color||'#111827';")
+          s=s.replace('<input id="search"','<input aria-label="Search PenniTools tools" id="search"',1)
+          if s==original:
+              print('No changes needed')
+          else:
+              p.write_text(s,encoding='utf-8')
+              print('Patched index.html')
+          PY
+      - name: Commit and remove one-time runner
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          rm -f .github/workflows/apply-site-improvements.yml
+          git add -u .github/workflows/apply-site-improvements.yml
+          git commit -m "Apply PenniTools site improvements"
+          git push
