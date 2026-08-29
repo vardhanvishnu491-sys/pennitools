@@ -1279,7 +1279,6 @@ async function pdfToText(){
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
  const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
 </head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}
-<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>
 </body></html>`;
  dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
  out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
@@ -1520,4 +1519,5 @@ if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').va
 await new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(Error('Your browser could not create the output image.'));const ext=type==='image/png'?'png':'jpg';dl(b,`pennitools-${mode}.${ext}`);resolve()},type,q));
 out(`<strong>Image ${mode==='convert'?'converted':'processed'} successfully.</strong><br>Downloaded as ${type==='image/png'?'PNG':'JPG'}.`)}
 </script>
+<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>
 </body></html>
