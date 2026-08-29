@@ -1,0 +1,19 @@
+name: Browser homepage stack diagnosis
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 -m http.server 8000 >/tmp/p.log 2>&1 &
+      - run: npm init -y >/dev/null 2>&1 && npm install playwright >/dev/null 2>&1 && npx playwright install --with-deps chromium >/dev/null 2>&1
+      - run: |
+          node - <<'NODE'
+          const {chromium}=require('playwright');
+          (async()=>{const b=await chromium.launch({headless:true});const p=await b.newPage();p.on('pageerror',e=>console.log('PAGEERROR_STACK\n'+e.stack));p.on('console',m=>console.log('CONSOLE',m.type(),m.text()));await p.goto('http://127.0.0.1:8000/index.html',{waitUntil:'domcontentloaded'});await p.waitForTimeout(1500);console.log('options',await p.locator('#toolSelect option').count());await b.close();})();
+          NODE
