@@ -37,20 +37,16 @@ jobs:
           python3 - <<'PY'
           from pathlib import Path
           import re
-
           for path in Path('.').glob('*.html'):
               text = path.read_text(encoding='utf-8')
               blocks = re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
               for i, block in enumerate(blocks):
                   Path(f'/tmp/{path.stem}-{i}.js').write_text(block, encoding='utf-8')
           PY
-
           shopt -s nullglob
           files=(/tmp/*.js)
           test ${#files[@]} -gt 0
-          for file in "${files[@]}"; do
-            node --check "$file"
-          done
+          for file in "${files[@]}"; do node --check "$file"; done
 
       - name: Check homepage tool initialization markers
         run: |
@@ -59,7 +55,7 @@ jobs:
           grep -q "toolSelect" index.html
           grep -q "function render" index.html
 
-      - name: Browser smoke test homepage
+      - name: Browser smoke test homepage and key tools
         run: |
           python3 -m http.server 8000 >/tmp/pennitools-http.log 2>&1 &
           npm init -y >/dev/null 2>&1
@@ -75,13 +71,30 @@ jobs:
             await page.goto('http://127.0.0.1:8000/index.html', {waitUntil:'networkidle'});
             await page.waitForTimeout(500);
             const options = await page.locator('#toolSelect option').count();
-            const chips = await page.locator('#cats .chip').count();
             const categories = await page.locator('#app .category-drop').count();
             if (options <= 1) throw new Error(`Expected populated tool dropdown, found ${options} option(s)`);
             if (categories < 1) throw new Error(`Expected category sections, found ${categories}`);
             if (errors.length) throw new Error(`Homepage JavaScript errors: ${errors.join(' | ')}`);
-            console.log(`Homepage smoke test passed: ${options} dropdown options, ${categories} category sections, ${chips} optional category chips.`);
+
+            const tools = [
+              ['emi','EMI Calculator'],
+              ['fuel','Fuel Cost Calculator'],
+              ['trip','Trip Cost Calculator'],
+              ['carpenterarea','Carpenter Area / Square Feet Calculator'],
+              ['image','Image tool'],
+              ['audiotranscribe','Audio Transcriber']
+            ];
+            for (const [key,label] of tools) {
+              const before = await page.locator('#modal').getAttribute('class');
+              await page.evaluate(([k,t]) => window.openTool(k,t), [key,label]);
+              await page.waitForTimeout(100);
+              if (!(await page.locator('#modal.show').count())) throw new Error(`${label} did not open`);
+              const body = await page.locator('#toolBody').textContent();
+              if (!body || body.trim().length < 3) throw new Error(`${label} opened without content`);
+              await page.locator('.close').click();
+            }
             await browser.close();
+            console.log(`Homepage/key-tool smoke test passed: ${options} dropdown options, ${categories} categories.`);
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
 
@@ -92,27 +105,15 @@ jobs:
           (async () => {
             const browser = await chromium.launch({headless:true});
             const cases = [
-              {
-                url: 'http://127.0.0.1:8000/square-feet-calculator.html',
-                inputs: { '#length':'77', '#width':'33' },
-                button: 'button',
-                result: '#answer',
-                expected: /17\.65 sq ft/
-              },
-              {
-                url: 'http://127.0.0.1:8000/tiles-calculator.html',
-                inputs: { '#rl':'20', '#rw':'15', '#tl':'2', '#tw':'2' },
-                button: 'button',
-                result: '#t',
-                expected: /83/
-              }
+              {url:'http://127.0.0.1:8000/square-feet-calculator.html',inputs:{'#length':'77','#width':'33'},button:'button',result:'#answer',expected:/17\.65 sq ft/},
+              {url:'http://127.0.0.1:8000/tiles-calculator.html',inputs:{'#rl':'20','#rw':'15','#tl':'2','#tw':'2'},button:'button',result:'#t',expected:/83/}
             ];
             for (const test of cases) {
               const page = await browser.newPage();
               const errors = [];
               page.on('pageerror', e => errors.push(e.message));
-              await page.goto(test.url, {waitUntil:'networkidle'});
-              for (const [selector, value] of Object.entries(test.inputs)) await page.locator(selector).fill(value);
+              await page.goto(test.url,{waitUntil:'networkidle'});
+              for (const [selector,value] of Object.entries(test.inputs)) await page.locator(selector).fill(value);
               await page.locator(test.button).click();
               const text = await page.locator(test.result).textContent();
               if (!test.expected.test(text || '')) throw new Error(`${test.url} returned unexpected result: ${text}`);
@@ -120,14 +121,14 @@ jobs:
               await page.close();
             }
             const pdf = await browser.newPage();
-            const pdfErrors = [];
-            pdf.on('pageerror', e => pdfErrors.push(e.message));
-            await pdf.goto('http://127.0.0.1:8000/pdf-editor.html', {waitUntil:'networkidle'});
+            const pdfErrors=[];
+            pdf.on('pageerror',e=>pdfErrors.push(e.message));
+            await pdf.goto('http://127.0.0.1:8000/pdf-editor.html',{waitUntil:'networkidle'});
             if (!(await pdf.locator('input[type="file"]').count())) throw new Error('PDF Editor file input is missing');
             if (pdfErrors.length) throw new Error(`PDF Editor JavaScript errors: ${pdfErrors.join(' | ')}`);
             await browser.close();
             console.log('Standalone calculator/PDF smoke tests passed.');
-          })().catch(err => { console.error(err); process.exit(1); });
+          })().catch(err=>{console.error(err);process.exit(1)});
           NODE
 
       - name: Check sitemap and robots
