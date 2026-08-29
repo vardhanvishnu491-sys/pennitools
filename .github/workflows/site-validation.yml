@@ -85,6 +85,51 @@ jobs:
           })().catch(err => { console.error(err); process.exit(1); });
           NODE
 
+      - name: Browser smoke test standalone calculators
+        run: |
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const cases = [
+              {
+                url: 'http://127.0.0.1:8000/square-feet-calculator.html',
+                inputs: { '#length':'77', '#width':'33' },
+                button: 'button',
+                result: '#answer',
+                expected: /17\.65 sq ft/
+              },
+              {
+                url: 'http://127.0.0.1:8000/tiles-calculator.html',
+                inputs: { '#rl':'20', '#rw':'15', '#tl':'2', '#tw':'2' },
+                button: 'button',
+                result: '#t',
+                expected: /83/
+              }
+            ];
+            for (const test of cases) {
+              const page = await browser.newPage();
+              const errors = [];
+              page.on('pageerror', e => errors.push(e.message));
+              await page.goto(test.url, {waitUntil:'networkidle'});
+              for (const [selector, value] of Object.entries(test.inputs)) await page.locator(selector).fill(value);
+              await page.locator(test.button).click();
+              const text = await page.locator(test.result).textContent();
+              if (!test.expected.test(text || '')) throw new Error(`${test.url} returned unexpected result: ${text}`);
+              if (errors.length) throw new Error(`${test.url} JavaScript errors: ${errors.join(' | ')}`);
+              await page.close();
+            }
+            const pdf = await browser.newPage();
+            const pdfErrors = [];
+            pdf.on('pageerror', e => pdfErrors.push(e.message));
+            await pdf.goto('http://127.0.0.1:8000/pdf-editor.html', {waitUntil:'networkidle'});
+            if (!(await pdf.locator('input[type="file"]').count())) throw new Error('PDF Editor file input is missing');
+            if (pdfErrors.length) throw new Error(`PDF Editor JavaScript errors: ${pdfErrors.join(' | ')}`);
+            await browser.close();
+            console.log('Standalone calculator/PDF smoke tests passed.');
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+
       - name: Check sitemap and robots
         run: |
           grep -q "https://pennitools.in/sitemap.xml" robots.txt
