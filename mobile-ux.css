@@ -1,0 +1,14 @@
+/* PenniTools mobile UX helpers. Include on pages that opt in. */
+:root{--pt-focus:#2563eb;--pt-border:#d7deea}
+button,input,select,textarea{font:inherit}
+button,a,input,select,textarea{touch-action:manipulation}
+:focus-visible{outline:3px solid rgba(37,99,235,.35);outline-offset:2px}
+@media(max-width:620px){
+  button,.btn{min-height:44px}
+  input,select,textarea{min-height:44px;font-size:16px}
+  .wrap{max-width:100%}
+  .selector-wrap{padding:14px}
+  .tool-select{min-height:46px}
+  .card{padding:18px;border-radius:16px}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
