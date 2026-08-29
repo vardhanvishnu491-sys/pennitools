@@ -40,7 +40,7 @@ jobs:
 
           for path in Path('.').glob('*.html'):
               text = path.read_text(encoding='utf-8')
-              blocks = re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
+              blocks = re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
               for i, block in enumerate(blocks):
                   Path(f'/tmp/{path.stem}-{i}.js').write_text(block, encoding='utf-8')
           PY
