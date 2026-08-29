@@ -624,7 +624,7 @@ $('#toolSelect').addEventListener('change',function(){
 });
 $('#search').addEventListener('input',render); window.cat='All'; render();
 
-function openTool(id,title){ $('#modal').classList.add('show'); $('#toolBody').innerHTML=`<h2>${title}</h2>${toolHTML(id)}`; bindTool(id); }
+function openTool(id,title){ if(id==='pdfeditor'){ window.location.href='/pdf-editor.html'; return; } $('#modal').classList.add('show'); $('#toolBody').innerHTML=`<h2>${title}</h2>${toolHTML(id)}`; bindTool(id); }
 function closeTool(){ $('#modal').classList.remove('show'); $('#toolBody').innerHTML=''; }
 function f(fields,button='Calculate'){return `<div class="row">${fields}</div><button class="btn" id="calc">${button}</button><div id="out"></div>`}
 function inp(id,label,val='',type='number',step='any'){return `<div><label>${label}</label><input id="${id}" type="${type}" value="${val}" ${type==='number'?`step="${step}"`:''}></div>`}
