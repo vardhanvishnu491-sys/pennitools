@@ -368,6 +368,18 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .pdf-editor-actions .btn{flex:1;min-width:145px}
 .pdf-editor-empty{padding:22px;text-align:center;color:#667085}
 </style>
+
+<style id="pennitools-safety-fix">
+html,body{max-width:100%;overflow-x:hidden}
+img,canvas,iframe,video{max-width:100%}
+pre{white-space:pre-wrap;overflow-wrap:anywhere}
+#app,.wrap,.content-section,.info-page{max-width:100%;box-sizing:border-box}
+@media(max-width:600px){
+  .wrap,.content-section,.info-page{width:100%;padding-left:14px;padding-right:14px}
+  .panel{width:calc(100vw - 20px);max-width:calc(100vw - 20px);box-sizing:border-box}
+}
+</style>
+
 </head>
 <body>
 <header>
@@ -1254,183 +1266,7 @@ async function pdfToText(){
  const body=text.join('\n\n');
  if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
- const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title></head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}</body></html>`;
- dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
- out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
-}
-async function pdfToJpg(){
- let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
- const pdfjs=await loadPdfJs();
- const pdf=await pdfjs.getDocument({data:await f.arrayBuffer()}).promise;
- $('#out').innerHTML='<div class="result">Rendering PDF pages…</div>';
- if(typeof JSZip==='undefined')throw Error('JPG packaging library failed to load. Refresh and try again.');
- const zip=new JSZip();
- for(let i=1;i<=pdf.numPages;i++){
-   const page=await pdf.getPage(i),v=page.getViewport({scale:1.6});
-   const c=document.createElement('canvas'); c.width=Math.ceil(v.width); c.height=Math.ceil(v.height);
-   await page.render({canvasContext:c.getContext('2d'),viewport:v}).promise;
-   const blob=await new Promise(r=>c.toBlob(r,'image/jpeg',.92));
-   if(!blob)throw Error(`Could not render page ${i}.`);
-   zip.file(`page-${i}.jpg`,await blob.arrayBuffer());
- }
- const zipped=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
- dl(zipped,(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-jpg.zip');
- out(`<strong>PDF converted to JPG successfully.</strong><br>${pdf.numPages} JPG page(s) are inside the downloaded ZIP.`);
-}
-
-let pdfEditorBytes=null;
-let pdfEditorOriginalName='pennitools-edited.pdf';
-let pdfEditorPdfJs=null;
-let pdfEditorPdf=null;
-let pdfEditorItems=[];
-let pdfEditorSelected=-1;
-let pdfEditorRedactions=[];
-let pdfEditorScale=1;
-
-async function pdfEditorLoad(){
- const f=$('#pdfEditorFile')?.files?.[0];
- if(!pdfEditorBytes){
-  if(!f)throw Error('Choose a PDF first.');
-  if(f.size>50*1024*1024)throw Error('For the browser editor, please use a PDF up to 50 MB.');
-  pdfEditorBytes=new Uint8Array(await f.arrayBuffer());
-  pdfEditorOriginalName=(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-edited.pdf';
- }
- return PDFLib.PDFDocument.load(pdfEditorBytes);
-}
-
-async function pdfEditorInfo(input){
- pdfEditorBytes=null; pdfEditorPdf=null; pdfEditorItems=[]; pdfEditorRedactions=[]; pdfEditorSelected=-1;
- const f=input.files[0],box=$('#pdfEditorInfo');
- if(!f){box.textContent='';return}
- if(f.size>50*1024*1024){box.textContent='File is over the 50 MB browser-editor limit.';return}
- box.textContent=`Selected: ${f.name} · ${(f.size/1024/1024).toFixed(2)} MB`;
- try{await pdfEditorRenderPage();pdfEditorUpdateMarker()}catch(e){out(`<strong>Preview error:</strong> ${e.message||e}`)}
-}
-
-async function pdfEditorGetPdfJs(){
- if(pdfEditorPdfJs)return pdfEditorPdfJs;
- pdfEditorPdfJs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
- pdfEditorPdfJs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
- return pdfEditorPdfJs;
-}
-function pdfEditorPageItems(pageNo){return pdfEditorItems.filter(x=>x.page===pageNo)}
-function pdfEditorUpdateMarker(){
- const text=$('#pdfEditorText')?.value?.trim()||'Text here';
- const size=Math.max(6,Math.min(96,Number($('#pdfEditorSize')?.value)||18));
- const item=pdfEditorItems.find(x=>x.index===pdfEditorSelected);
- if(item){item.text=text;item.size=size;item.displaySize=size;item.color=$('#pdfEditorColor')?.value||'#111827';item.font=$('#pdfEditorFont')?.value||'auto';pdfEditorRenderItems();}
- document.querySelectorAll('.pdf-text-item.preview').forEach(el=>{el.textContent=text;el.style.fontSize=Math.max(12,Math.min(40,size))+'px';el.style.color=$('#pdfEditorColor')?.value||'#111827'});
-}
-function pdfEditorRenderItems(){
- const overlay=$('#pdfEditorOverlay'),canvas=$('#pdfEditorCanvas'); if(!overlay||!canvas)return; overlay.innerHTML='';
- const pageNo=Number($('#pdfEditorPage').value)||1;
- pdfEditorPageItems(pageNo).forEach(item=>{
-  const el=document.createElement('div'); el.className='pdf-text-item'+(item.index===pdfEditorSelected?' selected':''); el.textContent=item.text;
-  el.style.left=(item.x*pdfEditorScale/canvas.width*100)+'%'; el.style.top=((canvas.height-item.y*pdfEditorScale)/canvas.height*100)+'%';
-  el.style.fontSize=Math.max(12,Math.min(60,(item.displaySize||item.size)*pdfEditorScale))+'px'; el.style.color=item.color; el.dataset.index=item.index;
-  el.addEventListener('pointerdown',pdfEditorStartDrag); overlay.appendChild(el);
- });
-}
-function pdfEditorRenderTextLayer(page,viewport){
- const layer=$('#pdfEditorTextLayer'); if(!layer)return; layer.innerHTML='';
- layer.style.width=viewport.width+'px'; layer.style.height=viewport.height+'px';
- page.getTextContent().then(tc=>pdfEditorPdfJs.renderTextLayer({textContentSource:tc,container:layer,viewport,textDivs:[]}).promise).then(()=>{
-   layer.querySelectorAll('span').forEach(span=>{
-     span.style.pointerEvents='auto';
-     span.addEventListener('pointerdown',ev=>{
-       if($('#pdfEditorAction')?.value!=='edittext')return;
-       ev.preventDefault();ev.stopPropagation();
-       const r=span.getBoundingClientRect(), cr=$('#pdfEditorCanvas').getBoundingClientRect();
-       const sx=cr.width?$('#pdfEditorCanvas').width/cr.width:1, sy=cr.height?$('#pdfEditorCanvas').height/cr.height:1;
-       const x=(r.left-cr.left)*sx/pdfEditorScale;
-       const y=($('#pdfEditorCanvas').height-(r.bottom-cr.top)*sy)/pdfEditorScale;
-       const displaySize=Math.max(6,Math.min(96,parseFloat(getComputedStyle(span).fontSize)||18));
-       const text=span.textContent||'';
-       if(!text.trim())return;
-       const old=pdfEditorItems.find(x=>x.sourceSpan===span && x.page===Number($('#pdfEditorPage').value));
-       if(old){pdfEditorSelected=old.index; $('#pdfEditorText').value=old.text; $('#pdfEditorSize').value=old.size; $('#pdfEditorColor').value=old.color; $('#pdfEditorFont').value=old.font||'auto'; pdfEditorRenderItems(); return;}
-       const item={index:Date.now()+Math.random(),page:Number($('#pdfEditorPage').value)||1,x,y,text:text.trim(),originalText:text.trim(),size:displaySize,displaySize,color:$('#pdfEditorColor').value,font:'auto',replace:true,sourceSpan:span,redaction:{x,y,width:r.width*sx/pdfEditorScale,height:r.height*sy/pdfEditorScale}};
-       pdfEditorItems.push(item); pdfEditorSelected=item.index;
-       $('#pdfEditorText').value=item.text; $('#pdfEditorSize').value=Math.round(displaySize); $('#pdfEditorFont').value='auto';
-       $('#pdfEditorPlaceInfo').textContent='Selected existing text. Change the Text box, font or size, then tap Update selected.';
-       pdfEditorRenderItems();
-     });
-   });
- }).catch(err=>console.warn('PDF text layer unavailable',err));
-}
-function pdfEditorRenderItems(){
- const overlay=$('#pdfEditorOverlay'),canvas=$('#pdfEditorCanvas'); if(!overlay||!canvas)return; overlay.innerHTML='';
- const pageNo=Number($('#pdfEditorPage').value)||1;
- pdfEditorPageItems(pageNo).forEach(item=>{
-  const el=document.createElement('div'); el.className='pdf-text-item'+(item.index===pdfEditorSelected?' selected':''); el.textContent=item.text;
-  el.style.left=(item.x*pdfEditorScale/canvas.width*100)+'%';
-  el.style.top=((canvas.height-item.y*pdfEditorScale)/canvas.height*100)+'%';
-  el.style.fontSize=Math.max(10,Math.min(72,(item.displaySize||item.size)*pdfEditorScale))+'px';
-  el.style.color=item.color; el.dataset.index=item.index;
-  el.addEventListener('pointerdown',pdfEditorStartDrag); overlay.appendChild(el);
- });
-}
-function pdfEditorUpdateMarker(){
- const item=pdfEditorItems.find(x=>x.index===pdfEditorSelected);
- if(item){item.text=$('#pdfEditorText')?.value||'';item.size=Math.max(6,Math.min(96,Number($('#pdfEditorSize')?.value)||18));item.displaySize=item.size;item.color=$('#pdfEditorColor')?.value||'#111827';item.font=$('#pdfEditorFont')?.value||'auto';pdfEditorRenderItems();}
-}
-function hexRgb(hex){const h=(hex||'#111827').replace('#',''),n=parseInt(h.length===3?h.split('').map(x=>x+x).join(''):h,16);return PDFLib.rgb(((n>>16)&255)/255,((n>>8)&255)/255,((n&255)/255))}
-
-async function editPdf(){
- const action=$('#pdfEditorAction').value,d=await pdfEditorLoad(),max=d.getPageCount();if(!max)throw Error('The PDF has no pages.');
- if(action==='delete'){
-  const sel=parsePages($('#pdfEditorPages').value,max);if(!sel.length)throw Error('Enter at least one page to delete.');if(sel.length>=max)throw Error('At least one page must remain.');
-  sel.sort((a,b)=>b-a).forEach(n=>d.removePage(n-1));
- }else{
-  const pageNo=Math.max(1,Math.min(max,Number($('#pdfEditorPage').value)||1)),page=d.getPage(pageNo-1);
-  if(action==='rotate'){
-   const angle=Number($('#pdfEditorAngle').value);page.setRotation(PDFLib.degrees((page.getRotation().angle+angle)%360));
-  }else if(action==='watermark'){
-   const text=$('#pdfEditorText').value.trim();if(!text)throw Error('Enter the watermark text.');
-   const size=Math.max(6,Math.min(96,Number($('#pdfEditorSize').value)||18)),color=hexRgb($('#pdfEditorColor').value),{width,height}=page.getSize();
-   page.drawText(text,{x:Math.max(10,width*.18),y:height*.48,size:Math.max(18,size*2.2),color,opacity:.22,rotate:PDFLib.degrees(35)});
-  }else{
-   const items=pdfEditorItems.filter(x=>x.page===pageNo);
-   if(!items.length)throw Error('Select or place at least one text item on the PDF first.');
-   for(const item of items){
-    if(item.replace&&item.redaction){const rr=item.redaction;page.drawRectangle({x:rr.x,y:rr.y,width:Math.max(rr.width, item.text.length*item.size*.45),height:Math.max(rr.height,item.size*1.25),color:PDFLib.rgb(1,1,1)});}
-    let font; const fn=item.font||'auto'; if(fn==='Times-Roman')font=PDFLib.StandardFonts.TimesRoman; else if(fn==='Times-Bold')font=PDFLib.StandardFonts.TimesBold; else if(fn==='Times-Italic')font=PDFLib.StandardFonts.TimesItalic; else if(fn==='Courier')font=PDFLib.StandardFonts.Courier; else if(fn==='Helvetica-Bold')font=PDFLib.StandardFonts.HelveticaBold; else if(fn==='Helvetica-Oblique')font=PDFLib.StandardFonts.HelveticaOblique; else font=PDFLib.StandardFonts.Helvetica;
-    page.drawText(item.text,{x:item.x,y:item.y,size:item.size,color:hexRgb(item.color),font});
-   }
-  }
- }
- const bytes=new Uint8Array(await d.save());pdfEditorBytes=bytes;
- const blob=new Blob([bytes],{type:'application/pdf'});
- dl(blob,pdfEditorOriginalName);
- out(`PDF updated successfully. <strong>${d.getPageCount()}</strong> page(s). Your placed text has been added to the PDF.`);
-}
-
-function resetPdfEditor(){
- pdfEditorBytes=null;pdfEditorPdf=null;pdfEditorItems=[];pdfEditorRedactions=[];pdfEditorSelected=-1;
- const f=$('#pdfEditorFile');if(f)f.value='';
- const i=$('#pdfEditorInfo');if(i)i.textContent='';
- if($('#pdfEditorPreviewWrap'))$('#pdfEditorPreviewWrap').style.display='none';
- if($('#pdfEditorText'))$('#pdfEditorText').value='';
- if($('#pdfEditorPages'))$('#pdfEditorPages').value='';
- if($('#pdfEditorOverlay'))$('#pdfEditorOverlay').innerHTML='';
- if($('#out'))$('#out').innerHTML='';
-}
-
-
-async function pageNumberPdf(){
- let d=await pdfDoc(),pages=d.getPages();
- pages.forEach((p,i)=>{let s=p.getSize();p.drawText(String(i+1),{x:s.width/2-5,y:15,size:10})});
- dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-numbered.pdf');out('Page numbers added.');
-}
-async function rotatePdf(){
- let d=await pdfDoc(),a=Number($('#angle').value);
- d.getPages().forEach(p=>p.setRotation(PDFLib.degrees((p.getRotation().angle+a)%360)));
- dl(new Blob([await d.save()],{type:'application/pdf'}),'pennitools-rotated.pdf');out(`Pages rotated by ${a}°.`);
-}
-async function imageDownload(mode){
-let f=$('#img').files[0];if(!f)throw Error('Choose an image');let src=await fileData(f),im=new Image();await new Promise(r=>{im.onload=r;im.src=src});let c=document.createElement('canvas'),ctx=c.getContext('2d');
-if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').value)||im.height;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='passport'){c.width=num($('#pw').value)||413;c.height=num($('#ph').value)||531;ctx.drawImage(im,0,0,c.width,c.height)}else if(mode==='crop'){let x=Math.max(0,num($('#x').value)),y=Math.max(0,num($('#y').value)),w=Math.min(num($('#cw').value)||im.width,im.width-x),h=Math.min(num($('#ch').value)||im.height,im.height-y);c.width=w;c.height=h;ctx.drawImage(im,x,y,w,h,0,0,w,h)}else{c.width=im.width;c.height=im.height;ctx.drawImage(im,0,0,c.width,c.height)}let type=mode==='convert'?$('#fmt').value:'image/jpeg',q=mode==='compress'||mode==='resize'?Math.max(.1,Math.min(1,num($('#quality').value)||.9)):.92;
-await new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(Error('Your browser could not create the output image.'));const ext=type==='image/png'?'png':'jpg';dl(b,`pennitools-${mode}.${ext}`);resolve()},type,q));
-out(`<strong>Image ${mode==='convert'?'converted':'processed'} successfully.</strong><br>Downloaded as ${type==='image/png'?'PNG':'JPG'}.`)}
+ const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title></head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}
 </script>
-</body></html>
+</body>
+</html>
