@@ -1,0 +1,65 @@
+name: Validate PenniTools
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate required site files
+        run: |
+          test -f index.html
+          test -f 404.html
+          test -f CNAME
+          test -f robots.txt
+          test -f sitemap.xml
+          test -f about.html
+          test -f disclaimer.html
+          test -f privacy-policy.html
+          test -f terms.html
+          test -f pdf-editor.html
+          test -f square-feet-calculator.html
+          test -f tiles-calculator.html
+
+      - name: Validate inline JavaScript syntax
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          for path in Path('.').glob('*.html'):
+              text = path.read_text(encoding='utf-8')
+              blocks = re.findall(r'<script(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
+              for i, block in enumerate(blocks):
+                  Path(f'/tmp/{path.stem}-{i}.js').write_text(block, encoding='utf-8')
+          PY
+
+          shopt -s nullglob
+          files=(/tmp/*.js)
+          test ${#files[@]} -gt 0
+          for file in "${files[@]}"; do
+            node --check "$file"
+          done
+
+      - name: Check homepage tool initialization markers
+        run: |
+          grep -q "const cats=" index.html
+          grep -q "const tools=" index.html
+          grep -q "toolSelect" index.html
+          grep -q "function render" index.html
+
+      - name: Check sitemap and robots
+        run: |
+          grep -q "https://pennitools.in/sitemap.xml" robots.txt
+          grep -q "https://pennitools.in/" sitemap.xml
