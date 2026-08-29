@@ -37,8 +37,8 @@ input,select{width:100%;padding:15px;border:2px solid #d9dee8;border-radius:12px
 <select id="tu"><option value="ft">Feet</option><option value="in">Inches</option><option value="cm">Centimeters</option><option value="m">Meters</option></select>
 <label>Wastage Percentage</label><input id="w" type="number" min="0" step="0.1" value="10" placeholder="Example: 10">
 <label>Price per Tile (₹) — Optional</label><input id="p" type="number" min="0" step="0.01" placeholder="Example: 45">
-<button onclick="calc()">Calculate Tiles</button>
-<div id="result">
+<button type="button" onclick="calc()">Calculate Tiles</button>
+<div id="result" role="status" aria-live="polite">
 <div class="result-line"><span>Room area</span><strong id="a"></strong></div>
 <div class="result-line"><span>Tile area</span><strong id="ta"></strong></div>
 <div class="result-line"><span>Tiles before wastage</span><strong id="b"></strong></div>
@@ -49,12 +49,42 @@ input,select{width:100%;padding:15px;border:2px solid #d9dee8;border-radius:12px
 <a class="back" href="https://pennitools.in/">← Back to PenniTools</a>
 </div></div>
 <script>
-function ft(v,u){if(u=="m")return v*3.280839895;if(u=="in")return v/12;if(u=="cm")return v/30.48;return v}
-function calc(){
- let rl=+document.getElementById("rl").value,rw=+document.getElementById("rw").value,tl=+document.getElementById("tl").value,tw=+document.getElementById("tw").value;
- if(!rl||!rw||!tl||!tw){alert("Please enter all room and tile measurements.");return}
- let area=ft(rl,ru.value)*ft(rw,ru.value),tile=ft(tl,tu.value)*ft(tw,tu.value),base=area/tile,w=Math.max(0,+document.getElementById("w").value||0),n=Math.ceil(base*(1+w/100)),p=Math.max(0,+document.getElementById("p").value||0);
- a.textContent=area.toFixed(2)+" sq ft";ta.textContent=tile.toFixed(4)+" sq ft";b.textContent=Math.ceil(base);t.textContent=n;c.textContent=p?"₹"+(n*p).toFixed(2):"Not entered";result.style.display="block";
+function toFeet(v,u){
+  if(u==="m") return v*3.280839895;
+  if(u==="in") return v/12;
+  if(u==="cm") return v/30.48;
+  return v;
 }
+function calc(){
+  const rl=Number(document.getElementById("rl").value);
+  const rw=Number(document.getElementById("rw").value);
+  const tl=Number(document.getElementById("tl").value);
+  const tw=Number(document.getElementById("tw").value);
+  const ru=document.getElementById("ru").value;
+  const tu=document.getElementById("tu").value;
+  const wInput=Number(document.getElementById("w").value);
+  const pInput=Number(document.getElementById("p").value);
+  if(![rl,rw,tl,tw].every(Number.isFinite) || rl<=0 || rw<=0 || tl<=0 || tw<=0){
+    alert("Please enter positive room and tile measurements.");
+    return;
+  }
+  const area=toFeet(rl,ru)*toFeet(rw,ru);
+  const tile=toFeet(tl,tu)*toFeet(tw,tu);
+  if(!Number.isFinite(area) || !Number.isFinite(tile) || tile<=0){
+    alert("Please check the measurement units and values.");
+    return;
+  }
+  const base=area/tile;
+  const w=Number.isFinite(wInput) && wInput>=0 ? wInput : 0;
+  const n=Math.ceil(base*(1+w/100));
+  const p=Number.isFinite(pInput) && pInput>=0 ? pInput : 0;
+  document.getElementById("a").textContent=area.toFixed(2)+" sq ft";
+  document.getElementById("ta").textContent=tile.toFixed(4)+" sq ft";
+  document.getElementById("b").textContent=Math.ceil(base);
+  document.getElementById("t").textContent=n;
+  document.getElementById("c").textContent=p>0?"₹"+(n*p).toFixed(2):"Not entered";
+  document.getElementById("result").style.display="block";
+}
+document.addEventListener("keydown",e=>{if(e.key==="Enter" && e.target.matches("input,select"))calc();});
 </script>
 </body></html>
