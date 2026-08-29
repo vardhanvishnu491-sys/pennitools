@@ -1,0 +1,78 @@
+name: Validate PDF Editor
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pdf-editor.html'
+      - '.github/workflows/pdf-editor-validation.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'pdf-editor.html'
+      - '.github/workflows/pdf-editor-validation.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  pdf-editor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate PDF editor source
+        run: |
+          test -s pdf-editor.html
+          grep -q 'type="file"' pdf-editor.html
+          grep -q 'accept="application/pdf"' pdf-editor.html
+          grep -q 'Download PDF' pdf-editor.html
+          grep -q 'contentEditable' pdf-editor.html
+          grep -q 'Click existing text to type' pdf-editor.html
+          grep -q 'Click a blank area to create text' pdf-editor.html
+          grep -q 'Drag text to move it' pdf-editor.html
+          grep -q 'pdf-lib' pdf-editor.html
+          grep -q 'pdfjsLib' pdf-editor.html
+
+      - name: Validate PDF editor JavaScript syntax
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          text=Path('pdf-editor.html').read_text(encoding='utf-8')
+          blocks=re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
+          assert blocks, 'No script blocks found'
+          for i, block in enumerate(blocks):
+              Path(f'/tmp/pdf-editor-{i}.js').write_text(block, encoding='utf-8')
+          PY
+          for file in /tmp/pdf-editor-*.js; do
+            if grep -q '^import ' "$file"; then node --check "$file"; else node --check "$file"; fi
+          done
+
+      - name: Browser smoke test PDF editor UI
+        run: |
+          python3 -m http.server 8000 >/tmp/pennitools-http.log 2>&1 &
+          npm init -y >/dev/null 2>&1
+          npm install playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage();
+            const errors=[];
+            page.on('pageerror',e=>errors.push(e.message));
+            await page.goto('http://127.0.0.1:8000/pdf-editor.html',{waitUntil:'networkidle'});
+            if(await page.locator('input[type="file"]').count()!==1) throw new Error('PDF upload input missing');
+            if(await page.locator('#save').count()!==1) throw new Error('Download button missing');
+            if(await page.locator('#font').count()!==1) throw new Error('Font control missing');
+            if(await page.locator('#size').count()!==1) throw new Error('Font-size control missing');
+            if(await page.locator('#color').count()!==1) throw new Error('Colour control missing');
+            if(await page.locator('#bold').count()!==1 || await page.locator('#italic').count()!==1) throw new Error('Text formatting controls missing');
+            if(await page.locator('#delete').count()!==1) throw new Error('Delete control missing');
+            if(errors.length) throw new Error('PDF editor JavaScript errors: '+errors.join(' | '));
+            console.log('PDF Editor UI smoke test passed.');
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          NODE
