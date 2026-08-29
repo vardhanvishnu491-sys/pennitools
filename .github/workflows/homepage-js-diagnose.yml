@@ -1,0 +1,32 @@
+name: Diagnose homepage JavaScript
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract and check inline scripts
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+          s=Path('index.html').read_text(encoding='utf-8')
+          blocks=re.findall(r'<script(?:\s[^>]*)?>([\\s\\S]*?)</script>',s,re.I)
+          print('INLINE_SCRIPT_COUNT',len(blocks))
+          for i,b in enumerate(blocks):
+              Path(f'/tmp/pennitools-script-{i}.js').write_text(b,encoding='utf-8')
+          PY
+          for f in /tmp/pennitools-script-*.js; do echo "CHECK $f"; node --check "$f"; done
+      - name: Check homepage tool initialization
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s=Path('index.html').read_text(encoding='utf-8')
+          for needle in ['const cats=','const tools=[','$(\'#toolSelect\').innerHTML=','render();']:
+              print(needle, s.count(needle))
+          PY
