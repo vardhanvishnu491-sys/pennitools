@@ -1001,7 +1001,7 @@ function indianWords(n){
  for(const [v,name] of groups){if(n>=v){let q=Math.floor(n/v);out+=(out?' ':'')+part(q)+' '+name;n%=v}}
  if(n)out+=(out?' ':'')+part(n); return out;
 }
-function annuity(P,annual,months){let r=annual/1200,n=months;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
+function annuity(P,annual,months){P=Number(P)||0;annual=Number(annual)||0;months=Number(months)||0;if(P<=0||months<=0)return 0;let r=annual/1200;return r?P*r*Math.pow(1+r,months)/(Math.pow(1+r,months)-1):P/months}
 function parsePages(s,max){let out=[];(s||'').split(',').forEach(x=>{x=x.trim();if(x.includes('-')){let [a,b]=x.split('-').map(Number);for(let i=a;i<=b;i++)out.push(i)}else{let n=Number(x);if(n)out.push(n)}});return [...new Set(out)].filter(n=>n>=1&&(!max||n<=max))}
 function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
 function out(html){$('#out').innerHTML=`<div class="result">${html}</div>`}
@@ -1054,10 +1054,10 @@ case'pdflock':{
  case'ppf':{let a=num($('#annual').value),r=num($('#rate').value)/100,n=num($('#years').value),fv=a*((Math.pow(1+r,n)-1)/r);out(`Estimated maturity: <strong>${money(fv)}</strong><br>Total contributions: ${money(a*n)}`);break}
  case'nps':{let m=num($('#monthly').value),r=num($('#rate').value)/1200,n=num($('#years').value)*12,fv=r?m*((Math.pow(1+r,n)-1)/r)*(1+r):m*n,an=fv*num($('#annuity').value)/100;out(`Estimated corpus: <strong>${money(fv)}</strong><br>Illustrative annuity portion: ${money(an)}<br>Remaining corpus: ${money(fv-an)}`);break}
  case'home':case'carloan':{let e=annuity(num($('#p').value),num($('#r').value),num($('#n').value)),n=num($('#n').value);out(`EMI: <strong>${money(e)}</strong><br>Total interest: ${money(e*n-num($('#p').value))}`);break}
- case'mileage':out(`Mileage: <strong>${(num($('#distance').value)/num($('#fuel').value)).toFixed(2)} km/l</strong><br>Fuel used per 100 km: ${(num($('#fuel').value)/num($('#distance').value)*100).toFixed(2)} L`);break;
- case'fuel':{let d=num($('#distance').value),m=num($('#mileage').value),p=num($('#price').value),l=d/m;out(`Fuel needed: <strong>${l.toFixed(2)} L</strong><br>Trip cost: <strong>${money(l*p)}</strong>`);break}
+ case'mileage':{let d=num($('#distance').value),f=num($('#fuel').value);if(d<=0||f<=0)throw Error('Enter distance and fuel used as positive values.');out(`Mileage: <strong>${(d/f).toFixed(2)} km/l</strong><br>Fuel used per 100 km: ${(f/d*100).toFixed(2)} L`);break}
+ case'fuel':{let d=num($('#distance').value),m=num($('#mileage').value),p=num($('#price').value);if(d<=0||m<=0||p<0)throw Error('Enter positive distance and mileage, and a valid fuel price.');let l=d/m;out(`Fuel needed: <strong>${l.toFixed(2)} L</strong><br>Trip cost: <strong>${money(l*p)}</strong>`);break}
  case'ev':{let k=num($('#battery').value),pct=Math.max(0,num($('#to').value)-num($('#from').value))/100,cost=k*pct*num($('#tariff').value);out(`Energy used: <strong>${(k*pct).toFixed(2)} kWh</strong><br>Charging cost: <strong>${money(cost)}</strong>`);break}
- case'trip':{let l=num($('#distance').value)/num($('#mileage').value),total=l*num($('#fuelprice').value)+num($('#toll').value),people=Math.max(1,num($('#people').value));out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
+ case'trip':{let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),t=num($('#toll').value),people=Math.max(1,num($('#people').value));if(d<=0||m<=0||fp<0||t<0)throw Error('Enter positive distance and mileage, and valid fuel/toll amounts.');let l=d/m,total=l*fp+t;out(`Total trip cost: <strong>${money(total)}</strong><br>Per person: <strong>${money(total/people)}</strong>`);break}
  case'insurance':{let idv=num($('#idv').value),prem=idv*num($('#rate').value)/100,tot=prem*(1+num($('#gst').value)/100);out(`Estimated premium: <strong>${money(tot)}</strong><br>Base premium: ${money(prem)}<br>GST: ${money(tot-prem)}`);break}
  case'carpenterarea':{
    const L=num($('#caLength').value), W=num($('#caWidth').value), Q=Math.max(1,Math.floor(num($('#caQty').value)||1)), unit=$('#caUnit').value;
@@ -1117,7 +1117,7 @@ case'feetinch':{
  case'simpleint':{let p=num($('#p').value),r=num($('#r').value),t=num($('#t').value),i=p*r*t/100;out(`Simple interest: <strong>${money(i)}</strong><br>Maturity amount: <strong>${money(p+i)}</strong>`);break}
 case'compoundint':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),n=num($('#n').value),a=p*Math.pow(1+r/n,n*t);out(`Compound interest: <strong>${money(a-p)}</strong><br>Maturity amount: <strong>${money(a)}</strong>`);break}
 case'inflation':{let p=num($('#p').value),r=num($('#r').value)/100,t=num($('#t').value),a=p*Math.pow(1+r,t);out(`Estimated future cost: <strong>${money(a)}</strong><br>Increase due to inflation: ${money(a-p)}`);break}
-case'cagr':{let s=num($('#startv').value),e=num($('#endv').value),y=num($('#years').value),c=(Math.pow(e/s,1/y)-1)*100;out(`CAGR: <strong>${c.toFixed(2)}%</strong>`);break}
+case'cagr':{let s=num($('#startv').value),e=num($('#endv').value),y=num($('#years').value);if(s<=0||e<=0||y<=0)throw Error('Enter positive starting value, ending value and years.');let c=(Math.pow(e/s,1/y)-1)*100;out(`CAGR: <strong>${c.toFixed(2)}%</strong>`);break}
 case'loancompare':{let a=annuity(num($('#p1').value),num($('#r1').value),num($('#n1').value)),b=annuity(num($('#p2').value),num($('#r2').value),num($('#n2').value)),ta=a*num($('#n1').value),tb=b*num($('#n2').value);out(`Loan A EMI: <strong>${money(a)}</strong> · Interest: ${money(ta-num($('#p1').value))}<br>Loan B EMI: <strong>${money(b)}</strong> · Interest: ${money(tb-num($('#p2').value))}<br><strong>${ta<tb?'Loan A':'Loan B'}</strong> has the lower total repayment.`);break}
 case'salarybreak':{let a=num($('#annual').value),m=a/12,p=m*num($('#pf').value)/100,t=num($('#tax').value),o=num($('#other').value);out(`Monthly gross: <strong>${money(m)}</strong><br>PF: ${money(p)} · Tax: ${money(t)} · Other: ${money(o)}<br>Estimated in-hand: <strong>${money(m-p-t-o)}</strong>`);break}
 case'pdfeditor':await editPdf();break;
@@ -1137,7 +1137,7 @@ case'breakeven':{let f=num($('#fixed').value),p=num($('#price').value),v=num($('
 case'savingsgoal':{let t=num($('#target').value),s=num($('#saved').value),m=num($('#months').value),need=Math.max(0,t-s);out(`Monthly saving needed: <strong>${money(need/Math.max(1,m))}</strong><br>Remaining target: ${money(need)}`);break}
 case'prepay':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),x=Math.min(p,Math.max(0,num($('#extra').value))),e=annuity(p,r,n),oldInt=e*n-p,rem=p-x,newE=annuity(rem,r,n),newInt=newE*n-rem,saved=oldInt-newInt;out(`Current EMI: <strong>${money(e)}</strong><br>After extra payment, estimated EMI: <strong>${money(newE)}</strong><br>Estimated interest saving: <strong>${money(saved)}</strong>`);break}
 case'fuelmonthly':{let km=num($('#km').value),m=num($('#mileage').value),p=num($('#price').value),c=km/m*p;out(`Monthly fuel needed: ${(km/m).toFixed(2)} L<br>Monthly fuel cost: <strong>${money(c)}</strong>`);break}
-case'unitprice':{let a=num($('#p1').value)/num($('#q1').value),b=num($('#p2').value)/num($('#q2').value);out(`Product A: <strong>${money(a)}</strong> per unit<br>Product B: <strong>${money(b)}</strong> per unit<br>Better value: <strong>${a<b?'Product A':'Product B'}</strong>`);break}
+case'unitprice':{let p1=num($('#p1').value),q1=num($('#q1').value),p2=num($('#p2').value),q2=num($('#q2').value);if(p1<0||p2<0||q1<=0||q2<=0)throw Error('Enter valid positive quantities and prices.');let a=p1/q1,b=p2/q2;out(`Product A: <strong>${money(a)}</strong> per unit<br>Product B: <strong>${money(b)}</strong> per unit<br>Better value: <strong>${a<b?'Product A':'Product B'}</strong>`);break}
 case'traveltime':{let d=num($('#distance').value),s=num($('#speed').value),h=d/s,hrs=Math.floor(h),mins=Math.round((h-hrs)*60);out(`Estimated travel time: <strong>${hrs}h ${mins}m</strong>`);break}
 case'tollfuel':{let d=num($('#distance').value),m=num($('#mileage').value),fp=num($('#fuelprice').value),t=num($('#toll').value),fuel=d/m*fp;out(`Fuel cost: ${money(fuel)}<br>Tolls: ${money(t)}<br>Total trip cost: <strong>${money(fuel+t)}</strong>`);break}
 case'runningcost':{let c=num($('#fuelcost').value)+num($('#service').value)+num($('#insurance').value);out(`Estimated monthly running cost: <strong>${money(c)}</strong><br>Estimated annual cost: ${money(c*12)}`);break}
@@ -1153,15 +1153,15 @@ case'hourlysalary':{let s=num($('#salary').value),months=num($('#months').value)
 case'loaninterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`EMI: <strong>${money(e)}</strong><br>Total repayment: ${money(e*n)}<br>Total interest: <strong>${money(e*n-p)}</strong>`);break}
 case'budget':{let i=num($('#income').value),s=num($('#savings').value),e=num($('#expenses').value);out(`Unallocated amount: <strong>${money(i-s-e)}</strong><br>Savings rate: ${i?((s/i)*100).toFixed(1):0}%`);break}
 case'networth':{let a=num($('#assets').value),l=num($('#liabilities').value);out(`Estimated net worth: <strong>${money(a-l)}</strong>`);break}
-case'emergency':{let s=num($('#savings').value),e=num($('#expenses').value);out(`Emergency fund coverage: <strong>${(s/e).toFixed(1)} months</strong>`);break}
+case'emergency':{let s=num($('#savings').value),e=num($('#expenses').value);if(s<0||e<=0)throw Error('Enter savings and monthly expenses as valid positive values.');out(`Emergency fund coverage: <strong>${(s/e).toFixed(1)} months</strong>`);break}
 case'roi':{let a=num($('#invested').value),b=num($('#returned').value);out(`Profit/loss: <strong>${money(b-a)}</strong><br>ROI: <strong>${a?((b-a)/a*100).toFixed(2):0}%</strong>`);break}
 case'markup':{let c=num($('#cost').value),p=num($('#markup').value);out(`Selling price: <strong>${money(c*(1+p/100))}</strong>`);break}
 case'margin':{let c=num($('#cost').value),s=num($('#sale').value);out(`Profit: ${money(s-c)}<br>Profit margin: <strong>${s?((s-c)/s*100).toFixed(2):0}%</strong>`);break}
 case'gstsplit':{let t=num($('#total').value),r=num($('#rate').value),base=t/(1+r/100);out(`Taxable value: <strong>${money(base)}</strong><br>GST: ${money(t-base)}`);break}
 case'annualmonthly':out(`Monthly salary: <strong>${money(num($('#annual').value)/12)}</strong>`);break
 case'monthlyannual':out(`Annual salary: <strong>${money(num($('#monthly').value)*12)}</strong>`);break
-case'mileagecalc':{let d=num($('#distance').value),f=num($('#fuel').value);out(`Mileage: <strong>${(d/f).toFixed(2)} km/l</strong>`);break}
-case'fuelrequired':{let d=num($('#distance').value),m=num($('#mileage').value);out(`Fuel required: <strong>${(d/m).toFixed(2)} litres</strong>`);break}
+case'mileagecalc':{let d=num($('#distance').value),f=num($('#fuel').value);if(d<=0||f<=0)throw Error('Enter positive distance and fuel used.');out(`Mileage: <strong>${(d/f).toFixed(2)} km/l</strong>`);break}
+case'fuelrequired':{let d=num($('#distance').value),m=num($('#mileage').value);if(d<=0||m<=0)throw Error('Enter positive distance and mileage.');out(`Fuel required: <strong>${(d/m).toFixed(2)} litres</strong>`);break}
 case'tripsplit':{let x=num($('#fuel').value)+num($('#toll').value),n=Math.max(1,num($('#people').value));out(`Total trip cost: ${money(x)}<br>Per person: <strong>${money(x/n)}</strong>`);break}
 case'emivscash':{let price=num($('#price').value),down=num($('#down').value),r=num($('#rate').value),n=num($('#months').value),p=price-down,e=annuity(p,r,n);out(`Loan amount: ${money(p)}<br>EMI: <strong>${money(e)}</strong><br>Total loan repayment: ${money(e*n)}<br>Cash purchase: ${money(price)}`);break}
 case'carinterest':{let p=num($('#p').value),r=num($('#r').value),n=num($('#n').value),e=annuity(p,r,n);out(`Total interest: <strong>${money(e*n-p)}</strong>`);break}
