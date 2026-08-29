@@ -1,0 +1,32 @@
+name: Browser diagnose homepage
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start local server
+        run: python3 -m http.server 8000 >/tmp/pennitools-http.log 2>&1 &
+      - name: Install Playwright
+        run: npm init -y >/dev/null 2>&1 && npm install playwright >/dev/null 2>&1 && npx playwright install --with-deps chromium >/dev/null 2>&1
+      - name: Test homepage
+        run: |
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const page=await browser.newPage();
+            page.on('console',m=>console.log('CONSOLE',m.type(),m.text()));
+            page.on('pageerror',e=>console.log('PAGEERROR',e.message));
+            await page.goto('http://127.0.0.1:8000/index.html',{waitUntil:'networkidle'});
+            console.log('SELECT_OPTIONS',await page.locator('#toolSelect option').count());
+            console.log('APP_DETAILS',await page.locator('#app .category-drop').count());
+            console.log('CATS',await page.locator('#cats .chip').count());
+            await browser.close();
+          })();
+          NODE
