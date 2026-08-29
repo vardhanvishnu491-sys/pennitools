@@ -1,9 +1,6 @@
 name: Connect PDF Editor
 
-on:
-  push:
-    paths:
-      - '.github/workflows/connect-pdf-editor.yml'
+on: push
 
 permissions:
   contents: write
