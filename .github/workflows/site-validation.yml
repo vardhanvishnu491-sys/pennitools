@@ -59,6 +59,33 @@ jobs:
           grep -q "toolSelect" index.html
           grep -q "function render" index.html
 
+      - name: Browser smoke test homepage
+        run: |
+          python3 -m http.server 8000 >/tmp/pennitools-http.log 2>&1 &
+          npm init -y >/dev/null 2>&1
+          npm install playwright >/dev/null 2>&1
+          npx playwright install --with-deps chromium >/dev/null 2>&1
+          node - <<'NODE'
+          const { chromium } = require('playwright');
+          (async () => {
+            const browser = await chromium.launch({headless:true});
+            const page = await browser.newPage();
+            const errors = [];
+            page.on('pageerror', e => errors.push(e.message));
+            await page.goto('http://127.0.0.1:8000/index.html', {waitUntil:'networkidle'});
+            await page.waitForTimeout(500);
+            const options = await page.locator('#toolSelect option').count();
+            const chips = await page.locator('#cats .chip').count();
+            const categories = await page.locator('#app .category-drop').count();
+            if (options <= 1) throw new Error(`Expected populated tool dropdown, found ${options} option(s)`);
+            if (chips < 1) throw new Error(`Expected category chips, found ${chips}`);
+            if (categories < 1) throw new Error(`Expected category sections, found ${categories}`);
+            if (errors.length) throw new Error(`Homepage JavaScript errors: ${errors.join(' | ')}`);
+            console.log(`Homepage smoke test passed: ${options} dropdown options, ${chips} category chips, ${categories} category sections.`);
+            await browser.close();
+          })().catch(err => { console.error(err); process.exit(1); });
+          NODE
+
       - name: Check sitemap and robots
         run: |
           grep -q "https://pennitools.in/sitemap.xml" robots.txt
