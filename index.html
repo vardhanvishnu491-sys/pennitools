@@ -374,7 +374,50 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 .pdf-page-label{text-align:center;font-size:12px;font-weight:800;color:#475467;padding-top:7px}
 .pdf-preview-empty{padding:28px;text-align:center;color:#667085}
 </style>
-</head>
+<style>
+
+/* PenniTools mobile/full-width reliability fixes */
+html,body{width:100%;max-width:100%;min-width:0;overflow-x:hidden}
+body{min-height:100vh}
+header,.trust-hero,.popular-section,.content-section,.info-page,footer{width:100%;max-width:none}
+header>.wrap{width:min(1160px,calc(100% - 32px));margin-inline:auto}
+.trust-hero,.popular-section,.content-section,.info-page{box-sizing:border-box}
+.trust-hero{margin-left:0;margin-right:0}
+.popular-section,.content-section,.info-page{padding-left:16px;padding-right:16px}
+.popular-section>.section-head,.popular-section>.popular-grid,
+.content-section>.content-grid,.info-page{width:min(1160px,100%);margin-left:auto;margin-right:auto}
+.download-bar{
+  position:fixed;left:12px;right:12px;bottom:14px;z-index:100;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:12px 14px;background:#fff;border:1px solid #d7deea;
+  border-radius:16px;box-shadow:0 18px 45px rgba(16,24,40,.22)
+}
+.download-bar span{font-weight:800;color:#344054}
+.download-link{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:10px 13px;border-radius:10px;background:#2563eb;color:#fff;
+  font-weight:800;text-decoration:none;min-height:42px
+}
+.download-bar .secondary{margin:0}
+.pdf-editor .drop{padding:16px;border:2px dashed #b8c9ea;border-radius:16px;background:#f8fbff}
+.pdf-editor .drop input{display:block;width:100%;margin-top:10px}
+.pdf-preview{min-width:0}
+.pdf-pages{min-width:0}
+.pdf-page-card{min-width:0}
+@media(max-width:620px){
+  header{padding-left:0;padding-right:0}
+  header>.wrap{width:calc(100% - 22px)}
+  .trust-hero{margin:14px 11px;padding:22px;border-radius:20px;width:calc(100% - 22px)}
+  .trust-hero h2{font-size:28px}
+  .popular-section,.content-section,.info-page{padding-left:11px;padding-right:11px}
+  .popular-section>.section-head,.popular-section>.popular-grid,
+  .content-section>.content-grid,.info-page{width:100%}
+  .download-bar{left:8px;right:8px;bottom:8px;padding:10px}
+  .download-bar span{width:100%;font-size:13px}
+  .download-link{flex:1}
+  .download-bar .secondary{flex:1}
+}
+</style>\n</head>
 <body>
 <header>
 <div class="wrap">
@@ -397,7 +440,7 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
     <button onclick="openTool('carpenterarea','Carpenter Area / Square Feet Calculator')">🪚 <strong>Square Feet</strong><small>Inches × inches → sq ft</small></button>
     <button onclick="openTool('emi','EMI Calculator')">💰 <strong>EMI Calculator</strong><small>Estimate monthly loan payment</small></button>
     <button onclick="openTool('fuel','Fuel Cost Calculator')">⛽ <strong>Fuel Cost</strong><small>Estimate your trip fuel cost</small></button>
-    <button onclick="openTool('tripcost','Trip Cost Calculator')">🚗 <strong>Trip Cost</strong><small>Plan your travel expenses</small></button>
+    <button onclick="openTool('trip','Trip Cost Calculator')">🚗 <strong>Trip Cost</strong><small>Plan your travel expenses</small></button>
     <button onclick="openTool('pdfeditor','PDF Editor')">📄 <strong>PDF Editor</strong><small>Work with PDF files</small></button>
     <button onclick="openTool('audiotranscribe','Audio Transcriber')">🎙️ <strong>Audio Transcriber</strong><small>Turn audio into text</small></button>
   </div>
@@ -433,7 +476,7 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs" type="module"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
 const $=s=>document.querySelector(s), money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR',maximumFractionDigits:2}).format(Number(n)||0), num=n=>Number(n)||0;
@@ -985,7 +1028,37 @@ function indianWords(n){
 }
 function annuity(P,annual,months){let r=annual/1200,n=months;return r?P*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1):P/n}
 function parsePages(s,max){let out=[];(s||'').split(',').forEach(x=>{x=x.trim();if(x.includes('-')){let [a,b]=x.split('-').map(Number);for(let i=a;i<=b;i++)out.push(i)}else{let n=Number(x);if(n)out.push(n)}});return [...new Set(out)].filter(n=>n>=1&&(!max||n<=max))}
-function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function dl(blob,name){
+  const url=URL.createObjectURL(blob);
+  document.querySelectorAll('.download-bar').forEach(x=>x.remove());
+  const bar=document.createElement('div');
+  bar.className='download-bar';
+  const label=document.createElement('span');
+  label.textContent='Your file is ready:';
+  const a=document.createElement('a');
+  a.className='download-link';
+  a.href=url;
+  a.download=name;
+  a.target='_blank';
+  a.rel='noopener';
+  a.textContent='Save / Download '+name;
+  bar.append(label,a);
+  if(window.isSecureContext && navigator.share && window.File){
+    const share=document.createElement('button');
+    share.className='btn secondary';
+    share.type='button';
+    share.textContent='Share / Save';
+    share.onclick=async()=>{
+      try{
+        const file=new File([blob],name,{type:blob.type||'application/octet-stream'});
+        if(!navigator.canShare || navigator.canShare({files:[file]})) await navigator.share({files:[file],title:name});
+      }catch(e){ if(e.name!=='AbortError') console.error(e); }
+    };
+    bar.appendChild(share);
+  }
+  document.body.appendChild(bar);
+  return url;
+}
 function out(html){$('#out').innerHTML=`<div class="result">${html}</div>`}
 async function calculate(id){
  try{
@@ -1240,9 +1313,9 @@ async function copyPdf(){
 }
 
 async function loadPdfJs(){
- const pdfjs=await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs');
- pdfjs.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
- return pdfjs;
+ if(!window.pdfjsLib) throw new Error('PDF preview engine could not load. Please refresh the page and try again.');
+ window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+ return window.pdfjsLib;
 }
 async function pdfToText(){
  let f=$('#pdf').files[0]; if(!f)throw Error('Choose a PDF');
@@ -1333,7 +1406,7 @@ async function renderPdfEditorPreview(){
       grid.appendChild(card);await page.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;
     }
     box.innerHTML=`<div class="pdf-preview-head"><span>Document preview</span><span class="small">Tap a page to select it</span></div>`;box.appendChild(grid);
-  }catch(e){console.error(e);box.innerHTML='<div class="pdf-preview-empty">Unable to render the PDF preview. You can still try the edit action.</div>'}
+  }catch(e){console.error(e);box.innerHTML='<div class="pdf-preview-empty"><strong>Preview could not be rendered.</strong><br>'+String(e?.message||e).replace(/[<>]/g,'')+'<br><span class="small">Try refreshing the page. The PDF editor can still process supported, non-password-protected PDFs.</span></div>'}
 }
 
 async function editPdf(){
