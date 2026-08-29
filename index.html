@@ -1279,6 +1279,22 @@ async function pdfToText(){
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
  const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
 </head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}
+
+<script>
+/* PENNITOOLS_SAFE_ROUTING_V1 */
+(function(){
+  var originalOpenTool = window.openTool;
+  if (typeof originalOpenTool !== 'function') return;
+  window.openTool = function(key, title){
+    if (key === 'pdfeditor' || key === 'pdf-editor') {
+      window.location.href = 'pdf-editor.html';
+      return;
+    }
+    if (key === 'tripcost') key = 'trip';
+    return originalOpenTool.call(this, key, title);
+  };
+})();
+</script>
 </body></html>`;
  dl(new Blob([docHtml],{type:'application/msword'}),(f.name||'document.pdf').replace(/\.pdf$/i,'')+'-converted.doc');
  out(`<strong>PDF converted successfully.</strong><br>${pdf.numPages} page(s) extracted into a Word-compatible <code>.doc</code> file.`);
