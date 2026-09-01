@@ -53,6 +53,8 @@ jobs:
           test -f mobile-calculator.html
           test -f calorie-calculator.html
           test -f audio-transcriber.html
+          test -f scientific-calculator.html
+          test -f audio-duration-calculator.html
 
       - name: Validate inline JavaScript syntax
         shell: bash
@@ -80,7 +82,7 @@ jobs:
 
       - name: Check sitemap coverage for key standalone tools
         run: |
-          for path in tools-index finance-extra text-tools work-everyday-tools pdf-editor image-tools background-remover document-image-tools pdf-tools carpenter-calculators carpenter-tool construction-calculators construction-extra gst-calculator percentage-calculator discount-calculator mileage-calculator fuel-cost-calculator ev-range-calculator ev-charging-cost-calculator mobile-calculator calorie-calculator audio-transcriber; do
+          for path in tools-index finance-extra text-tools work-everyday-tools pdf-editor image-tools background-remover document-image-tools pdf-tools carpenter-calculators carpenter-tool construction-calculators construction-extra gst-calculator percentage-calculator discount-calculator mileage-calculator fuel-cost-calculator ev-range-calculator ev-charging-cost-calculator mobile-calculator calorie-calculator audio-transcriber scientific-calculator audio-duration-calculator; do
             grep -q "https://pennitools.in/$path.html" sitemap.xml
           done
 
