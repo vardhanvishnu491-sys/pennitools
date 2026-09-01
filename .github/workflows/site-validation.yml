@@ -27,7 +27,19 @@ jobs:
           test -f disclaimer.html
           test -f privacy-policy.html
           test -f terms.html
+          test -f tools-index.html
           test -f pdf-editor.html
+          test -f image-tools.html
+          test -f background-remover.html
+          test -f document-image-tools.html
+          test -f pdf-tools.html
+          test -f finance-extra.html
+          test -f text-tools.html
+          test -f work-everyday-tools.html
+          test -f carpenter-calculators.html
+          test -f carpenter-tool.html
+          test -f construction-calculators.html
+          test -f construction-extra.html
           test -f square-feet-calculator.html
           test -f tiles-calculator.html
           test -f emi-calculator.html
@@ -68,7 +80,7 @@ jobs:
 
       - name: Check sitemap coverage for key standalone tools
         run: |
-          for path in gst-calculator percentage-calculator discount-calculator mileage-calculator fuel-cost-calculator ev-range-calculator ev-charging-cost-calculator mobile-calculator calorie-calculator audio-transcriber; do
+          for path in tools-index finance-extra text-tools work-everyday-tools pdf-editor image-tools background-remover document-image-tools pdf-tools carpenter-calculators carpenter-tool construction-calculators construction-extra gst-calculator percentage-calculator discount-calculator mileage-calculator fuel-cost-calculator ev-range-calculator ev-charging-cost-calculator mobile-calculator calorie-calculator audio-transcriber; do
             grep -q "https://pennitools.in/$path.html" sitemap.xml
           done
 
