@@ -93,15 +93,21 @@ jobs:
           href_re = re.compile(r'\bhref\s*=\s*["\']([^"\']+)["\']', re.I)
           id_re = re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']', re.I)
 
+          def static_html(text):
+              # Ignore JavaScript/CSS blocks because their template strings can
+              # intentionally reuse IDs and build hrefs dynamically at runtime.
+              return re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>', '', text, flags=re.I)
+
           for path in sorted(root.glob('*.html')):
               text = path.read_text(encoding='utf-8')
-              ids = [html.unescape(x) for x in id_re.findall(text)]
+              static_text = static_html(text)
+              ids = [html.unescape(x) for x in id_re.findall(static_text)]
               seen = set()
               for ident in ids:
                   if ident in seen:
                       errors.append(f'{path}: duplicate id="{ident}"')
                   seen.add(ident)
-              for href in href_re.findall(text):
+              for href in href_re.findall(static_text):
                   href = html.unescape(href).strip()
                   if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')):
                       continue
@@ -113,7 +119,7 @@ jobs:
                       errors.append(f'{path}: missing internal page target {href}')
                       continue
                   if parsed.fragment:
-                      target_text = (root / target).read_text(encoding='utf-8')
+                      target_text = static_html((root / target).read_text(encoding='utf-8'))
                       target_ids = set(id_re.findall(target_text))
                       if parsed.fragment not in target_ids:
                           errors.append(f'{path}: missing anchor {href}')
@@ -121,14 +127,14 @@ jobs:
           if errors:
               print('\n'.join(errors))
               sys.exit(1)
-          print('Internal HTML links, anchors and duplicate IDs look valid.')
+          print('Static internal HTML links, anchors and IDs look valid.')
           PY
 
       - name: Check sitemap coverage for all standalone HTML pages
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re, sys
+          import sys
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           missing=[]
           for p in Path('.').glob('*.html'):
