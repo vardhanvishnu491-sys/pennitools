@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Validate required site files
         run: |
@@ -55,6 +55,9 @@ jobs:
           test -f audio-transcriber.html
           test -f scientific-calculator.html
           test -f audio-duration-calculator.html
+          test -f fuel-efficiency-converter.html
+          test -f tire-size-calculator.html
+          test -f vehicle-calculators.html
 
       - name: Validate inline JavaScript syntax
         shell: bash
@@ -94,8 +97,6 @@ jobs:
           id_re = re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']', re.I)
 
           def static_html(text):
-              # Ignore JavaScript/CSS blocks because their template strings can
-              # intentionally reuse IDs and build hrefs dynamically at runtime.
               return re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>', '', text, flags=re.I)
 
           for path in sorted(root.glob('*.html')):
