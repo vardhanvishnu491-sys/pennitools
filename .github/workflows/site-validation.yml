@@ -14,7 +14,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
 
       - name: Validate required site files
         run: |
@@ -82,6 +84,33 @@ jobs:
           grep -q "const tools=" index.html
           grep -q "toolSelect" index.html
           grep -q "function render" index.html
+
+      - name: Validate basic HTML metadata and accessibility
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+          errors=[]
+          for path in sorted(Path('.').glob('*.html')):
+              text=path.read_text(encoding='utf-8')
+              if '<meta name="viewport"' not in text.lower():
+                  errors.append(f'{path}: missing viewport meta')
+              if not re.search(r'<title>\s*[^<]+\s*</title>', text, re.I):
+                  errors.append(f'{path}: missing title')
+              if not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I):
+                  errors.append(f'{path}: missing meta description')
+              if not re.search(r'<h1\b[^>]*>[^<]*\S[^<]*</h1>', text, re.I):
+                  errors.append(f'{path}: missing H1')
+              for m in re.finditer(r'<img\b([^>]*)>', text, re.I):
+                  attrs=m.group(1)
+                  if not re.search(r'\balt\s*=\s*["\']', attrs, re.I):
+                      errors.append(f'{path}: image missing alt attribute')
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print('Basic metadata and image accessibility checks passed.')
+          PY
 
       - name: Validate internal HTML links and anchors
         run: |
