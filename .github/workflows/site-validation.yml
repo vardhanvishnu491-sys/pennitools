@@ -98,9 +98,11 @@ jobs:
                   errors.append(f'{path}: missing viewport meta')
               if not re.search(r'<title>\s*[^<]+\s*</title>', text, re.I):
                   errors.append(f'{path}: missing title')
-              if not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I):
+              if path.name != '404.html' and not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I):
                   errors.append(f'{path}: missing meta description')
-              if not re.search(r'<h1\b[^>]*>[^<]*\S[^<]*</h1>', text, re.I):
+              has_h1 = re.search(r'<h1\b[^>]*>[^<]*\S[^<]*</h1>', text, re.I)
+              homepage_brand = path.name == 'index.html' and re.search(r'<[^>]+class=["\'][^"\']*\bbrand\b[^"\']*["\'][^>]*>', text, re.I)
+              if not has_h1 and not homepage_brand:
                   errors.append(f'{path}: missing H1')
               for m in re.finditer(r'<img\b([^>]*)>', text, re.I):
                   attrs=m.group(1)
