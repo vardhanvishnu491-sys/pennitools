@@ -80,11 +80,69 @@ jobs:
           grep -q "toolSelect" index.html
           grep -q "function render" index.html
 
-      - name: Check sitemap coverage for key standalone tools
+      - name: Validate internal HTML links and anchors
         run: |
-          for path in tools-index finance-extra text-tools work-everyday-tools pdf-editor image-tools background-remover document-image-tools pdf-tools carpenter-calculators carpenter-tool construction-calculators construction-extra gst-calculator percentage-calculator discount-calculator mileage-calculator fuel-cost-calculator ev-range-calculator ev-charging-cost-calculator mobile-calculator calorie-calculator audio-transcriber scientific-calculator audio-duration-calculator; do
-            grep -q "https://pennitools.in/$path.html" sitemap.xml
-          done
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.parse import urlsplit
+          import html, re, sys
+
+          root = Path('.')
+          pages = {p.name for p in root.glob('*.html')}
+          errors = []
+          href_re = re.compile(r'\bhref\s*=\s*["\']([^"\']+)["\']', re.I)
+          id_re = re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']', re.I)
+
+          for path in sorted(root.glob('*.html')):
+              text = path.read_text(encoding='utf-8')
+              ids = [html.unescape(x) for x in id_re.findall(text)]
+              seen = set()
+              for ident in ids:
+                  if ident in seen:
+                      errors.append(f'{path}: duplicate id="{ident}"')
+                  seen.add(ident)
+              for href in href_re.findall(text):
+                  href = html.unescape(href).strip()
+                  if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')):
+                      continue
+                  parsed = urlsplit(href)
+                  if parsed.scheme or parsed.netloc:
+                      continue
+                  target = parsed.path.lstrip('/') or 'index.html'
+                  if target not in pages:
+                      errors.append(f'{path}: missing internal page target {href}')
+                      continue
+                  if parsed.fragment:
+                      target_text = (root / target).read_text(encoding='utf-8')
+                      target_ids = set(id_re.findall(target_text))
+                      if parsed.fragment not in target_ids:
+                          errors.append(f'{path}: missing anchor {href}')
+
+          if errors:
+              print('\n'.join(errors))
+              sys.exit(1)
+          print('Internal HTML links, anchors and duplicate IDs look valid.')
+          PY
+
+      - name: Check sitemap coverage for all standalone HTML pages
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
+          missing=[]
+          for p in Path('.').glob('*.html'):
+              if p.name == '404.html':
+                  continue
+              url='https://pennitools.in/'+p.name
+              if url not in sitemap:
+                  missing.append(url)
+          if missing:
+              print('Missing sitemap URLs:')
+              print('\n'.join(missing))
+              sys.exit(1)
+          print('All standalone HTML pages are represented in sitemap.xml.')
+          PY
 
       - name: Check robots and policy pages
         run: |
