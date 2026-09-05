@@ -26,6 +26,7 @@ jobs:
           test -f robots.txt
           test -f sitemap.xml
           test -f about.html
+          test -f contact.html
           test -f disclaimer.html
           test -f privacy-policy.html
           test -f terms.html
@@ -189,3 +190,4 @@ jobs:
           grep -q "Privacy Policy" privacy-policy.html
           grep -q "Terms of Use" terms.html
           grep -q "Disclaimer" disclaimer.html
+          grep -q "Contact PenniTools" contact.html
