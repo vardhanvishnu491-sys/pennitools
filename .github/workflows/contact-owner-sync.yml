@@ -1,0 +1,56 @@
+name: Add founder details to homepage contact
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-contact:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Add founder details to homepage Contact section
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+
+          old = '<section id="contact" class="info-page"><span class="eyebrow">CONTACT</span><h2>Contact PenniTools</h2><p>For feedback, broken tools, suggestions or partnership enquiries, please contact the PenniTools site owner using the contact method published on the website. Please do not send passwords, bank credentials or other sensitive information.</p></section>'
+          new = '<section id="contact" class="info-page"><span class="eyebrow">CONTACT</span><h2>Contact PenniTools</h2><p>For feedback, broken tools, suggestions or partnership enquiries, please contact the PenniTools site owner.</p><div class="contact-owner"><h3>Founder &amp; Creator</h3><p><strong>Name:</strong> Mosali Vishnuvardan Reddy</p><p><strong>Email:</strong> <a href="mailto:vardhan.vishnu491@gmail.com">vardhan.vishnu491@gmail.com</a></p></div><p>Please do not send passwords, bank credentials or other sensitive information.</p></section>'
+
+          if old in text:
+              text = text.replace(old, new, 1)
+          elif 'Mosali Vishnuvardan Reddy' in text and 'vardhan.vishnu491@gmail.com' in text:
+              print('Founder details already present; no change needed.')
+              raise SystemExit(0)
+          else:
+              raise SystemExit('Expected homepage Contact section was not found; no changes made.')
+
+          marker = '</style>'
+          css = '.contact-owner{margin:18px 0;padding:18px 20px;background:#f8fafc;border:1px solid #dfe6f2;border-radius:14px}.contact-owner h3{margin:0 0 10px;font-size:20px}.contact-owner p{margin:6px 0}.contact-owner a{color:#2563eb;font-weight:750}'
+          if '.contact-owner{' not in text:
+              text = text.replace(marker, marker + '\n<style>' + css + '</style>', 1)
+
+          path.write_text(text, encoding='utf-8')
+          print('Homepage Contact section updated with founder name and email.')
+          PY
+
+      - name: Commit homepage update
+        run: |
+          if git diff --quiet -- index.html; then
+            echo 'No homepage change to commit.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git commit -m 'Show founder details in homepage contact section'
+          git push
