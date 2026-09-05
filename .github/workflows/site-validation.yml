@@ -25,6 +25,7 @@ jobs:
           test -f CNAME
           test -f robots.txt
           test -f sitemap.xml
+          test -f ads.txt
           test -f about.html
           test -f contact.html
           test -f disclaimer.html
@@ -61,6 +62,11 @@ jobs:
           test -f fuel-efficiency-converter.html
           test -f tire-size-calculator.html
           test -f vehicle-calculators.html
+
+      - name: Validate AdSense ads.txt
+        run: |
+          test "$(wc -l < ads.txt)" -eq 1
+          grep -Fxq "google.com, pub-2877520218090125, DIRECT, f08c47fec0942fa0" ads.txt
 
       - name: Validate inline JavaScript syntax
         shell: bash
