@@ -1280,6 +1280,7 @@ async function pdfToText(){
  if(!body.replace(/--- Page \d+ ---/g,'').trim())throw Error('No selectable text was found. This may be a scanned/image-only PDF.');
  const safe=body.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
  const docHtml=`<!doctype html><html><head><meta charset="utf-8"><title>PenniTools PDF to Word</title>
+<meta name="google-adsense-account" content="ca-pub-2877520218090125">
 </head><body style="font-family:Arial,sans-serif;line-height:1.5">${safe}
 
 <script>
