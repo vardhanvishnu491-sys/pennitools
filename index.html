@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="PenniTools provides free calculators for construction, carpentry, area, length, tiles, paint, concrete, finance and everyday calculations in India.">
-<meta name="theme-color" content="#155eef">
+<meta name="theme-color" content="#05070b">
 <meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="author" content="PenniTools">
 <link rel="canonical" href="https://pennitools.in/">
@@ -459,6 +459,160 @@ footer{padding:38px 20px;background:#081329;color:#b8c3d6;text-align:center}foot
   .featured-home .card{min-height:190px}
 }
 </style>
+
+<style id="penni-dark-theme">
+/* PenniTools — premium black / midnight theme */
+:root{
+  --navy:#05070b;
+  --blue:#3b82f6;
+  --blue2:#7c3aed;
+  --cyan:#22d3ee;
+  --ink:#f5f7fb;
+  --muted:#a8b1c2;
+  --bg:#07090d;
+  --card:#10131a;
+  --line:#252b38;
+  --shadow:0 18px 55px rgba(0,0,0,.42);
+}
+html{background:#07090d}
+body{
+  background:#07090d;
+  color:#f5f7fb;
+}
+body:before{
+  background:
+    radial-gradient(circle at 8% 10%,rgba(59,130,246,.12),transparent 27%),
+    radial-gradient(circle at 90% 18%,rgba(124,58,237,.11),transparent 25%),
+    radial-gradient(circle at 50% 70%,rgba(34,211,238,.045),transparent 30%);
+}
+header{
+  background:
+    radial-gradient(circle at 82% 12%,rgba(59,130,246,.22),transparent 30%),
+    linear-gradient(135deg,#020308 0%,#080d18 48%,#101b38 100%);
+  box-shadow:0 18px 50px rgba(0,0,0,.55);
+}
+header:after{background:#07090d}
+.brand span{color:#67d8ff}
+.tag{color:#b9c4d8}
+.search{
+  background:#f7f9fc;
+  color:#101828;
+  box-shadow:0 14px 38px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08);
+}
+.chip{
+  border-color:rgba(255,255,255,.16);
+  background:rgba(255,255,255,.07);
+  color:#eaf2ff;
+}
+.chip:hover,.chip.active{background:#fff;color:#101828}
+
+.trust-hero{
+  background:linear-gradient(135deg,#0b1220 0%,#111827 48%,#15102b 100%) !important;
+  color:#fff !important;
+  border:1px solid #202838;
+  box-shadow:0 20px 55px rgba(0,0,0,.3);
+}
+.trust-hero h1,.trust-hero h2,.trust-hero h3{color:#fff !important}
+.trust-hero p,.trust-hero li{color:#c3ccdc !important}
+
+.featured-home{
+  position:relative;
+  margin:34px 0 28px !important;
+  padding:30px !important;
+  background:linear-gradient(145deg,#0d1119 0%,#121827 55%,#17102a 100%) !important;
+  border:1px solid #293247 !important;
+  border-radius:24px !important;
+  box-shadow:0 22px 60px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.035) !important;
+  overflow:hidden;
+}
+.featured-home:before{
+  content:"";
+  position:absolute;
+  left:0;right:0;top:0;height:4px;
+  background:linear-gradient(90deg,#22d3ee,#3b82f6,#8b5cf6);
+}
+.featured-home .featured-kicker{color:#67e8f9 !important;letter-spacing:1.5px}
+.featured-home h2{color:#fff !important;font-size:clamp(28px,4vw,38px) !important}
+.featured-home > p{color:#aeb8ca !important}
+.featured-home .card{
+  background:linear-gradient(145deg,#151a24,#10141d) !important;
+  border-color:#2a3345 !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.3) !important;
+}
+.featured-home .card:hover{border-color:#3b82f6 !important;box-shadow:0 18px 38px rgba(0,0,0,.45),0 0 0 1px rgba(59,130,246,.16) !important}
+.featured-home .card h3{color:#f8fafc !important}
+.featured-home .card p{color:#aab5c7 !important}
+.featured-home .badge{background:rgba(59,130,246,.13) !important;color:#7dd3fc !important;border:1px solid rgba(59,130,246,.18)}
+
+.selector-wrap{
+  background:#10131a !important;
+  border-color:#293142 !important;
+  box-shadow:0 16px 45px rgba(0,0,0,.35) !important;
+}
+.selector-title{color:#f5f7fb}
+.tool-select{
+  background:#0b0f16 !important;
+  color:#f5f7fb !important;
+  border-color:#30394b !important;
+}
+
+.section h2,.section h3,.popular-section h2,.popular-section h3{color:#f5f7fb}
+.section > p,.section p{color:#a8b1c2}
+.grid .card,.card{
+  background:#10131a;
+  color:#f5f7fb;
+  border-color:#252d3b;
+  box-shadow:0 8px 24px rgba(0,0,0,.24);
+}
+.card h3{color:#f5f7fb}
+.card p{color:#a8b1c2}
+.card:hover{border-color:#365a96}
+.badge{background:rgba(59,130,246,.12);color:#7dd3fc}
+.btn{background:linear-gradient(135deg,#2563eb,#7c3aed);box-shadow:0 9px 22px rgba(37,99,235,.22)}
+
+.category-dropdown,.category-drop{
+  background:#10131a !important;
+  border-color:#293142 !important;
+  box-shadow:0 12px 35px rgba(0,0,0,.3) !important;
+}
+.category-toggle,.category-drop summary{
+  background:linear-gradient(135deg,#111620,#171322) !important;
+  color:#f5f7fb !important;
+}
+.category-title,.category-drop summary strong,.cat-info strong{color:#f5f7fb !important}
+.category-content,.category-tools{background:#0c1017 !important;border-color:#252d3b !important}
+.category-content p,.category-drop summary small,.cat-info small{color:#a8b1c2 !important}
+.cat-icon,.category-chevron,.cat-arrow{background:rgba(59,130,246,.12) !important;color:#67e8f9 !important}
+.category-drop[open] .cat-arrow,.category-toggle[aria-expanded="true"] .category-chevron{background:linear-gradient(135deg,#2563eb,#7c3aed) !important;color:#fff !important}
+
+.empty{background:#10131a;color:#a8b1c2;border-color:#252d3b}
+.modal{background:rgba(0,0,0,.78)}
+.panel{background:#11151d;color:#f5f7fb;border:1px solid #2b3445}
+.panel h2{color:#fff}
+.close{background:#202735;color:#dce4f2}
+.row label{color:#cbd5e1}
+.row input,.row select{
+  background:#0b0f16;color:#f5f7fb;border-color:#30394b;
+}
+#out{background:#0d1727;border-color:#26466f;color:#e6efff}
+.notice{background:#211a08;color:#f7d98b;border-color:#5d4715}
+.small{color:#98a4b8}
+.contact-owner{background:#10151e;border-color:#2a3343}
+.contact-owner h3,.contact-owner p{color:#f5f7fb}
+.contact-owner a{color:#67d8ff}
+footer{background:#020308;color:#8f9bb0;border-top:1px solid #1d2430}
+footer strong{color:#fff}
+
+a{color:#70c8ff}
+::selection{background:#2563eb;color:#fff}
+:focus-visible{outline:3px solid rgba(34,211,238,.65);outline-offset:3px}
+
+@media(max-width:620px){
+  .featured-home{padding:22px 16px !important;border-radius:20px !important}
+  .featured-home .card{padding:20px}
+}
+</style>
+
 </head>
 <body>
 <header>
