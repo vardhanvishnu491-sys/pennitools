@@ -1,7 +1,8 @@
 name: Ensure AdSense sitewide
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 permissions:
   contents: write
@@ -28,11 +29,13 @@ jobs:
                   continue
               text = path.read_text(encoding='utf-8')
               original = text
-              if 'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2877520218090125' not in text and '</head>' in text.lower():
-                  idx = text.lower().rfind('</head>')
+              lower = text.lower()
+              if 'pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2877520218090125' not in text and '</head>' in lower:
+                  idx = lower.rfind('</head>')
                   text = text[:idx] + script + '\n' + text[idx:]
-              if 'name="google-adsense-account"' not in text and '</head>' in text.lower():
-                  idx = text.lower().rfind('</head>')
+                  lower = text.lower()
+              if 'name="google-adsense-account"' not in text and '</head>' in lower:
+                  idx = lower.rfind('</head>')
                   text = text[:idx] + meta + '\n' + text[idx:]
               if text != original:
                   path.write_text(text, encoding='utf-8')
