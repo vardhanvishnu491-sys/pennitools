@@ -18,30 +18,31 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Apply shared PenniTools theme to every HTML page
+      - name: Apply final PenniTools theme layer to every HTML page
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           set -euo pipefail
           test -s theme.css
-          changed=0
+          test -s theme-final.css
           for file in *.html; do
             [ -f "$file" ] || continue
-            if ! grep -q 'href="/theme.css"' "$file"; then
-              python3 - "$file" <<'PY'
+            python3 - "$file" <<'PY'
           import sys
           from pathlib import Path
           p=Path(sys.argv[1])
           s=p.read_text(encoding='utf-8')
           if '</head>' not in s:
               raise SystemExit(f'Missing </head>: {p}')
-          s=s.replace('</head>', '<link rel="stylesheet" href="/theme.css"></head>', 1)
+          # Keep the shared stylesheet and add the final override after all legacy page CSS.
+          s=s.replace('<link rel="stylesheet" href="/theme.css"></head>', '<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
+          if '/theme.css?v=20260914' not in s:
+              s=s.replace('</head>', '<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
+          elif '/theme-final.css?v=20260914' not in s:
+              s=s.replace('</head>', '<link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
           p.write_text(s, encoding='utf-8')
           PY
-              changed=1
-            fi
           done
-          echo "Theme link rollout complete; changed=$changed"
 
       - name: Enforce homepage section order
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -74,19 +75,20 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add '*.html' index.html theme.css
-          git diff --cached --quiet || git commit -m "Apply shared theme across all pages"
+          git add '*.html' index.html theme.css theme-final.css
+          git diff --cached --quiet || git commit -m "Apply final PenniTools theme across all pages"
           git push || true
 
-      - name: Verify shared theme coverage
+      - name: Verify final theme coverage
         shell: bash
         run: |
           test -s theme.css
+          test -s theme-final.css
           for file in *.html; do
             [ -f "$file" ] || continue
-            grep -q 'href="/theme.css"' "$file" || { echo "Theme missing: $file"; exit 1; }
+            grep -q 'theme-final.css?v=20260914' "$file" || { echo "Final theme missing: $file"; exit 1; }
           done
-          echo "Shared theme is linked from every HTML page."
+          echo "Final theme is linked from every HTML page."
 
       - name: Verify homepage order
         run: |
