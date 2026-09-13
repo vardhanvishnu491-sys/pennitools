@@ -1,5 +1,5 @@
 /* PenniTools — shared dark theme for every page and calculator */
-/* Shared-theme rollout trigger: apply this stylesheet to every HTML page. */
+/* This file is intentionally loaded LAST so it consistently overrides each page's legacy light CSS. */
 :root{
   --pt-bg:#05070b;
   --pt-surface:#0b111c;
@@ -14,7 +14,8 @@
   --pt-shadow:0 18px 55px rgba(0,0,0,.34);
 }
 
-html{background:var(--pt-bg)!important;color-scheme:dark}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--pt-bg)!important;color-scheme:dark!important}
 body{
   background:
     radial-gradient(circle at 8% 5%,rgba(59,130,246,.16),transparent 25%),
@@ -24,27 +25,20 @@ body{
   color:var(--pt-text)!important;
 }
 
-header,
-header.hero,
-.hero{
+/* Header / hero */
+header,header.hero,.hero{
   background:linear-gradient(135deg,#030712 0%,#0b1b3a 48%,#123c86 100%)!important;
   color:#fff!important;
   box-shadow:0 18px 50px rgba(0,0,0,.45)!important;
 }
 header:after{background:var(--pt-bg)!important}
-
-.brand,.tag,.section h2,.section>p,h1,h2,h3,h4,h5,h6,strong{color:var(--pt-text)}
+.brand,.tag,.section h2,.section>p,h1,h2,h3,h4,h5,h6,strong{color:var(--pt-text)!important}
 .tag,.section>p,.small,.seo p,.category-content>p{color:var(--pt-muted)!important}
 
-.selector-wrap,
-.card,
-.panel,
-.empty,
-.category-drop,
-.category-dropdown,
-.category-tools,
-.contact-owner,
-.seo{
+/* Main page/tool surfaces */
+main,.wrap{color:var(--pt-text)}
+.selector-wrap,.card,.panel,.empty,.category-drop,.category-dropdown,.category-tools,.contact-owner,.seo,
+.calculator,.calculator-card,.tool-card,.tool-panel,.content-card,.info-card,.form-card,.result-card{
   background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(9,14,24,.98))!important;
   color:var(--pt-text)!important;
   border-color:var(--pt-line)!important;
@@ -52,8 +46,7 @@ header:after{background:var(--pt-bg)!important}
 }
 
 .selector-wrap{box-shadow:0 16px 45px rgba(0,0,0,.38)!important}
-.category-drop summary,
-.category-toggle{
+.category-drop summary,.category-toggle{
   background:linear-gradient(145deg,#111b2d,#0b1220)!important;
   color:var(--pt-text)!important;
 }
@@ -63,21 +56,11 @@ header:after{background:var(--pt-bg)!important}
 .cat-icon,.cat-arrow,.category-chevron{background:rgba(59,130,246,.14)!important;color:#7dd3fc!important}
 .category-drop[open] .cat-arrow,.category-toggle[aria-expanded="true"] .category-chevron{background:linear-gradient(135deg,var(--pt-blue),var(--pt-purple))!important;color:#fff!important}
 
-.card:hover{border-color:rgba(59,130,246,.55)!important;box-shadow:0 22px 60px rgba(0,0,0,.48)!important}
+.card:hover,.panel:hover,.tool-card:hover{border-color:rgba(59,130,246,.55)!important;box-shadow:0 22px 60px rgba(0,0,0,.48)!important}
 .badge{background:rgba(59,130,246,.14)!important;color:#93c5fd!important}
-.result,
-.results .result,
-#out{
-  background:linear-gradient(145deg,rgba(20,36,62,.96),rgba(10,18,31,.96))!important;
-  border-color:#2b4364!important;
-  color:var(--pt-text)!important;
-}
-.result strong{color:#67e8f9!important}
 
-input,select,textarea,
-.tool-select,
-.row input,.row select,
-.search{
+/* Calculator inputs, controls and outputs */
+input,select,textarea,.tool-select,.row input,.row select,.search{
   background:#0a1220!important;
   color:var(--pt-text)!important;
   border-color:#31435d!important;
@@ -87,11 +70,19 @@ input:focus,select:focus,textarea:focus,.tool-select:focus,.search:focus{
   border-color:var(--pt-blue)!important;
   box-shadow:0 0 0 3px rgba(59,130,246,.18)!important;
 }
-.row label,.field label,.check{color:#dbe5f2!important}
+.row label,.field label,.check,label{color:#dbe5f2!important}
+
+.result,.results .result,#out{
+  background:linear-gradient(145deg,rgba(20,36,62,.96),rgba(10,18,31,.96))!important;
+  border-color:#2b4364!important;
+  color:var(--pt-text)!important;
+}
+.result strong{color:#67e8f9!important}
 
 button,.btn{color:#fff!important}
 button:not(.close),.btn{
   background:linear-gradient(135deg,#2563eb,#7c3aed)!important;
+  border-color:transparent!important;
   box-shadow:0 10px 24px rgba(59,130,246,.24)!important;
 }
 button:not(.close):hover,.btn:hover{filter:brightness(1.08)!important}
@@ -102,21 +93,27 @@ button:not(.close):hover,.btn:hover{filter:brightness(1.08)!important}
 a,.back,.seo a,.nav a{color:#67e8f9!important}
 a:hover,.back:hover,.seo a:hover,.nav a:hover{color:#93c5fd!important}
 
-footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b}
-footer strong{color:#fff!important}
-
+/* Homepage featured section */
 .featured-home{
   background:linear-gradient(145deg,rgba(13,24,43,.98),rgba(8,14,25,.98))!important;
   border-color:#263b5b!important;
 }
 .featured-home .featured-kicker{color:#67e8f9!important}
 
-/* Keep readable media/tool surfaces dark without changing their functionality. */
+/* Tables and code */
 pre,code{background:#080d16!important;color:#dbeafe!important;border-color:#26344a!important}
-table{color:var(--pt-text)!important}
+table{color:var(--pt-text)!important;background:#0b111c!important}
 th{background:#111b2d!important;color:#f8fafc!important}
-td{border-color:#26344a!important}
+td{border-color:#26344a!important;color:var(--pt-text)!important}
+
+/* Common legacy light utility/content blocks */
+article,aside,section{color:var(--pt-text)}
+hr{border-color:var(--pt-line)!important}
+svg{color:inherit}
+
+footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b!important}
+footer strong{color:#fff!important}
 
 @media(max-width:620px){
-  .card,.panel{box-shadow:0 12px 35px rgba(0,0,0,.38)!important}
+  .card,.panel,.calculator,.calculator-card{box-shadow:0 12px 35px rgba(0,0,0,.38)!important}
 }
