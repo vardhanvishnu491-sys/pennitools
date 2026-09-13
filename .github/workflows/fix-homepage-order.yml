@@ -1,0 +1,87 @@
+name: Fix Homepage Order
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Enforce exact homepage order
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+
+          def extract(pattern, label):
+              m = re.search(pattern, html, re.S)
+              if not m:
+                  raise SystemExit(f'{label} not found; no changes made.')
+              return m.group(1) if m.lastindex else m.group(0)
+
+          hero = extract(r'(<section class="trust-hero"[\\s\\S]*?</section>)', 'Main Introduction')
+          featured = extract(r'(<section class="section featured-home"[\\s\\S]*?</section>)', 'Featured Calculators')
+          popular = extract(r'(<section class="popular-section"[\\s\\S]*?</section>)', 'Popular Tools')
+          selector = extract(r'(<div class="selector-wrap">[\\s\\S]*?</div>)\\s*(?=<main id="app")', 'Calculator Categories')
+          app = extract(r'(<main id="app"[\\s\\S]*?</main>)', 'All Tools')
+
+          # Remove each complete block from its current location.
+          for block in (hero, featured, popular, selector, app):
+              html = html.replace(block, '', 1)
+
+          header_end = html.find('</header>')
+          if header_end < 0:
+              raise SystemExit('Header not found; no changes made.')
+
+          ordered = (
+              '\n' + hero +
+              '\n' + featured +
+              '\n' + popular +
+              '\n' + selector +
+              '\n' + app + '\n'
+          )
+          insert_at = header_end + len('</header>')
+          html = html[:insert_at] + ordered + html[insert_at:]
+          p.write_text(html, encoding='utf-8')
+          PY
+
+      - name: Verify exact sequence
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          markers = [
+              ('Header', html.find('</header>')),
+              ('Main Introduction', html.find('class="trust-hero"')),
+              ('Featured Calculators', html.find('class="section featured-home"')),
+              ('Popular Tools', html.find('class="popular-section"')),
+              ('Calculator Categories', html.find('class="selector-wrap"')),
+              ('All Tools', html.find('<main id="app"')),
+              ('Footer', html.find('<footer')),
+          ]
+          missing = [name for name, pos in markers if pos < 0]
+          if missing:
+              raise SystemExit('Missing: ' + ', '.join(missing))
+          positions = [pos for _, pos in markers]
+          if positions != sorted(positions):
+              raise SystemExit('Incorrect order: ' + str(markers))
+          print('EXACT ORDER VERIFIED: ' + ' -> '.join(name for name, _ in markers))
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Set exact homepage section order" || true
+          git push
+          git rm .github/workflows/fix-homepage-order.yml
+          git commit -m "Remove one-time homepage order workflow"
+          git push
