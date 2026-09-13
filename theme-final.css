@@ -1,0 +1,20 @@
+/* PenniTools final theme layer. Loaded after every page's legacy CSS. */
+html,body{background:#05070b!important;color:#f4f7fb!important;color-scheme:dark!important}
+body{background:radial-gradient(circle at 8% 5%,rgba(59,130,246,.13),transparent 25%),radial-gradient(circle at 92% 18%,rgba(34,211,238,.08),transparent 22%),#05070b!important}
+header,header.hero,.hero{background:linear-gradient(135deg,#030712,#0b1b3a 52%,#123c86)!important;color:#fff!important}
+main,main section,main article{color:#f4f7fb!important}
+main .card,main .panel,main .calculator,main .calculator-card,main .tool-card,main .tool-panel,main .content-card,main .info-card,main .form-card,main .result-card,main .empty,main .why-card,main .why-item,main .trust-card,main .trust-item,main .feature-card,main .feature-item,main .info-box,main .info-grid>*,main .trust-grid>*,main .why-grid>*,main .seo-grid>*,main .about-grid>*,main .intro-grid>*,main .grid>*{background:linear-gradient(145deg,#111a2a,#0b111c)!important;color:#f4f7fb!important;border:1px solid #2b3a50!important;box-shadow:0 12px 32px rgba(0,0,0,.28)!important}
+main .card h2,main .card h3,main .card h4,main .panel h2,main .calculator h2,main .calculator h3,main .tool-card h2,main .tool-card h3,main .why-card h2,main .why-card h3,main .why-item h2,main .why-item h3,main .trust-card h2,main .trust-card h3,main .trust-item h2,main .trust-item h3,main .feature-card h2,main .feature-card h3,main .feature-item h2,main .feature-item h3,main .info-box h2,main .info-box h3{color:#f8fafc!important}
+main p,main .card p,main .tool-card p,main .calculator-card p,main .content-card p,main .info-card p,main .why-card p,main .why-item p,main .trust-card p,main .trust-item p,main .feature-card p,main .feature-item p,main .info-box p,main small{color:#a9b5c7!important}
+.selector-wrap,.category-drop,.category-dropdown,.category-tools{background:linear-gradient(145deg,#111a2a,#0b111c)!important;color:#f4f7fb!important;border-color:#2b3a50!important}
+.category-drop summary,.category-toggle{background:linear-gradient(145deg,#111b2d,#0b1220)!important;color:#f4f7fb!important}
+.category-drop summary strong,.category-title,.cat-info strong{color:#f8fafc!important}.category-drop summary small,.cat-info small{color:#a9b5c7!important}
+input,select,textarea,.tool-select{background:#0a1220!important;color:#f4f7fb!important;border-color:#31435d!important}
+label{color:#dbe5f2!important}.result,#out,.results .result{background:linear-gradient(145deg,#14243e,#0a121f)!important;color:#f4f7fb!important;border-color:#2b4364!important}.result strong{color:#67e8f9!important}
+button,.btn{background:linear-gradient(135deg,#2563eb,#7c3aed)!important;color:#fff!important;border:0!important}
+a,.back{color:#67e8f9!important}a:hover,.back:hover{color:#93c5fd!important}
+.featured-home,.popular-section{background:linear-gradient(180deg,#080e19,#050911)!important;color:#f4f7fb!important}
+.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{background:linear-gradient(145deg,#172033,#101827)!important;color:#f8fafc!important;border-color:#34445d!important}
+footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b!important}
+footer strong{color:#fff!important}
+@media(max-width:620px){main .card,main .tool-card,main .calculator-card{box-shadow:0 10px 28px rgba(0,0,0,.3)!important}}
