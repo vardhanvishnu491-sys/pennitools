@@ -1,0 +1,69 @@
+name: Clarify Featured Homepage
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - index.html
+      - .github/workflows/clarify-featured-homepage.yml
+
+permissions:
+  contents: write
+
+jobs:
+  clarify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Make Featured Calculators visually clear
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          path = Path("index.html")
+          text = path.read_text(encoding="utf-8")
+
+          featured_re = re.compile(r'<section class="section" aria-labelledby="featured-calculators">.*?</section>', re.S)
+          m = featured_re.search(text)
+          if not m:
+              raise SystemExit("Featured calculators section not found")
+
+          block = m.group(0)
+          block = block.replace(
+              '<section class="section" aria-labelledby="featured-calculators">',
+              '<section class="section featured-home" aria-labelledby="featured-calculators">'
+          )
+          block = block.replace(
+              '<h2 id="featured-calculators">Featured calculators</h2>',
+              '<span class="featured-kicker">START HERE</span><h2 id="featured-calculators">Featured Calculators</h2>'
+          )
+          block = block.replace(
+              '<p>Popular practical calculators for travel, vehicles and everyday planning.</p>',
+              '<p>Quick access to the calculators people use most for travel and vehicles.</p>'
+          )
+          text = text[:m.start()] + block + text[m.end():]
+
+          style = '''\n<style>\n/* Clear visual hierarchy for the homepage featured tools */\n.featured-home{\n  margin:28px 0 34px;\n  padding:26px;\n  background:linear-gradient(180deg,#ffffff 0%,#f7faff 100%);\n  border:1px solid #d9e4f5;\n  border-radius:24px;\n  box-shadow:0 10px 30px rgba(15,23,42,.07);\n  position:relative;\n}\n.featured-home:before{\n  content:"";\n  position:absolute;\n  left:0;right:0;top:0;height:5px;\n  border-radius:24px 24px 0 0;\n  background:linear-gradient(90deg,#2563eb,#06b6d4);\n}\n.featured-home .section-head{\n  align-items:flex-start;\n  margin-bottom:18px;\n}\n.featured-home .section-head > div{\n  width:100%;\n}\n.featured-home .featured-kicker{\n  display:inline-block;\n  margin-bottom:5px;\n  color:#2563eb;\n  font-size:11px;\n  font-weight:900;\n  letter-spacing:1.5px;\n}\n.featured-home .section-head h2{\n  font-size:clamp(28px,4.5vw,36px);\n  margin:0 0 4px;\n}\n.featured-home .section-head p{\n  margin:0;\n  color:#667085;\n  font-size:15px;\n}\n.featured-home .card{\n  min-height:220px;\n  border-color:#dfe7f3;\n  box-shadow:0 7px 20px rgba(15,23,42,.06);\n}\n@media(max-width:620px){\n  .featured-home{\n    margin:20px 0 28px;\n    padding:20px 14px;\n    border-radius:20px;\n  }\n  .featured-home .section-head{margin-bottom:14px}\n  .featured-home .section-head h2{font-size:28px}\n  .featured-home .card{min-height:190px}\n}\n</style>\n'''
+
+          marker = '</head>'
+          if '.featured-home{' not in text:
+              if marker not in text:
+                  raise SystemExit("</head> not found")
+              text = text.replace(marker, style + marker, 1)
+
+          path.write_text(text, encoding="utf-8")
+
+      - name: Commit homepage clarification and remove workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+users.noreply.github.com"
+          git add index.html
+          git commit -m "Clarify featured calculators section" || true
+          git push
+          git rm .github/workflows/clarify-featured-homepage.yml
+          git commit -m "Remove one-time featured homepage workflow"
+          git push
