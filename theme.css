@@ -1,119 +1,32 @@
 /* PenniTools — shared dark theme for every page and calculator */
 /* This file is intentionally loaded LAST so it consistently overrides each page's legacy light CSS. */
-:root{
-  --pt-bg:#05070b;
-  --pt-surface:#0b111c;
-  --pt-surface-2:#101827;
-  --pt-surface-3:#151f31;
-  --pt-line:#26344a;
-  --pt-text:#f4f7fb;
-  --pt-muted:#a9b5c7;
-  --pt-blue:#3b82f6;
-  --pt-cyan:#22d3ee;
-  --pt-purple:#8b5cf6;
-  --pt-shadow:0 18px 55px rgba(0,0,0,.34);
-}
-
+:root{--pt-bg:#05070b;--pt-surface:#0b111c;--pt-surface-2:#101827;--pt-surface-3:#151f31;--pt-line:#26344a;--pt-text:#f4f7fb;--pt-muted:#a9b5c7;--pt-blue:#3b82f6;--pt-cyan:#22d3ee;--pt-purple:#8b5cf6;--pt-shadow:0 18px 55px rgba(0,0,0,.34)}
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--pt-bg)!important;color-scheme:dark!important}
-body{
-  background:
-    radial-gradient(circle at 8% 5%,rgba(59,130,246,.16),transparent 25%),
-    radial-gradient(circle at 92% 18%,rgba(34,211,238,.10),transparent 22%),
-    radial-gradient(circle at 50% 100%,rgba(139,92,246,.08),transparent 30%),
-    var(--pt-bg)!important;
-  color:var(--pt-text)!important;
-}
-
-/* Header / hero */
-header,header.hero,.hero{
-  background:linear-gradient(135deg,#030712 0%,#0b1b3a 48%,#123c86 100%)!important;
-  color:#fff!important;
-  box-shadow:0 18px 50px rgba(0,0,0,.45)!important;
-}
-header:after{background:var(--pt-bg)!important}
-.brand,.tag,.section h2,.section>p,h1,h2,h3,h4,h5,h6,strong{color:var(--pt-text)!important}
-.tag,.section>p,.small,.seo p,.category-content>p{color:var(--pt-muted)!important}
-
-/* Main page/tool surfaces */
+body{background:radial-gradient(circle at 8% 5%,rgba(59,130,246,.16),transparent 25%),radial-gradient(circle at 92% 18%,rgba(34,211,238,.10),transparent 22%),radial-gradient(circle at 50% 100%,rgba(139,92,246,.08),transparent 30%),var(--pt-bg)!important;color:var(--pt-text)!important}
+header,header.hero,.hero{background:linear-gradient(135deg,#030712 0%,#0b1b3a 48%,#123c86 100%)!important;color:#fff!important;box-shadow:0 18px 50px rgba(0,0,0,.45)!important}header:after{background:var(--pt-bg)!important}
+.brand,.tag,.section h2,.section>p,h1,h2,h3,h4,h5,h6,strong{color:var(--pt-text)!important}.tag,.section>p,.small,.seo p,.category-content>p{color:var(--pt-muted)!important}
 main,.wrap{color:var(--pt-text)}
-.selector-wrap,.card,.panel,.empty,.category-drop,.category-dropdown,.category-tools,.contact-owner,.seo,
-.calculator,.calculator-card,.tool-card,.tool-panel,.content-card,.info-card,.form-card,.result-card{
-  background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(9,14,24,.98))!important;
-  color:var(--pt-text)!important;
-  border-color:var(--pt-line)!important;
-  box-shadow:var(--pt-shadow)!important;
-}
+.selector-wrap,.card,.panel,.empty,.category-drop,.category-dropdown,.category-tools,.contact-owner,.seo,.calculator,.calculator-card,.tool-card,.tool-panel,.content-card,.info-card,.form-card,.result-card{background:linear-gradient(145deg,rgba(16,24,39,.98),rgba(9,14,24,.98))!important;color:var(--pt-text)!important;border-color:var(--pt-line)!important;box-shadow:var(--pt-shadow)!important}
+.selector-wrap{box-shadow:0 16px 45px rgba(0,0,0,.38)!important}.category-drop summary,.category-toggle{background:linear-gradient(145deg,#111b2d,#0b1220)!important;color:var(--pt-text)!important}.category-drop summary strong,.category-toggle,.category-title{color:var(--pt-text)!important}.category-drop summary small,.cat-info small{color:var(--pt-muted)!important}.category-content,.category-tools{border-color:var(--pt-line)!important;background:rgba(8,13,22,.82)!important}.cat-icon,.cat-arrow,.category-chevron{background:rgba(59,130,246,.14)!important;color:#7dd3fc!important}.category-drop[open] .cat-arrow,.category-toggle[aria-expanded="true"] .category-chevron{background:linear-gradient(135deg,var(--pt-blue),var(--pt-purple))!important;color:#fff!important}
+.card:hover,.panel:hover,.tool-card:hover{border-color:rgba(59,130,246,.55)!important;box-shadow:0 22px 60px rgba(0,0,0,.48)!important}.badge{background:rgba(59,130,246,.14)!important;color:#93c5fd!important}
+input,select,textarea,.tool-select,.row input,.row select,.search{background:#0a1220!important;color:var(--pt-text)!important;border-color:#31435d!important}input::placeholder,textarea::placeholder{color:#718096!important}input:focus,select:focus,textarea:focus,.tool-select:focus,.search:focus{border-color:var(--pt-blue)!important;box-shadow:0 0 0 3px rgba(59,130,246,.18)!important}.row label,.field label,.check,label{color:#dbe5f2!important}
+.result,.results .result,#out{background:linear-gradient(145deg,rgba(20,36,62,.96),rgba(10,18,31,.96))!important;border-color:#2b4364!important;color:var(--pt-text)!important}.result strong{color:#67e8f9!important}
+button,.btn{color:#fff!important}button:not(.close),.btn{background:linear-gradient(135deg,#2563eb,#7c3aed)!important;border-color:transparent!important;box-shadow:0 10px 24px rgba(59,130,246,.24)!important}button:not(.close):hover,.btn:hover{filter:brightness(1.08)!important}.close{background:#182235!important;color:#dbe5f2!important}
+.notice{background:#2a2110!important;color:#f8d48a!important;border-color:#624b20!important}.error{color:#fda4af!important}a,.back,.seo a,.nav a{color:#67e8f9!important}a:hover,.back:hover,.seo a:hover,.nav a:hover{color:#93c5fd!important}
+.featured-home{background:linear-gradient(145deg,rgba(13,24,43,.98),rgba(8,14,25,.98))!important;border-color:#263b5b!important}.featured-home .featured-kicker{color:#67e8f9!important}
+pre,code{background:#080d16!important;color:#dbeafe!important;border-color:#26344a!important}table{color:var(--pt-text)!important;background:#0b111c!important}th{background:#111b2d!important;color:#f8fafc!important}td{border-color:#26344a!important;color:var(--pt-text)!important}
+article,aside,section{color:var(--pt-text)}hr{border-color:var(--pt-line)!important}svg{color:inherit}
+footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b!important}footer strong{color:#fff!important}
 
-.selector-wrap{box-shadow:0 16px 45px rgba(0,0,0,.38)!important}
-.category-drop summary,.category-toggle{
-  background:linear-gradient(145deg,#111b2d,#0b1220)!important;
-  color:var(--pt-text)!important;
-}
-.category-drop summary strong,.category-toggle,.category-title{color:var(--pt-text)!important}
-.category-drop summary small,.cat-info small{color:var(--pt-muted)!important}
-.category-content,.category-tools{border-color:var(--pt-line)!important;background:rgba(8,13,22,.82)!important}
-.cat-icon,.cat-arrow,.category-chevron{background:rgba(59,130,246,.14)!important;color:#7dd3fc!important}
-.category-drop[open] .cat-arrow,.category-toggle[aria-expanded="true"] .category-chevron{background:linear-gradient(135deg,var(--pt-blue),var(--pt-purple))!important;color:#fff!important}
-
-.card:hover,.panel:hover,.tool-card:hover{border-color:rgba(59,130,246,.55)!important;box-shadow:0 22px 60px rgba(0,0,0,.48)!important}
-.badge{background:rgba(59,130,246,.14)!important;color:#93c5fd!important}
-
-/* Calculator inputs, controls and outputs */
-input,select,textarea,.tool-select,.row input,.row select,.search{
-  background:#0a1220!important;
-  color:var(--pt-text)!important;
-  border-color:#31435d!important;
-}
-input::placeholder,textarea::placeholder{color:#718096!important}
-input:focus,select:focus,textarea:focus,.tool-select:focus,.search:focus{
-  border-color:var(--pt-blue)!important;
-  box-shadow:0 0 0 3px rgba(59,130,246,.18)!important;
-}
-.row label,.field label,.check,label{color:#dbe5f2!important}
-
-.result,.results .result,#out{
-  background:linear-gradient(145deg,rgba(20,36,62,.96),rgba(10,18,31,.96))!important;
-  border-color:#2b4364!important;
-  color:var(--pt-text)!important;
-}
-.result strong{color:#67e8f9!important}
-
-button,.btn{color:#fff!important}
-button:not(.close),.btn{
-  background:linear-gradient(135deg,#2563eb,#7c3aed)!important;
-  border-color:transparent!important;
-  box-shadow:0 10px 24px rgba(59,130,246,.24)!important;
-}
-button:not(.close):hover,.btn:hover{filter:brightness(1.08)!important}
-.close{background:#182235!important;color:#dbe5f2!important}
-
-.notice{background:#2a2110!important;color:#f8d48a!important;border-color:#624b20!important}
-.error{color:#fda4af!important}
-a,.back,.seo a,.nav a{color:#67e8f9!important}
-a:hover,.back:hover,.seo a:hover,.nav a:hover{color:#93c5fd!important}
-
-/* Homepage featured section */
-.featured-home{
-  background:linear-gradient(145deg,rgba(13,24,43,.98),rgba(8,14,25,.98))!important;
-  border-color:#263b5b!important;
-}
-.featured-home .featured-kicker{color:#67e8f9!important}
-
-/* Tables and code */
-pre,code{background:#080d16!important;color:#dbeafe!important;border-color:#26344a!important}
-table{color:var(--pt-text)!important;background:#0b111c!important}
-th{background:#111b2d!important;color:#f8fafc!important}
-td{border-color:#26344a!important;color:var(--pt-text)!important}
-
-/* Common legacy light utility/content blocks */
-article,aside,section{color:var(--pt-text)}
-hr{border-color:var(--pt-line)!important}
-svg{color:inherit}
-
-footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b!important}
-footer strong{color:#fff!important}
-
-@media(max-width:620px){
-  .card,.panel,.calculator,.calculator-card{box-shadow:0 12px 35px rgba(0,0,0,.38)!important}
-}
+/* Premium calmer card treatment: replaces the overly bright blue/purple blocks shown in Popular Tools. */
+.popular-section{background:linear-gradient(180deg,#080e19,#050911)!important;color:#f4f7fb!important;padding:28px 0 30px!important}
+.popular-section h2,.popular-section h3,.popular-section strong{color:#f8fafc!important}
+.popular-section p{color:#a9b5c7!important}
+.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{background:linear-gradient(145deg,#172033,#101827)!important;color:#f8fafc!important;border:1px solid #34445d!important;box-shadow:0 10px 30px rgba(0,0,0,.28)!important}
+.popular-section .card:hover,.popular-section .tool-card:hover,.popular-section .popular-card:hover,.popular-section .tool:hover,.popular-section a:hover{background:linear-gradient(145deg,#1b2940,#121d2f)!important;border-color:#4b8ff8!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}
+.popular-section .card h3,.popular-section .tool-card h3,.popular-section .popular-card h3,.popular-section a h3{color:#f8fafc!important}
+.popular-section .card p,.popular-section .tool-card p,.popular-section .popular-card p,.popular-section a p{color:#a9b5c7!important}
+.popular-section .badge{background:rgba(59,130,246,.16)!important;color:#93c5fd!important;border-color:rgba(59,130,246,.25)!important}
+.card p,.tool-card p,.calculator-card p,.content-card p,.info-card p{color:#a9b5c7!important}.card h3,.tool-card h3,.calculator-card h3,.content-card h3,.info-card h3{color:#f8fafc!important}
+@media(max-width:620px){.popular-section{padding:22px 0 24px!important}.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{box-shadow:0 9px 25px rgba(0,0,0,.30)!important}}
