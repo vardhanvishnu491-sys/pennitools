@@ -1,0 +1,49 @@
+/* PenniTools visual polish: calmer cards, stronger contrast, consistent hierarchy. */
+.popular-section{
+  background:linear-gradient(180deg,rgba(8,14,25,.96),rgba(5,9,17,.96))!important;
+  color:#f4f7fb!important;
+  padding:28px 0 30px!important;
+}
+.popular-section h2,.popular-section h3,.popular-section strong{color:#f8fafc!important}
+.popular-section p{color:#a9b5c7!important}
+.popular-section a{
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:space-between!important;
+  min-height:132px!important;
+  padding:20px!important;
+  background:linear-gradient(145deg,#172033,#101827)!important;
+  border:1px solid #34445d!important;
+  border-radius:18px!important;
+  color:#f8fafc!important;
+  text-decoration:none!important;
+  box-shadow:0 10px 30px rgba(0,0,0,.28)!important;
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease!important;
+}
+.popular-section a:hover{
+  transform:translateY(-3px)!important;
+  border-color:#4b8ff8!important;
+  box-shadow:0 16px 38px rgba(0,0,0,.38)!important;
+}
+.popular-section a span,.popular-section a div{color:#f8fafc!important}
+.popular-section a small,.popular-section a p{color:#a9b5c7!important}
+.popular-section a svg{color:#67e8f9!important}
+
+.card p,.tool-card p,.calculator-card p,.content-card p,.info-card p{color:#a9b5c7!important}
+.card h3,.tool-card h3,.calculator-card h3,.content-card h3,.info-card h3{color:#f8fafc!important}
+.badge{background:rgba(59,130,246,.16)!important;color:#93c5fd!important;border:1px solid rgba(59,130,246,.25)!important}
+
+/* Remove the overly bright blue/purple treatment from clickable homepage cards. */
+.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool{
+  background:linear-gradient(145deg,#172033,#101827)!important;
+  color:#f8fafc!important;
+  border-color:#34445d!important;
+}
+
+/* Keep interactive controls visually consistent with the site theme. */
+.popular-section button,.popular-section .btn{background:linear-gradient(135deg,#2563eb,#4f46e5)!important}
+
+@media(max-width:620px){
+  .popular-section{padding:22px 0 24px!important}
+  .popular-section a{min-height:118px!important;padding:17px!important}
+}
