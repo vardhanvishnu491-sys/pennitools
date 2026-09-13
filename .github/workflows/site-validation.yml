@@ -34,12 +34,12 @@ jobs:
           s=p.read_text(encoding='utf-8')
           if '</head>' not in s:
               raise SystemExit(f'Missing </head>: {p}')
-          # Keep the shared stylesheet and add the final override after all legacy page CSS.
-          s=s.replace('<link rel="stylesheet" href="/theme.css"></head>', '<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
-          if '/theme.css?v=20260914' not in s:
-              s=s.replace('</head>', '<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
-          elif '/theme-final.css?v=20260914' not in s:
-              s=s.replace('</head>', '<link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', 1)
+          s=s.replace('<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', '<link rel="stylesheet" href="/theme.css?v=20260914b"><link rel="stylesheet" href="/theme-final.css?v=20260914b"></head>', 1)
+          s=s.replace('<link rel="stylesheet" href="/theme.css?v=20260914"></head>', '<link rel="stylesheet" href="/theme.css?v=20260914b"><link rel="stylesheet" href="/theme-final.css?v=20260914b"></head>', 1)
+          if '/theme.css?v=20260914b' not in s:
+              s=s.replace('</head>', '<link rel="stylesheet" href="/theme.css?v=20260914b"><link rel="stylesheet" href="/theme-final.css?v=20260914b"></head>', 1)
+          elif '/theme-final.css?v=20260914b' not in s:
+              s=s.replace('</head>', '<link rel="stylesheet" href="/theme-final.css?v=20260914b"></head>', 1)
           p.write_text(s, encoding='utf-8')
           PY
           done
@@ -86,7 +86,7 @@ jobs:
           test -s theme-final.css
           for file in *.html; do
             [ -f "$file" ] || continue
-            grep -q 'theme-final.css?v=20260914' "$file" || { echo "Final theme missing: $file"; exit 1; }
+            grep -q 'theme-final.css?v=20260914b' "$file" || { echo "Final theme missing: $file"; exit 1; }
           done
           echo "Final theme is linked from every HTML page."
 
