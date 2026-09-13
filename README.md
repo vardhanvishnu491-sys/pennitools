@@ -1,6 +1,10 @@
 # PenniTools
 
-PenniTools is a free collection of practical calculators and browser-based tools for everyday use in India.
+**PenniTools** is a free collection of practical calculators and browser-based tools for everyday use in India.
+
+🌐 **Website:** https://pennitools.in/
+
+📚 **Calculator guides:** https://pennitools.in/guides.html
 
 ## Current tool areas
 
@@ -12,6 +16,17 @@ PenniTools is a free collection of practical calculators and browser-based tools
 - Image utilities
 - PDF tools
 - Audio transcription
+
+## Popular calculator categories
+
+- [Trip Cost Calculator](https://pennitools.in/trip-cost-calculator.html) — fuel, tolls and road-trip expense
+- [Fuel Cost Calculator](https://pennitools.in/fuel-cost-calculator.html) — estimate fuel expense
+- [Mileage Calculator](https://pennitools.in/mileage-calculator.html) — calculate vehicle mileage
+- [EMI Calculator](https://pennitools.in/emi-calculator.html) — estimate loan EMI and repayment
+- [GST Calculator](https://pennitools.in/gst-calculator.html) — calculate GST amounts
+- [Square Feet Calculator](https://pennitools.in/square-feet-calculator.html) — calculate area from measurements
+- [Tiles Calculator](https://pennitools.in/tiles-calculator.html) — estimate tiles required
+- [Concrete Calculator](https://pennitools.in/concrete-calculator.html) — estimate concrete volume
 
 ## Safety and privacy
 
