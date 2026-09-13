@@ -69,14 +69,57 @@ jobs:
           p.write_text(html,encoding='utf-8')
           PY
 
-      - name: Commit automated theme and homepage changes
+      - name: Add durable SEO structured data
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json,re,html
+          
+          def inject(path, payload):
+              p=Path(path); s=p.read_text(encoding='utf-8')
+              marker=f'"@id":"https://pennitools.in/{payload.get("@type", "schema")}"'
+              if marker in s: return
+              block='<script type="application/ld+json">'+json.dumps(payload,separators=(",",":"),ensure_ascii=False)+'</script>\n'
+              if '</head>' not in s: raise SystemExit(f'Missing head: {p}')
+              s=s.replace('</head>',block+'</head>',1)
+              p.write_text(s,encoding='utf-8')
+          
+          home=Path('index.html')
+          hs=home.read_text(encoding='utf-8')
+          if '"@type":"Organization"' not in hs or '"@type":"WebSite"' not in hs:
+              payload={"@context":"https://schema.org","@graph":[
+                {"@type":"Organization","@id":"https://pennitools.in/organization","name":"PenniTools","url":"https://pennitools.in/","logo":"https://pennitools.in/favicon.png","description":"Free calculators and practical browser-based tools for everyday use in India."},
+                {"@type":"WebSite","@id":"https://pennitools.in/website","url":"https://pennitools.in/","name":"PenniTools","description":"Free calculators and practical tools for construction, carpentry, finance, vehicles, documents and everyday calculations in India.","publisher":{"@id":"https://pennitools.in/organization"}}
+              ]}
+              block='<script type="application/ld+json">'+json.dumps(payload,separators=(",",":"),ensure_ascii=False)+'</script>\n'
+              hs=hs.replace('</head>',block+'</head>',1)
+              home.write_text(hs,encoding='utf-8')
+          
+          tools=Path('tools-index.html')
+          if tools.exists():
+              ts=tools.read_text(encoding='utf-8')
+              if '"@type":"ItemList"' not in ts:
+                  items=[]
+                  for i,(name,url) in enumerate([
+                    ('Trip Cost Calculator','trip-cost-calculator.html'),('Fuel Cost Calculator','fuel-cost-calculator.html'),('Mileage Calculator','mileage-calculator.html'),('Square Feet Calculator','square-feet-calculator.html'),('Tiles Calculator','tiles-calculator.html'),('Paint Calculator','paint-calculator.html'),('Concrete Calculator','concrete-calculator.html'),('EMI Calculator','emi-calculator.html'),('GST Calculator','gst-calculator.html'),('PDF Tools','pdf-tools.html'),('Image Tools','image-tools.html')],1):
+                      items.append({"@type":"ListItem","position":i,"name":name,"url":"https://pennitools.in/"+url})
+                  payload={"@context":"https://schema.org","@type":"ItemList","name":"Popular PenniTools Calculators and Tools","url":"https://pennitools.in/tools-index.html","itemListElement":items}
+                  block='<script type="application/ld+json">'+json.dumps(payload,separators=(",",":"),ensure_ascii=False)+'</script>\n'
+                  ts=ts.replace('</head>',block+'</head>',1)
+                  tools.write_text(ts,encoding='utf-8')
+          print('Structured data enhancement complete.')
+          PY
+
+      - name: Commit automated theme, homepage and SEO changes
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add '*.html' index.html theme.css theme-final.css
-          git diff --cached --quiet || git commit -m "Apply final PenniTools theme across all pages"
+          git diff --cached --quiet || git commit -m "Apply PenniTools theme and SEO enhancements"
           git push || true
 
       - name: Verify final theme coverage
