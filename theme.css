@@ -1,4 +1,5 @@
 /* PenniTools — shared dark theme for every page and calculator */
+/* Shared-theme rollout trigger: apply this stylesheet to every HTML page. */
 :root{
   --pt-bg:#05070b;
   --pt-surface:#0b111c;
