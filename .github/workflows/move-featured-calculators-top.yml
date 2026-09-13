@@ -1,0 +1,52 @@
+name: Move Featured Calculators to Top
+on:
+  push:
+    branches: [main]
+jobs:
+  move-featured:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Move Featured Calculators section
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          heading = re.search(r'<h2[^>]*>\s*Featured calculators\s*</h2>', s, re.I)
+          if not heading:
+              raise SystemExit('Featured calculators heading not found')
+          start = s.rfind('<section', 0, heading.start())
+          end = s.find('</section>', heading.end())
+          if start < 0 or end < 0:
+              raise SystemExit('Featured calculators section boundaries not found')
+          end += len('</section>')
+          block = s[start:end]
+          s2 = s[:start] + s[end:]
+          # Insert immediately before the first content section after the header/navigation area.
+          first_section = re.search(r'<section\b', s2, re.I)
+          if not first_section:
+              raise SystemExit('No content section found for insertion')
+          s2 = s2[:first_section.start()] + block + '\n' + s2[first_section.start():]
+          p.write_text(s2, encoding='utf-8')
+      - name: Commit homepage change
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m 'Move featured calculators to top of homepage'
+          git push
+      - name: Remove temporary workflow
+        if: success()
+        run: |
+          rm -f .github/workflows/move-featured-calculators-top.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add .github/workflows/move-featured-calculators-top.yml
+          git commit -m 'Remove temporary featured calculators workflow'
+          git push
