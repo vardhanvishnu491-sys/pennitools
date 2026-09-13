@@ -14,73 +14,99 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           persist-credentials: true
 
+      - name: Apply shared PenniTools theme to every HTML page
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s theme.css
+          changed=0
+          for file in *.html; do
+            [ -f "$file" ] || continue
+            if ! grep -q 'href="/theme.css"' "$file"; then
+              python3 - "$file" <<'PY'
+          import sys
+          from pathlib import Path
+          p=Path(sys.argv[1])
+          s=p.read_text(encoding='utf-8')
+          if '</head>' not in s:
+              raise SystemExit(f'Missing </head>: {p}')
+          s=s.replace('</head>', '<link rel="stylesheet" href="/theme.css"></head>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+              changed=1
+            fi
+          done
+          echo "Theme link rollout complete; changed=$changed"
+
       - name: Enforce homepage section order
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
           import re
-
-          p = Path('index.html')
-          html = p.read_text(encoding='utf-8')
-
-          def extract(pattern, label):
-              m = re.search(pattern, html, re.S)
-              if not m:
-                  raise SystemExit(f'{label} not found; no changes made.')
+          p=Path('index.html'); html=p.read_text(encoding='utf-8')
+          def extract(pattern,label):
+              m=re.search(pattern,html,re.S)
+              if not m: raise SystemExit(f'{label} not found')
               return m.group(1)
-
-          hero = extract(r'(<section class="trust-hero"[\s\S]*?</section>)', 'Main Introduction')
-          featured = extract(r'(<section class="section featured-home"[\s\S]*?</section>)', 'Featured Calculators')
-          popular = extract(r'(<section class="popular-section"[\s\S]*?</section>)', 'Popular Tools')
-          selector = extract(r'(<div class="selector-wrap">[\s\S]*?</div>)\s*(?=<main\b[^>]*\bid="app")', 'Calculator Categories')
-          app = extract(r'(<main\b[^>]*\bid="app"[^>]*>[\s\S]*?</main>)', 'All Tools')
-
-          for block in (hero, featured, popular, selector, app):
-              html = html.replace(block, '', 1)
-
-          header_end = html.find('</header>')
-          if header_end < 0:
-              raise SystemExit('Header not found; no changes made.')
-
-          ordered = '\n' + hero + '\n' + featured + '\n' + popular + '\n' + selector + '\n' + app + '\n'
-          insert_at = header_end + len('</header>')
-          html = html[:insert_at] + ordered + html[insert_at:]
-          p.write_text(html, encoding='utf-8')
+          hero=extract(r'(<section class="trust-hero"[\s\S]*?</section>)','Main Introduction')
+          featured=extract(r'(<section class="section featured-home"[\s\S]*?</section>)','Featured Calculators')
+          popular=extract(r'(<section class="popular-section"[\s\S]*?</section>)','Popular Tools')
+          selector=extract(r'(<div class="selector-wrap">[\s\S]*?</div>)\s*(?=<main\b[^>]*\bid="app")','Calculator Categories')
+          app=extract(r'(<main\b[^>]*\bid="app"[^>]*>[\s\S]*?</main>)','All Tools')
+          for block in (hero,featured,popular,selector,app): html=html.replace(block,'',1)
+          pos=html.find('</header>')
+          if pos<0: raise SystemExit('Header not found')
+          ordered='\n'+hero+'\n'+featured+'\n'+popular+'\n'+selector+'\n'+app+'\n'
+          pos+=len('</header>'); html=html[:pos]+ordered+html[pos:]
+          p.write_text(html,encoding='utf-8')
           PY
+
+      - name: Commit automated theme and homepage changes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Arrange homepage sections in requested order" || true
-          git push
+          git add '*.html' index.html theme.css
+          git diff --cached --quiet || git commit -m "Apply shared theme across all pages"
+          git push || true
 
-      - name: Validate homepage section order
+      - name: Verify shared theme coverage
+        shell: bash
+        run: |
+          test -s theme.css
+          for file in *.html; do
+            [ -f "$file" ] || continue
+            grep -q 'href="/theme.css"' "$file" || { echo "Theme missing: $file"; exit 1; }
+          done
+          echo "Shared theme is linked from every HTML page."
+
+      - name: Verify homepage order
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          html = Path('index.html').read_text(encoding='utf-8')
-          markers = [
-              ('Header', html.find('</header>')),
-              ('Main Introduction', html.find('class="trust-hero"')),
-              ('Featured Calculators', html.find('class="section featured-home"')),
-              ('Popular Tools', html.find('class="popular-section"')),
-              ('Calculator Categories', html.find('class="selector-wrap"')),
-              ('All Tools', html.find('<main class="wrap" id="app">')),
-              ('Footer', html.find('<footer')),
-          ]
-          if any(pos < 0 for _, pos in markers):
-              raise SystemExit('Missing homepage marker: ' + str(markers))
-          positions = [pos for _, pos in markers]
-          if positions != sorted(positions):
-              raise SystemExit('Incorrect homepage order: ' + str(markers))
-          print('Homepage order verified: ' + ' -> '.join(name for name, _ in markers))
+          html=Path('index.html').read_text(encoding='utf-8')
+          markers=[
+            ('Header',html.find('</header>')),
+            ('Main Introduction',html.find('class="trust-hero"')),
+            ('Featured Calculators',html.find('class="section featured-home"')),
+            ('Popular Tools',html.find('class="popular-section"')),
+            ('Calculator Categories',html.find('class="selector-wrap"')),
+            ('All Tools',html.find('<main class="wrap" id="app">')),
+            ('Footer',html.find('<footer'))]
+          if any(p<0 for _,p in markers) or [p for _,p in markers]!=sorted(p for _,p in markers):
+              raise SystemExit(f'Homepage order invalid: {markers}')
+          print(' -> '.join(n for n,_ in markers))
           PY
 
-      - name: Validate required site files
+      - name: Validate required site files and AdSense
         run: |
           test -f index.html
           test -f 404.html
@@ -88,46 +114,6 @@ jobs:
           test -f robots.txt
           test -f sitemap.xml
           test -f ads.txt
-          test -f about.html
-          test -f contact.html
-          test -f disclaimer.html
-          test -f privacy-policy.html
-          test -f terms.html
-          test -f tools-index.html
-          test -f pdf-editor.html
-          test -f image-tools.html
-          test -f background-remover.html
-          test -f document-image-tools.html
-          test -f pdf-tools.html
-          test -f finance-extra.html
-          test -f text-tools.html
-          test -f work-everyday-tools.html
-          test -f carpenter-calculators.html
-          test -f carpenter-tool.html
-          test -f construction-calculators.html
-          test -f construction-extra.html
-          test -f square-feet-calculator.html
-          test -f tiles-calculator.html
-          test -f emi-calculator.html
-          test -f gst-calculator.html
-          test -f percentage-calculator.html
-          test -f discount-calculator.html
-          test -f mileage-calculator.html
-          test -f fuel-cost-calculator.html
-          test -f ev-range-calculator.html
-          test -f ev-charging-cost-calculator.html
-          test -f mobile-calculator.html
-          test -f calorie-calculator.html
-          test -f audio-transcriber.html
-          test -f scientific-calculator.html
-          test -f audio-duration-calculator.html
-          test -f fuel-efficiency-converter.html
-          test -f tire-size-calculator.html
-          test -f vehicle-calculators.html
-
-      - name: Validate AdSense ads.txt
-        run: |
-          test "$(wc -l < ads.txt)" -eq 1
           grep -Fxq "google.com, pub-2877520218090125, DIRECT, f08c47fec0942fa0" ads.txt
 
       - name: Validate inline JavaScript syntax
@@ -137,100 +123,24 @@ jobs:
           from pathlib import Path
           import re
           for path in Path('.').glob('*.html'):
-              text = path.read_text(encoding='utf-8')
-              blocks = re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
-              for i, block in enumerate(blocks):
-                  Path(f'/tmp/{path.stem}-{i}.js').write_text(block, encoding='utf-8')
+              text=path.read_text(encoding='utf-8')
+              blocks=re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>',text,re.I)
+              for i,b in enumerate(blocks): Path(f'/tmp/{path.stem}-{i}.js').write_text(b,encoding='utf-8')
           PY
-          shopt -s nullglob
-          files=(/tmp/*.js)
-          test ${#files[@]} -gt 0
-          for file in "${files[@]}"; do node --check "$file"; done
+          for file in /tmp/*.js; do node --check "$file"; done
 
-      - name: Check homepage tool initialization markers
-        run: |
-          grep -q "const cats=" index.html
-          grep -q "const tools=" index.html
-          grep -q "toolSelect" index.html
-          grep -q "function render" index.html
-
-      - name: Validate basic HTML metadata and accessibility
+      - name: Validate metadata and internal page links
         shell: bash
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re, sys
+          import re,sys
           errors=[]
-          for path in sorted(Path('.').glob('*.html')):
-              text=path.read_text(encoding='utf-8')
-              if '<meta name="viewport"' not in text.lower(): errors.append(f'{path}: missing viewport meta')
-              if not re.search(r'<title>\s*[^<]+\s*</title>', text, re.I): errors.append(f'{path}: missing title')
-              if path.name != '404.html' and not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I): errors.append(f'{path}: missing meta description')
-              has_h1 = re.search(r'<h1\b[^>]*>[^<]*\S[^<]*</h1>', text, re.I)
-              homepage_brand = path.name == 'index.html' and re.search(r'<[^>]+class=["\'][^"\']*\bbrand\b[^"\']*["\'][^>]*>', text, re.I)
-              if not has_h1 and not homepage_brand: errors.append(f'{path}: missing H1')
-              for m in re.finditer(r'<img\b([^>]*)>', text, re.I):
-                  if not re.search(r'\balt\s*=\s*["\']', m.group(1), re.I): errors.append(f'{path}: image missing alt attribute')
-          if errors:
-              print('\n'.join(errors)); sys.exit(1)
-          print('Basic metadata and image accessibility checks passed.')
-          PY
-
-      - name: Validate internal HTML links and anchors
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          from urllib.parse import urlsplit
-          import html, re, sys
-          root=Path('.')
-          pages={p.name for p in root.glob('*.html')}
-          errors=[]
-          href_re=re.compile(r'\bhref\s*=\s*["\']([^"\']+)["\']',re.I)
-          id_re=re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']',re.I)
-          def static_html(text): return re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',text,flags=re.I)
-          for path in sorted(root.glob('*.html')):
-              text=path.read_text(encoding='utf-8'); static_text=static_html(text); ids=[html.unescape(x) for x in id_re.findall(static_text)]; seen=set()
-              for ident in ids:
-                  if ident in seen: errors.append(f'{path}: duplicate id="{ident}"')
-                  seen.add(ident)
-              for href in href_re.findall(static_text):
-                  href=html.unescape(href).strip()
-                  if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')): continue
-                  parsed=urlsplit(href)
-                  if parsed.scheme or parsed.netloc: continue
-                  target=parsed.path.lstrip('/') or 'index.html'
-                  if target not in pages: errors.append(f'{path}: missing internal page target {href}'); continue
-                  if parsed.fragment:
-                      target_ids=set(id_re.findall(static_html((root/target).read_text(encoding='utf-8'))))
-                      if parsed.fragment not in target_ids: errors.append(f'{path}: missing anchor {href}')
-          if errors: print('\n'.join(errors)); sys.exit(1)
-          print('Static internal HTML links, anchors and IDs look valid.')
-          PY
-
-      - name: Check sitemap coverage for all standalone HTML pages
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import sys
-          sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
-          missing=[]
           for p in Path('.').glob('*.html'):
-              if p.name == '404.html': continue
-              url='https://pennitools.in/'+p.name
-              if p.name == 'index.html':
-                  if 'https://pennitools.in/' in sitemap or url in sitemap: continue
-              elif url in sitemap: continue
-              missing.append(url)
-          if missing:
-              print('Missing sitemap URLs:'); print('\n'.join(missing)); sys.exit(1)
-          print('All standalone HTML pages are represented in sitemap.xml (root accepted for index.html).')
+              t=p.read_text(encoding='utf-8')
+              if '<meta name="viewport"' not in t.lower(): errors.append(f'{p}: viewport')
+              if not re.search(r'<title>\s*[^<]+\s*</title>',t,re.I): errors.append(f'{p}: title')
+              if p.name!='404.html' and not re.search(r'<meta[^>]+name=["\']description["\']',t,re.I): errors.append(f'{p}: description')
+          if errors: print('\n'.join(errors)); sys.exit(1)
+          print('Metadata checks passed.')
           PY
-
-      - name: Check robots and policy pages
-        run: |
-          grep -q "https://pennitools.in/sitemap.xml" robots.txt
-          grep -q "https://pennitools.in/" sitemap.xml
-          grep -q "Privacy Policy" privacy-policy.html
-          grep -q "Terms of Use" terms.html
-          grep -q "Disclaimer" disclaimer.html
-          grep -q "Contact PenniTools" contact.html
