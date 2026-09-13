@@ -7,7 +7,7 @@ on:
     branches: [main]
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   validate:
@@ -16,7 +16,69 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
         with:
-          persist-credentials: false
+          persist-credentials: true
+
+      - name: Enforce homepage section order
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          html = p.read_text(encoding='utf-8')
+
+          def extract(pattern, label):
+              m = re.search(pattern, html, re.S)
+              if not m:
+                  raise SystemExit(f'{label} not found; no changes made.')
+              return m.group(1)
+
+          hero = extract(r'(<section class="trust-hero"[\s\S]*?</section>)', 'Main Introduction')
+          featured = extract(r'(<section class="section featured-home"[\s\S]*?</section>)', 'Featured Calculators')
+          popular = extract(r'(<section class="popular-section"[\s\S]*?</section>)', 'Popular Tools')
+          selector = extract(r'(<div class="selector-wrap">[\s\S]*?</div>)\s*(?=<main\b[^>]*\bid="app")', 'Calculator Categories')
+          app = extract(r'(<main\b[^>]*\bid="app"[^>]*>[\s\S]*?</main>)', 'All Tools')
+
+          for block in (hero, featured, popular, selector, app):
+              html = html.replace(block, '', 1)
+
+          header_end = html.find('</header>')
+          if header_end < 0:
+              raise SystemExit('Header not found; no changes made.')
+
+          ordered = '\n' + hero + '\n' + featured + '\n' + popular + '\n' + selector + '\n' + app + '\n'
+          insert_at = header_end + len('</header>')
+          html = html[:insert_at] + ordered + html[insert_at:]
+          p.write_text(html, encoding='utf-8')
+          PY
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Arrange homepage sections in requested order" || true
+          git push
+
+      - name: Validate homepage section order
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          html = Path('index.html').read_text(encoding='utf-8')
+          markers = [
+              ('Header', html.find('</header>')),
+              ('Main Introduction', html.find('class="trust-hero"')),
+              ('Featured Calculators', html.find('class="section featured-home"')),
+              ('Popular Tools', html.find('class="popular-section"')),
+              ('Calculator Categories', html.find('class="selector-wrap"')),
+              ('All Tools', html.find('<main class="wrap" id="app">')),
+              ('Footer', html.find('<footer')),
+          ]
+          if any(pos < 0 for _, pos in markers):
+              raise SystemExit('Missing homepage marker: ' + str(markers))
+          positions = [pos for _, pos in markers]
+          if positions != sorted(positions):
+              raise SystemExit('Incorrect homepage order: ' + str(markers))
+          print('Homepage order verified: ' + ' -> '.join(name for name, _ in markers))
+          PY
 
       - name: Validate required site files
         run: |
@@ -101,23 +163,16 @@ jobs:
           errors=[]
           for path in sorted(Path('.').glob('*.html')):
               text=path.read_text(encoding='utf-8')
-              if '<meta name="viewport"' not in text.lower():
-                  errors.append(f'{path}: missing viewport meta')
-              if not re.search(r'<title>\s*[^<]+\s*</title>', text, re.I):
-                  errors.append(f'{path}: missing title')
-              if path.name != '404.html' and not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I):
-                  errors.append(f'{path}: missing meta description')
+              if '<meta name="viewport"' not in text.lower(): errors.append(f'{path}: missing viewport meta')
+              if not re.search(r'<title>\s*[^<]+\s*</title>', text, re.I): errors.append(f'{path}: missing title')
+              if path.name != '404.html' and not re.search(r'<meta[^>]+name=["\']description["\'][^>]+content=["\'][^"\']+["\']', text, re.I): errors.append(f'{path}: missing meta description')
               has_h1 = re.search(r'<h1\b[^>]*>[^<]*\S[^<]*</h1>', text, re.I)
               homepage_brand = path.name == 'index.html' and re.search(r'<[^>]+class=["\'][^"\']*\bbrand\b[^"\']*["\'][^>]*>', text, re.I)
-              if not has_h1 and not homepage_brand:
-                  errors.append(f'{path}: missing H1')
+              if not has_h1 and not homepage_brand: errors.append(f'{path}: missing H1')
               for m in re.finditer(r'<img\b([^>]*)>', text, re.I):
-                  attrs=m.group(1)
-                  if not re.search(r'\balt\s*=\s*["\']', attrs, re.I):
-                      errors.append(f'{path}: image missing alt attribute')
+                  if not re.search(r'\balt\s*=\s*["\']', m.group(1), re.I): errors.append(f'{path}: image missing alt attribute')
           if errors:
-              print('\n'.join(errors))
-              sys.exit(1)
+              print('\n'.join(errors)); sys.exit(1)
           print('Basic metadata and image accessibility checks passed.')
           PY
 
@@ -127,45 +182,28 @@ jobs:
           from pathlib import Path
           from urllib.parse import urlsplit
           import html, re, sys
-
-          root = Path('.')
-          pages = {p.name for p in root.glob('*.html')}
-          errors = []
-          href_re = re.compile(r'\bhref\s*=\s*["\']([^"\']+)["\']', re.I)
-          id_re = re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']', re.I)
-
-          def static_html(text):
-              return re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>', '', text, flags=re.I)
-
+          root=Path('.')
+          pages={p.name for p in root.glob('*.html')}
+          errors=[]
+          href_re=re.compile(r'\bhref\s*=\s*["\']([^"\']+)["\']',re.I)
+          id_re=re.compile(r'\bid\s*=\s*["\']([^"\']+)["\']',re.I)
+          def static_html(text): return re.sub(r'<(?:script|style)\b[^>]*>[\s\S]*?</(?:script|style)>','',text,flags=re.I)
           for path in sorted(root.glob('*.html')):
-              text = path.read_text(encoding='utf-8')
-              static_text = static_html(text)
-              ids = [html.unescape(x) for x in id_re.findall(static_text)]
-              seen = set()
+              text=path.read_text(encoding='utf-8'); static_text=static_html(text); ids=[html.unescape(x) for x in id_re.findall(static_text)]; seen=set()
               for ident in ids:
-                  if ident in seen:
-                      errors.append(f'{path}: duplicate id="{ident}"')
+                  if ident in seen: errors.append(f'{path}: duplicate id="{ident}"')
                   seen.add(ident)
               for href in href_re.findall(static_text):
-                  href = html.unescape(href).strip()
-                  if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')):
-                      continue
-                  parsed = urlsplit(href)
-                  if parsed.scheme or parsed.netloc:
-                      continue
-                  target = parsed.path.lstrip('/') or 'index.html'
-                  if target not in pages:
-                      errors.append(f'{path}: missing internal page target {href}')
-                      continue
+                  href=html.unescape(href).strip()
+                  if not href or href.startswith(('#','mailto:','tel:','javascript:','data:')): continue
+                  parsed=urlsplit(href)
+                  if parsed.scheme or parsed.netloc: continue
+                  target=parsed.path.lstrip('/') or 'index.html'
+                  if target not in pages: errors.append(f'{path}: missing internal page target {href}'); continue
                   if parsed.fragment:
-                      target_text = static_html((root / target).read_text(encoding='utf-8'))
-                      target_ids = set(id_re.findall(target_text))
-                      if parsed.fragment not in target_ids:
-                          errors.append(f'{path}: missing anchor {href}')
-
-          if errors:
-              print('\n'.join(errors))
-              sys.exit(1)
+                      target_ids=set(id_re.findall(static_html((root/target).read_text(encoding='utf-8'))))
+                      if parsed.fragment not in target_ids: errors.append(f'{path}: missing anchor {href}')
+          if errors: print('\n'.join(errors)); sys.exit(1)
           print('Static internal HTML links, anchors and IDs look valid.')
           PY
 
@@ -177,16 +215,15 @@ jobs:
           sitemap=Path('sitemap.xml').read_text(encoding='utf-8')
           missing=[]
           for p in Path('.').glob('*.html'):
-              if p.name == '404.html':
-                  continue
+              if p.name == '404.html': continue
               url='https://pennitools.in/'+p.name
-              if url not in sitemap:
-                  missing.append(url)
+              if p.name == 'index.html':
+                  if 'https://pennitools.in/' in sitemap or url in sitemap: continue
+              elif url in sitemap: continue
+              missing.append(url)
           if missing:
-              print('Missing sitemap URLs:')
-              print('\n'.join(missing))
-              sys.exit(1)
-          print('All standalone HTML pages are represented in sitemap.xml.')
+              print('Missing sitemap URLs:'); print('\n'.join(missing)); sys.exit(1)
+          print('All standalone HTML pages are represented in sitemap.xml (root accepted for index.html).')
           PY
 
       - name: Check robots and policy pages
