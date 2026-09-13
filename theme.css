@@ -1,5 +1,4 @@
 /* PenniTools — shared dark theme for every page and calculator */
-/* This file is intentionally loaded LAST so it consistently overrides each page's legacy light CSS. */
 :root{--pt-bg:#05070b;--pt-surface:#0b111c;--pt-surface-2:#101827;--pt-surface-3:#151f31;--pt-line:#26344a;--pt-text:#f4f7fb;--pt-muted:#a9b5c7;--pt-blue:#3b82f6;--pt-cyan:#22d3ee;--pt-purple:#8b5cf6;--pt-shadow:0 18px 55px rgba(0,0,0,.34)}
 *,*::before,*::after{box-sizing:border-box}
 html{background:var(--pt-bg)!important;color-scheme:dark!important}
@@ -18,15 +17,10 @@ button,.btn{color:#fff!important}button:not(.close),.btn{background:linear-gradi
 pre,code{background:#080d16!important;color:#dbeafe!important;border-color:#26344a!important}table{color:var(--pt-text)!important;background:#0b111c!important}th{background:#111b2d!important;color:#f8fafc!important}td{border-color:#26344a!important;color:var(--pt-text)!important}
 article,aside,section{color:var(--pt-text)}hr{border-color:var(--pt-line)!important}svg{color:inherit}
 footer{background:#02040a!important;color:#94a3b8!important;border-top:1px solid #1d293b!important}footer strong{color:#fff!important}
-
-/* Premium calmer card treatment: replaces the overly bright blue/purple blocks shown in Popular Tools. */
-.popular-section{background:linear-gradient(180deg,#080e19,#050911)!important;color:#f4f7fb!important;padding:28px 0 30px!important}
-.popular-section h2,.popular-section h3,.popular-section strong{color:#f8fafc!important}
-.popular-section p{color:#a9b5c7!important}
-.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{background:linear-gradient(145deg,#172033,#101827)!important;color:#f8fafc!important;border:1px solid #34445d!important;box-shadow:0 10px 30px rgba(0,0,0,.28)!important}
-.popular-section .card:hover,.popular-section .tool-card:hover,.popular-section .popular-card:hover,.popular-section .tool:hover,.popular-section a:hover{background:linear-gradient(145deg,#1b2940,#121d2f)!important;border-color:#4b8ff8!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}
-.popular-section .card h3,.popular-section .tool-card h3,.popular-section .popular-card h3,.popular-section a h3{color:#f8fafc!important}
-.popular-section .card p,.popular-section .tool-card p,.popular-section .popular-card p,.popular-section a p{color:#a9b5c7!important}
-.popular-section .badge{background:rgba(59,130,246,.16)!important;color:#93c5fd!important;border-color:rgba(59,130,246,.25)!important}
+.popular-section{background:linear-gradient(180deg,#080e19,#050911)!important;color:#f4f7fb!important;padding:28px 0 30px!important}.popular-section h2,.popular-section h3,.popular-section strong{color:#f8fafc!important}.popular-section p{color:#a9b5c7!important}.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{background:linear-gradient(145deg,#172033,#101827)!important;color:#f8fafc!important;border:1px solid #34445d!important;box-shadow:0 10px 30px rgba(0,0,0,.28)!important}.popular-section .card:hover,.popular-section .tool-card:hover,.popular-section .popular-card:hover,.popular-section .tool:hover,.popular-section a:hover{background:linear-gradient(145deg,#1b2940,#121d2f)!important;border-color:#4b8ff8!important;box-shadow:0 16px 38px rgba(0,0,0,.38)!important}.popular-section .card h3,.popular-section .tool-card h3,.popular-section .popular-card h3,.popular-section a h3{color:#f8fafc!important}.popular-section .card p,.popular-section .tool-card p,.popular-section .popular-card p,.popular-section a p{color:#a9b5c7!important}.popular-section .badge{background:rgba(59,130,246,.16)!important;color:#93c5fd!important;border-color:rgba(59,130,246,.25)!important}
 .card p,.tool-card p,.calculator-card p,.content-card p,.info-card p{color:#a9b5c7!important}.card h3,.tool-card h3,.calculator-card h3,.content-card h3,.info-card h3{color:#f8fafc!important}
+/* Fix the remaining homepage informational cards (Why PenniTools / category explanations). */
+.why-card,.why-item,.trust-card,.trust-item,.feature-card,.feature-item,.info-box,.info-grid>*,.trust-grid>*,.why-grid>*,.seo-grid>*,.about-grid>*,.intro-grid>*{background:linear-gradient(145deg,#111a2a,#0b111c)!important;color:#f4f7fb!important;border:1px solid #2b3a50!important;border-radius:20px!important;box-shadow:0 12px 32px rgba(0,0,0,.28)!important}
+.why-card h2,.why-card h3,.why-card h4,.why-item h2,.why-item h3,.trust-card h2,.trust-card h3,.trust-item h2,.trust-item h3,.feature-card h2,.feature-card h3,.feature-item h2,.feature-item h3,.info-box h2,.info-box h3,.info-grid>* h2,.info-grid>* h3,.trust-grid>* h2,.trust-grid>* h3,.why-grid>* h2,.why-grid>* h3,.seo-grid>* h2,.seo-grid>* h3,.about-grid>* h2,.about-grid>* h3,.intro-grid>* h2,.intro-grid>* h3{color:#f8fafc!important}
+.why-card p,.why-item p,.trust-card p,.trust-item p,.feature-card p,.feature-item p,.info-box p,.info-grid>* p,.trust-grid>* p,.why-grid>* p,.seo-grid>* p,.about-grid>* p,.intro-grid>* p{color:#a9b5c7!important}
 @media(max-width:620px){.popular-section{padding:22px 0 24px!important}.popular-section .card,.popular-section .tool-card,.popular-section .popular-card,.popular-section .tool,.popular-section a{box-shadow:0 9px 25px rgba(0,0,0,.30)!important}}
