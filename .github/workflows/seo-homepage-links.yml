@@ -1,0 +1,37 @@
+name: Homepage SEO links
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  update-homepage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add featured calculator links
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          text = p.read_text(encoding='utf-8')
+          marker = '<footer>'
+          block = '''<section class="section" aria-labelledby="featured-calculators"><div class="section-head"><div><h2 id="featured-calculators">Featured calculators</h2><p>Popular practical calculators for travel, vehicles and everyday planning.</p></div></div><div class="grid"><article class="card"><span class="badge">TRAVEL</span><h3>Trip Cost Calculator India</h3><p>Estimate fuel, tolls, total road-trip cost, cost per km and cost per person.</p><a class="btn" href="/trip-cost-calculator.html">Open Trip Cost Calculator</a></article><article class="card"><span class="badge">VEHICLE</span><h3>Fuel Cost Calculator</h3><p>Estimate petrol or diesel needed, fuel cost and cost per kilometre.</p><a class="btn" href="/fuel-cost-calculator.html">Open Fuel Cost Calculator</a></article><article class="card"><span class="badge">VEHICLE</span><h3>Mileage Calculator</h3><p>Calculate vehicle mileage in km/L from distance and fuel used.</p><a class="btn" href="/mileage-calculator.html">Open Mileage Calculator</a></article></div></section>'''
+          if 'trip-cost-calculator.html' not in text and marker in text:
+              text = text.replace(marker, block + '\n' + marker, 1)
+              p.write_text(text, encoding='utf-8')
+          PY
+      - name: Commit and remove workflow
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          rm -f .github/workflows/seo-homepage-links.yml
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No homepage change needed"
+            exit 0
+          fi
+          git commit -m "Add featured calculator links to homepage"
+          git push
