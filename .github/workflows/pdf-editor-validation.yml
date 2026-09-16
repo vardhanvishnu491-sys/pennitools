@@ -2,77 +2,81 @@ name: Validate PDF Editor
 
 on:
   push:
-    branches: [main]
+    branches: [main, pdf-editor-v2]
     paths:
       - 'pdf-editor.html'
+      - 'pdf-editor-v2.html'
       - '.github/workflows/pdf-editor-validation.yml'
   pull_request:
     branches: [main]
     paths:
       - 'pdf-editor.html'
+      - 'pdf-editor-v2.html'
       - '.github/workflows/pdf-editor-validation.yml'
 
 permissions:
   contents: read
 
 jobs:
-  pdf-editor:
+  pdf-editor-v2:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Validate PDF editor source
+      - name: Validate v2 source
         run: |
-          test -s pdf-editor.html
-          grep -q 'type="file"' pdf-editor.html
-          grep -q 'accept="application/pdf"' pdf-editor.html
-          grep -q 'Download PDF' pdf-editor.html
-          grep -q 'contentEditable' pdf-editor.html
-          grep -q 'Click existing text to type' pdf-editor.html
-          grep -q 'Click a blank area to create text' pdf-editor.html
-          grep -q 'Drag text to move it' pdf-editor.html
-          grep -q 'pdf-lib' pdf-editor.html
-          grep -q 'pdfjsLib' pdf-editor.html
+          test -s pdf-editor-v2.html
+          grep -q 'type="file"' pdf-editor-v2.html
+          grep -q 'accept="application/pdf"' pdf-editor-v2.html
+          grep -q 'Download PDF' pdf-editor-v2.html
+          grep -q 'contentEditable' pdf-editor-v2.html
+          grep -q 'Click existing text to edit' pdf-editor-v2.html
+          grep -q 'click blank space to add' pdf-editor-v2.html
+          grep -q 'drag to move' pdf-editor-v2.html
+          grep -q 'Run OCR' pdf-editor-v2.html
+          grep -q 'Tesseract' pdf-editor-v2.html
+          grep -q 'pdf-lib' pdf-editor-v2.html
+          grep -q 'pdfjsLib' pdf-editor-v2.html
 
-      - name: Validate PDF editor JavaScript syntax
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          import re
-          text=Path('pdf-editor.html').read_text(encoding='utf-8')
-          blocks=re.findall(r'<script(?![^>]*type=["\']application/ld\+json["\'])(?:\s[^>]*)?>([\s\S]*?)</script>', text, flags=re.I)
-          assert blocks, 'No script blocks found'
-          for i, block in enumerate(blocks):
-              Path(f'/tmp/pdf-editor-{i}.js').write_text(block, encoding='utf-8')
-          PY
-          for file in /tmp/pdf-editor-*.js; do
-            if grep -q '^import ' "$file"; then node --check "$file"; else node --check "$file"; fi
-          done
-
-      - name: Browser smoke test PDF editor UI
+      - name: Browser smoke and round-trip test
         run: |
           python3 -m http.server 8000 >/tmp/pennitools-http.log 2>&1 &
           npm init -y >/dev/null 2>&1
-          npm install playwright >/dev/null 2>&1
+          npm install playwright pdf-lib pdfjs-dist >/dev/null 2>&1
           npx playwright install --with-deps chromium >/dev/null 2>&1
           node - <<'NODE'
           const { chromium } = require('playwright');
+          const { PDFDocument, StandardFonts, rgb } = require('pdf-lib');
+          const fs = require('fs');
           (async()=>{
+            const doc=await PDFDocument.create();
+            const p=doc.addPage([600,800]);
+            const font=await doc.embedFont(StandardFonts.Helvetica);
+            p.drawText('PenniTools validation text',{x:70,y:700,size:18,font,color:rgb(0,0,0)});
+            fs.writeFileSync('/tmp/input.pdf',await doc.save());
             const browser=await chromium.launch({headless:true});
-            const page=await browser.newPage();
+            const page=await browser.newPage({acceptDownloads:true});
             const errors=[];
             page.on('pageerror',e=>errors.push(e.message));
-            await page.goto('http://127.0.0.1:8000/pdf-editor.html',{waitUntil:'networkidle'});
-            if(await page.locator('input[type="file"]').count()!==1) throw new Error('PDF upload input missing');
-            if(await page.locator('#save').count()!==1) throw new Error('Download button missing');
-            if(await page.locator('#font').count()!==1) throw new Error('Font control missing');
-            if(await page.locator('#size').count()!==1) throw new Error('Font-size control missing');
-            if(await page.locator('#color').count()!==1) throw new Error('Colour control missing');
-            if(await page.locator('#bold').count()!==1 || await page.locator('#italic').count()!==1) throw new Error('Text formatting controls missing');
-            if(await page.locator('#delete').count()!==1) throw new Error('Delete control missing');
-            if(errors.length) throw new Error('PDF editor JavaScript errors: '+errors.join(' | '));
-            console.log('PDF Editor UI smoke test passed.');
+            await page.goto('http://127.0.0.1:8000/pdf-editor-v2.html',{waitUntil:'networkidle'});
+            await page.locator('input[type="file"]').setInputFiles('/tmp/input.pdf');
+            await page.waitForSelector('#editor', {state:'visible'});
+            await page.waitForSelector('.text');
+            const text=page.locator('.text').first();
+            await text.click();
+            await text.fill('Edited by PenniTools');
+            if(!(await text.textContent()).includes('Edited by PenniTools')) throw new Error('Direct text editing failed');
+            const downloadPromise=page.waitForEvent('download');
+            await page.locator('#save').click();
+            const download=await downloadPromise;
+            const output='/tmp/edited.pdf';
+            await download.saveAs(output);
+            if(!fs.existsSync(output) || fs.statSync(output).size<500) throw new Error('Edited PDF download failed');
+            const reopened=await PDFDocument.load(fs.readFileSync(output));
+            if(reopened.getPageCount()!==1) throw new Error('Edited PDF could not be reopened');
+            if(errors.length) throw new Error('Browser errors: '+errors.join(' | '));
+            console.log('PDF Editor v2 upload → edit → save → reopen test passed.');
             await browser.close();
           })().catch(e=>{console.error(e);process.exit(1)});
           NODE

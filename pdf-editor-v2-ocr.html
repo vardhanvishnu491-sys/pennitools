@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="PenniTools scanned PDF OCR workspace prototype.">
+<title>Scanned PDF OCR | PenniTools</title>
+<style>body{font-family:Arial,sans-serif;margin:0;background:#f4f7fb;color:#101828}.wrap{max-width:900px;margin:auto;padding:24px}.card{background:#fff;border:1px solid #dbe3ef;border-radius:16px;padding:20px;box-shadow:0 10px 30px #10182812}button{padding:11px 15px;border:0;border-radius:9px;background:#2563eb;color:#fff;font-weight:700;cursor:pointer}button:disabled{opacity:.5}canvas{max-width:100%;height:auto;display:block;margin:16px auto}.status{margin-top:12px;color:#667085}.result{white-space:pre-wrap;background:#f8fafc;border:1px solid #e4e7ec;border-radius:10px;padding:14px;min-height:100px}</style>
+</head>
+<body><main class="wrap"><div class="card"><h1>Scanned PDF OCR</h1><p>Scanned/image-only PDFs do not contain selectable text. This workspace detects that case and uses OCR instead of pretending the image contains editable text.</p><input id="file" type="file" accept="application/pdf"><button id="ocr" disabled>Run OCR</button><div id="status" class="status">Choose a PDF.</div><canvas id="canvas"></canvas><h2>Recognized text</h2><div id="result" class="result"></div></div></main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.0/tesseract.min.js"></script>
+<script type="module">
+import * as pdfjsLib from 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.min.mjs';
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.4.168/pdf.worker.min.mjs';
+const file=document.getElementById('file'),ocr=document.getElementById('ocr'),status=document.getElementById('status'),canvas=document.getElementById('canvas'),result=document.getElementById('result');
+let pdf=null;
+file.addEventListener('change',async()=>{const f=file.files[0];if(!f)return;try{status.textContent='Opening PDF…';pdf=await pdfjsLib.getDocument({data:new Uint8Array(await f.arrayBuffer())}).promise;const p=await pdf.getPage(1);const tc=await p.getTextContent();const selectable=tc.items.some(x=>(x.str||'').trim());const vp=p.getViewport({scale:1.5});canvas.width=Math.ceil(vp.width);canvas.height=Math.ceil(vp.height);await p.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;if(selectable){status.textContent='This page already contains selectable text. Use the main PDF Editor for direct editing.';ocr.disabled=true}else{status.textContent='No selectable text detected on page 1. OCR is available.';ocr.disabled=false}}catch(e){status.textContent='Could not open PDF: '+e.message;ocr.disabled=true}});
+ocr.addEventListener('click',async()=>{if(!canvas.width)return;try{ocr.disabled=true;result.textContent='';status.textContent='OCR running…';const worker=await Tesseract.createWorker('eng',1,{logger:m=>{if(m.status)status.textContent=`OCR: ${m.status} ${Math.round((m.progress||0)*100)}%`}});const r=await worker.recognize(canvas);result.textContent=r.data.text||'No text was recognized.';await worker.terminate();status.textContent='OCR complete. The recognized text can be used as the basis for an editable layer.'}catch(e){status.textContent='OCR failed: '+e.message}finally{ocr.disabled=false}});
+</script></body></html>
