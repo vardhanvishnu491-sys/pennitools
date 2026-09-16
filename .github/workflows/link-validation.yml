@@ -1,0 +1,97 @@
+name: Validate PenniTools Links
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Validate internal links, anchors and sitemap routes
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from urllib.parse import urlsplit, unquote
+          import html
+          import re
+          import sys
+
+          ROOT = Path('.').resolve()
+          SITE_HOSTS = {'pennitools.in', 'www.pennitools.in'}
+          errors = []
+          checked = 0
+
+          def page_ids(path):
+              text = path.read_text(encoding='utf-8', errors='strict')
+              return set(re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', text, re.I)) | set(re.findall(r'<a\b[^>]*\bname\s*=\s*["\']([^"\']+)["\']', text, re.I))
+
+          ids_cache = {}
+
+          def resolve_target(source, raw):
+              raw = html.unescape(raw).strip()
+              if not raw or raw.startswith(('#', 'mailto:', 'tel:', 'javascript:', 'data:')):
+                  return None, urlsplit(raw).fragment
+              parsed = urlsplit(raw)
+              if parsed.scheme and parsed.scheme not in {'http', 'https'}:
+                  return None, parsed.fragment
+              if parsed.netloc and parsed.netloc.lower() not in SITE_HOSTS:
+                  return None, parsed.fragment
+              target = unquote(parsed.path)
+              if not target or target == '/':
+                  path = ROOT / 'index.html'
+              elif target.startswith('/'):
+                  path = ROOT / target.lstrip('/')
+              else:
+                  path = (source.parent / target).resolve()
+              try:
+                  path.relative_to(ROOT)
+              except ValueError:
+                  errors.append(f'{source}: link escapes site root: {raw}')
+                  return None, parsed.fragment
+              return path, parsed.fragment
+
+          # Validate hrefs from anchors and link elements (including canonical/stylesheet links).
+          for source in sorted(ROOT.glob('*.html')):
+              text = source.read_text(encoding='utf-8', errors='strict')
+              for raw in re.findall(r'<(?:a|link)\b[^>]*\bhref\s*=\s*["\']([^"\']+)["\']', text, re.I):
+                  target, fragment = resolve_target(source, raw)
+                  if target is None:
+                      continue
+                  checked += 1
+                  if not target.exists() or not target.is_file():
+                      errors.append(f'{source}: missing target: {raw}')
+                      continue
+                  if fragment:
+                      ids_cache.setdefault(target, page_ids(target))
+                      if unquote(fragment) not in ids_cache[target]:
+                          errors.append(f'{source}: missing anchor #{unquote(fragment)} in {target.relative_to(ROOT)}')
+
+          # Validate URLs published in sitemap.xml against repository pages.
+          sitemap = ROOT / 'sitemap.xml'
+          if sitemap.exists():
+              st = sitemap.read_text(encoding='utf-8', errors='strict')
+              for loc in re.findall(r'<loc>\s*(.*?)\s*</loc>', st, re.I | re.S):
+                  target, fragment = resolve_target(ROOT / 'index.html', html.unescape(loc))
+                  if target is None:
+                      continue
+                  checked += 1
+                  if not target.exists() or not target.is_file():
+                      errors.append(f'sitemap.xml: missing page: {loc}')
+
+          if errors:
+              print('Internal-link validation FAILED:')
+              print('\n'.join(f' - {e}' for e in errors))
+              sys.exit(1)
+
+          print(f'Internal-link validation passed: {checked} local targets checked; no missing pages or anchors found.')
+          PY
