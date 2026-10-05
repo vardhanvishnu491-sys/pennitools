@@ -64,6 +64,10 @@ jobs:
           for source in sorted(ROOT.glob('*.html')):
               text = source.read_text(encoding='utf-8', errors='strict')
               for raw in re.findall(r'<(?:a|link)\b[^>]*\bhref\s*=\s*["\']([^"\']+)["\']', text, re.I):
+                  # Ignore JavaScript-generated URLs such as href="${x[2]}"; they are
+                  # validated through the static catalog entries separately.
+                  if '${' in raw:
+                      continue
                   target, fragment = resolve_target(source, raw)
                   if target is None:
                       continue
