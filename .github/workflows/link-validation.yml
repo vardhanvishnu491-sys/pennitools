@@ -80,6 +80,32 @@ jobs:
                       if unquote(fragment) not in ids_cache[target]:
                           errors.append(f'{source}: missing anchor #{unquote(fragment)} in {target.relative_to(ROOT)}')
 
+          # Validate literal routes in the JavaScript-generated tools catalog.
+          # The catalog stores each tool as [name, description, route].
+          catalog = ROOT / 'tools-index.html'
+          if catalog.exists():
+              catalog_text = catalog.read_text(encoding='utf-8', errors='strict')
+              groups_match = re.search(r'const\\s+groups\\s*=\\s*\\[(.*?)\\n\\];', catalog_text, re.S)
+              if not groups_match:
+                  errors.append('tools-index.html: could not locate the groups catalog for route validation')
+              else:
+                  routes = re.findall(r",\\s*'([^']+\\.html(?:#[^']*)?)'\\s*\\]", groups_match.group(1))
+                  if not routes:
+                      errors.append('tools-index.html: no literal tool routes were extracted from the catalog')
+                  for raw in routes:
+                      target, fragment = resolve_target(catalog, raw)
+                      if target is None:
+                          errors.append(f'tools-index.html: unsupported or invalid catalog route: {raw}')
+                          continue
+                      checked += 1
+                      if not target.exists() or not target.is_file():
+                          errors.append(f'tools-index.html: catalog route points to missing page: {raw}')
+                          continue
+                      if fragment:
+                          ids_cache.setdefault(target, page_ids(target))
+                          if unquote(fragment) not in ids_cache[target]:
+                              errors.append(f'tools-index.html: catalog route has missing anchor #{unquote(fragment)} in {target.relative_to(ROOT)}')
+
           # Validate URLs published in sitemap.xml against repository pages.
           sitemap = ROOT / 'sitemap.xml'
           if sitemap.exists():
