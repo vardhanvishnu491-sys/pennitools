@@ -85,11 +85,11 @@ jobs:
           catalog = ROOT / 'tools-index.html'
           if catalog.exists():
               catalog_text = catalog.read_text(encoding='utf-8', errors='strict')
-              groups_match = re.search(r'const\\s+groups\\s*=\\s*\\[(.*?)\\n\\];', catalog_text, re.S)
+              groups_match = re.search(r'const\s+groups\s*=\s*\[(.*?)\n\];', catalog_text, re.S)
               if not groups_match:
                   errors.append('tools-index.html: could not locate the groups catalog for route validation')
               else:
-                  routes = re.findall(r",\\s*'([^']+\\.html(?:#[^']*)?)'\\s*\\]", groups_match.group(1))
+                  routes = re.findall(r",\s*'([^']+\.html(?:#[^']*)?)'\s*\]", groups_match.group(1))
                   if not routes:
                       errors.append('tools-index.html: no literal tool routes were extracted from the catalog')
                   for raw in routes:
