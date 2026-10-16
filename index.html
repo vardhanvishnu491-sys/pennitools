@@ -1564,7 +1564,7 @@ async function initTranscriberTool(){
      const plain=$('#transcriptDetail').value==='plain';ta.value=makeTranscript(lines,plain);ta.dataset.lines=JSON.stringify(lines);
      status.textContent=`Complete — ${lines.length} timestamped segments. You can edit, copy or download the transcript.`;
      ['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=!ta.value);
-   }catch(e){console.error(e);status.textContent='Transcription failed. If the file is very long, try Balanced — Small or a shorter audio file.';}
+   }catch(e){console.error(e);status.textContent='Transcription failed. '+(e&&e.message?String(e.message).slice(0,220)+' — ':'')+'Try Fast — Tiny, a shorter audio file, or a browser with more available memory.';}
    finally{['audioFile','audioLang','audioModel','speakerMode','transcriptDetail'].forEach(id=>$('#'+id).disabled=false);start.disabled=!file.files[0]}
  });
  $('#copyTranscript').addEventListener('click',async()=>{await navigator.clipboard.writeText(ta.value);status.textContent='Transcript copied.'});
