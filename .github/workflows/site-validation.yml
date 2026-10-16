@@ -269,6 +269,10 @@ jobs:
               errors.append('Recurring-deposit calculator must handle zero interest and use a monthly-rate approximation')
           if 'r?a*((Math.pow(1+r,n)-1)/r):a*n' not in home:
               errors.append('PPF calculator must handle a zero-interest scenario')
+          if "!Number.isInteger(f)||f<1||f>12" not in home or 'Number.isFinite(fv)' not in home:
+              errors.append('Fixed-deposit calculator must reject invalid compounding frequency and non-finite results')
+          if 'Number.isInteger(n)||n<1||n>600' not in home or 'rate>100' not in home:
+              errors.append('Homepage EMI calculators must validate interest rate and repayment term')
           emi=Path('emi-calculator.html').read_text(encoding='utf-8')
           headings=re.findall(r'<h3>(.*?)</h3>',emi,re.I)
           if sum(1 for h in headings if h.strip().lower()=='emi formula')>1:
