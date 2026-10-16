@@ -231,6 +231,45 @@ jobs:
           print(f'Internal links and sitemap targets passed for {len(list(ROOT.glob("*.html")))} HTML pages.')
           PY
 
+      - name: Run core-tool regression checks
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+          errors=[]
+          home=Path('index.html').read_text(encoding='utf-8')
+          if 'function escapeTranscriptHtml' not in home:
+              errors.append('Audio AI transcript analysis must escape user-controlled transcript text before inserting HTML')
+          for fragment in ('sentences.slice(0,12).map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)', 'actions.map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)', 'questions.map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)'):
+              if fragment not in home:
+                  errors.append('Audio AI analysis is missing HTML escaping for one or more transcript-derived sections')
+                  break
+          if 'function transcribeFile(pipe,file,lang,status,label)' not in home:
+              errors.append('Audio AI must revoke temporary audio URLs after processing')
+          if 'Xenova/whisper-small" selected' not in home:
+              errors.append('Audio AI default model should remain the balanced option for device compatibility')
+          tiles=Path('tiles-calculator.html').read_text(encoding='utf-8')
+          if not re.search(r'id="w"[^>]*max="50"',tiles) or 'wInput>50' not in tiles:
+              errors.append('Tile calculator must enforce its 0–50% wastage limit in the UI and JavaScript')
+          paint=Path('paint-calculator.html').read_text(encoding='utf-8')
+          if 'Number.isFinite' not in paint or 'Number.isInteger(w)' not in paint:
+              errors.append('Paint calculator must validate finite measurements and whole-number wall counts')
+          gst=Path('gst-calculator.html').read_text(encoding='utf-8')
+          if 'Number.isFinite' not in gst or 'too large to calculate safely' not in gst:
+              errors.append('GST calculator must guard against extreme values')
+          trip=Path('trip-cost-calculator.html').read_text(encoding='utf-8')
+          if 'Number.isInteger(rawPeople)' not in trip or 'Number.isFinite' not in trip:
+              errors.append('Trip calculator must validate traveller count and finite results')
+          emi=Path('emi-calculator.html').read_text(encoding='utf-8')
+          headings=re.findall(r'<h3>(.*?)</h3>',emi,re.I)
+          if sum(1 for h in headings if h.strip().lower()=='emi formula')>1:
+              errors.append('EMI guide must not repeat the same formula heading')
+          if errors:
+              print('\n'.join(errors)); sys.exit(1)
+          print('Core-tool regression checks passed.')
+          PY
+
       - name: Validate metadata and internal page links
         shell: bash
         run: |
