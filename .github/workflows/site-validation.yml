@@ -32,6 +32,7 @@ jobs:
           from pathlib import Path
           p=Path(sys.argv[1])
           s=p.read_text(encoding='utf-8')
+          s=s.replace('favicon.png', 'favicon.svg')
           if '</head>' not in s:
               raise SystemExit(f'Missing </head>: {p}')
           s=s.replace('<link rel="stylesheet" href="/theme.css?v=20260914"><link rel="stylesheet" href="/theme-final.css?v=20260914"></head>', '<link rel="stylesheet" href="/theme.css?v=20260914b"><link rel="stylesheet" href="/theme-final.css?v=20260914b"></head>', 1)
@@ -90,7 +91,7 @@ jobs:
           hs=home.read_text(encoding='utf-8')
           if '"@type":"Organization"' not in hs or '"@type":"WebSite"' not in hs:
               payload={"@context":"https://schema.org","@graph":[
-                {"@type":"Organization","@id":"https://pennitools.in/organization","name":"PenniTools","url":"https://pennitools.in/","logo":"https://pennitools.in/favicon.png","description":"Free calculators and practical browser-based tools for everyday use in India."},
+                {"@type":"Organization","@id":"https://pennitools.in/organization","name":"PenniTools","url":"https://pennitools.in/","logo":"https://pennitools.in/favicon.svg","description":"Free calculators and practical browser-based tools for everyday use in India."},
                 {"@type":"WebSite","@id":"https://pennitools.in/website","url":"https://pennitools.in/","name":"PenniTools","description":"Free calculators and practical tools for construction, carpentry, finance, vehicles, documents and everyday calculations in India.","publisher":{"@id":"https://pennitools.in/organization"}}
               ]}
               block='<script type="application/ld+json">'+json.dumps(payload,separators=(",",":"),ensure_ascii=False)+'</script>\n'
