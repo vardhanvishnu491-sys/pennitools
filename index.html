@@ -1488,6 +1488,7 @@ async function transcribeInput(pipe,input,lang,status,label){
  const result=await pipe(input,options,x=>{if(x?.status==='progress'&&typeof x.progress==='number')status.textContent=`Transcribing ${label||''}… ${Math.round(x.progress)}%`;});
  return chunksToLines(result?.chunks,label);
 }
+async function transcribeFile(pipe,file,lang,status,label){const url=URL.createObjectURL(file);try{return await transcribeInput(pipe,url,lang,status,label)}finally{URL.revokeObjectURL(url)}}
 function escapeTranscriptHtml(value){return String(value).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
 function basicCallAnalysis(lines){
  const text=lines.map(x=>x.text).join(' ');
@@ -1503,31 +1504,32 @@ async function initTranscriberTool(){
  $('#audioModel').addEventListener('change',()=>{transcriberPipeline=null;const labels={'Xenova/whisper-tiny':'Fast (Tiny)','Xenova/whisper-small':'Balanced (Small)','onnx-community/whisper-large-v3-turbo':'High accuracy (Large v3 Turbo)'};start.textContent='Start transcription — '+(labels[$('#audioModel').value]||'selected model');});
  start.addEventListener('click',async()=>{
    const f=file.files[0];if(!f)return;
-   start.disabled=true;['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=true);ta.value='';$('#analysisOut').style.display='none';$('#callNotice').style.display='none';
+   start.disabled=true;['audioFile','audioLang','audioModel','speakerMode','transcriptDetail'].forEach(id=>$('#'+id).disabled=true);['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=true);ta.value='';$('#analysisOut').style.display='none';$('#callNotice').style.display='none';
    try{
      const pipe=await initTranscriber();const lang=$('#audioLang').value;const mode=$('#speakerMode').value;let lines=[];
      status.textContent='Preparing audio…';
      if(mode==='stereo'){
        status.textContent='Checking call channels…';
        const ctx=new (window.AudioContext||window.webkitAudioContext)();
-       const buffer=await ctx.decodeAudioData(await f.arrayBuffer());
-       if(buffer.numberOfChannels<2){$('#callNotice').style.display='block';$('#callNotice').textContent='⚠️ This recording is mono. The two speakers cannot be separated reliably from a single mixed channel. The transcript will be generated without speaker labels.';const url=URL.createObjectURL(f);lines=await transcribeInput(pipe,url,lang,status,'audio');URL.revokeObjectURL(url);}
-       else{
-         $('#callNotice').style.display='block';$('#callNotice').textContent='☎️ Stereo mode labels channel 1 and channel 2 separately. Use this only when the recording actually isolates each participant to a different channel; the app cannot determine who is the caller. Segments are merged by timestamp.';
-         const a=await resampleChannel(buffer,0),b=await resampleChannel(buffer,1);
-         const caller=await transcribeInput(pipe,a,lang,status,'Channel 1');
-         const receiver=await transcribeInput(pipe,b,lang,status,'Channel 2');
-         lines=caller.concat(receiver).sort((x,y)=>x.start-y.start);
-       }
-       try{await ctx.close()}catch{}
+       try{
+         const buffer=await ctx.decodeAudioData(await f.arrayBuffer());
+         if(buffer.numberOfChannels<2){$('#callNotice').style.display='block';$('#callNotice').textContent='⚠️ This recording is mono. The two speakers cannot be separated reliably from a single mixed channel. The transcript will be generated without speaker labels.';lines=await transcribeFile(pipe,f,lang,status,'audio');}
+         else{
+           $('#callNotice').style.display='block';$('#callNotice').textContent='☎️ Stereo mode labels channel 1 and channel 2 separately. Use this only when the recording actually isolates each participant to a different channel; the app cannot determine who is the caller. Segments are merged by timestamp.';
+           const a=await resampleChannel(buffer,0),b=await resampleChannel(buffer,1);
+           const caller=await transcribeInput(pipe,a,lang,status,'Channel 1');
+           const receiver=await transcribeInput(pipe,b,lang,status,'Channel 2');
+           lines=caller.concat(receiver).sort((x,y)=>x.start-y.start);
+         }
+       }finally{try{await ctx.close()}catch{}}
      }else{
-       const url=URL.createObjectURL(f);lines=await transcribeInput(pipe,url,lang,status,'audio');URL.revokeObjectURL(url);
+       lines=await transcribeFile(pipe,f,lang,status,'audio');
      }
      const plain=$('#transcriptDetail').value==='plain';ta.value=makeTranscript(lines,plain);ta.dataset.lines=JSON.stringify(lines);
      status.textContent=`Complete — ${lines.length} timestamped segments. You can edit, copy or download the transcript.`;
      ['copyTranscript','downloadTranscript','downloadSrt','analyzeTranscript'].forEach(id=>$('#'+id).disabled=!ta.value);
    }catch(e){console.error(e);status.textContent='Transcription failed. If the file is very long, try Balanced — Small or a shorter audio file.';}
-   finally{start.disabled=false}
+   finally{['audioFile','audioLang','audioModel','speakerMode','transcriptDetail'].forEach(id=>$('#'+id).disabled=false);start.disabled=!file.files[0]}
  });
  $('#copyTranscript').addEventListener('click',async()=>{await navigator.clipboard.writeText(ta.value);status.textContent='Transcript copied.'});
  $('#downloadTranscript').addEventListener('click',()=>dl(new Blob([ta.value],{type:'text/plain;charset=utf-8'}),'pennitools-transcript.txt'));
