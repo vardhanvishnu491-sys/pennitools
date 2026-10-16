@@ -263,6 +263,12 @@ jobs:
               errors.append('Income tax calculator must include the current 25% slab band')
           if 'Math.min(tax,60000)' not in home or 'maxTax=(x-1200000)/(1+cessRate/100)' not in home:
               errors.append('Income tax calculator must apply the eligible rebate and marginal-relief estimate')
+          if 'p>1e15||r<0||r>100' not in home or "p/(1+r/100)" not in home:
+              errors.append('Homepage GST calculator must reject invalid rates and prevent division by zero')
+          if 'annual/1200' not in home or ':m*n' not in home:
+              errors.append('Recurring-deposit calculator must handle zero interest and use a monthly-rate approximation')
+          if 'r?a*((Math.pow(1+r,n)-1)/r):a*n' not in home:
+              errors.append('PPF calculator must handle a zero-interest scenario')
           emi=Path('emi-calculator.html').read_text(encoding='utf-8')
           headings=re.findall(r'<h3>(.*?)</h3>',emi,re.I)
           if sum(1 for h in headings if h.strip().lower()=='emi formula')>1:
