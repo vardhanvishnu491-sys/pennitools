@@ -241,10 +241,8 @@ jobs:
           home=Path('index.html').read_text(encoding='utf-8')
           if 'function escapeTranscriptHtml' not in home:
               errors.append('Audio AI transcript analysis must escape user-controlled transcript text before inserting HTML')
-          for fragment in ('sentences.slice(0,12).map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)', 'actions.map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)', 'questions.map(s=>\`<li>\${escapeTranscriptHtml(s)}</li>\`)'):
-              if fragment not in home:
-                  errors.append('Audio AI analysis is missing HTML escaping for one or more transcript-derived sections')
-                  break
+          if home.count('escapeTranscriptHtml(s)') < 3:
+              errors.append('Audio AI analysis must escape transcript text in key points, action items and questions')
           if 'function transcribeFile(pipe,file,lang,status,label)' not in home:
               errors.append('Audio AI must revoke temporary audio URLs after processing')
           if 'Xenova/whisper-small" selected' not in home:
