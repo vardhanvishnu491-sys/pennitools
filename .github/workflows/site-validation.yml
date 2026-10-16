@@ -259,6 +259,10 @@ jobs:
           trip=Path('trip-cost-calculator.html').read_text(encoding='utf-8')
           if 'Number.isInteger(rawPeople)' not in trip or 'Number.isFinite' not in trip:
               errors.append('Trip calculator must validate traveller count and finite results')
+          if '[[400000,0],[400000,.05],[400000,.10],[400000,.15],[400000,.20],[400000,.25],[Infinity,.30]]' not in home:
+              errors.append('Income tax calculator must include the current 25% slab band')
+          if 'Math.min(tax,60000)' not in home or 'maxTax=(x-1200000)/(1+cessRate/100)' not in home:
+              errors.append('Income tax calculator must apply the eligible rebate and marginal-relief estimate')
           emi=Path('emi-calculator.html').read_text(encoding='utf-8')
           headings=re.findall(r'<h3>(.*?)</h3>',emi,re.I)
           if sum(1 for h in headings if h.strip().lower()=='emi formula')>1:
