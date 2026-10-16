@@ -175,6 +175,62 @@ jobs:
           PY
           for file in /tmp/*.js; do node --check "$file"; done
 
+      - name: Validate internal links and sitemap targets
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from urllib.parse import urlparse, unquote
+          import re, sys
+          ROOT = Path('.').resolve()
+          HTML = {p.name for p in ROOT.glob('*.html')}
+          errors = []
+          class Links(HTMLParser):
+              def __init__(self):
+                  super().__init__(); self.refs=[]
+              def handle_starttag(self, tag, attrs):
+                  a=dict(attrs)
+                  for key in ('href','src','poster'):
+                      value=a.get(key)
+                      if value: self.refs.append((key,value))
+          for page in sorted(ROOT.glob('*.html')):
+              parser=Links(); parser.feed(page.read_text(encoding='utf-8'))
+              for attr, ref in parser.refs:
+                  if ref.startswith(('#','mailto:','tel:','javascript:','data:')): continue
+                  u=urlparse(ref)
+                  if u.scheme or u.netloc:
+                      if u.scheme in ('http','https') and u.netloc.lower() in ('pennitools.in','www.pennitools.in'):
+                          target=unquote(u.path or '/')
+                      else: continue
+                  else:
+                      target=unquote(u.path)
+                  if not target: continue
+                  if target.startswith('/'):
+                      candidate=(ROOT / target.lstrip('/')).resolve()
+                  else:
+                      candidate=(page.parent / target).resolve()
+                  if ROOT not in candidate.parents and candidate != ROOT:
+                      errors.append(f'{page}: unsafe local path {ref}'); continue
+                  if candidate.is_dir(): candidate=candidate/'index.html'
+                  if not candidate.exists(): errors.append(f'{page}: broken {attr} {ref}')
+          sitemap=ROOT/'sitemap.xml'
+          if sitemap.exists():
+              xml=sitemap.read_text(encoding='utf-8')
+              for url in re.findall(r'<loc>(.*?)</loc>',xml):
+                  u=urlparse(url)
+                  if u.netloc.lower() not in ('pennitools.in','www.pennitools.in'): continue
+                  target=unquote(u.path or '/')
+                  candidate=(ROOT / target.lstrip('/')).resolve()
+                  if candidate.is_dir(): candidate=candidate/'index.html'
+                  if not candidate.exists(): errors.append(f'sitemap: missing target {url}')
+          if errors:
+              print('Internal-link/sitemap errors:')
+              print('\\n'.join(errors))
+              sys.exit(1)
+          print(f'Internal links and sitemap targets passed for {len(list(ROOT.glob("*.html")))} HTML pages.')
+          PY
+
       - name: Validate metadata and internal page links
         shell: bash
         run: |
