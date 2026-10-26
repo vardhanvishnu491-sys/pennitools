@@ -2402,5 +2402,5 @@ if(mode==='resize'){c.width=num($('#w').value)||im.width;c.height=num($('#h').va
 await new Promise((resolve,reject)=>c.toBlob(b=>{if(!b)return reject(Error('Your browser could not create the output image.'));const ext=type==='image/png'?'png':'jpg';dl(b,`pennitools-${mode}.${ext}`);resolve()},type,q));
 out(`<strong>Image ${mode==='convert'?'converted':'processed'} successfully.</strong><br>Downloaded as ${type==='image/png'?'PNG':'JPG'}.`)}
 </script>
-<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>
+<div class="site-trustbar" aria-label="PenniTools information links"><strong>Free & practical tools</strong><span class="dot">•</span><a href="/about.html">About</a><span class="dot">•</span><a href="/contact.html">Contact</a><span class="dot">•</span><a href="/privacy-policy.html">Privacy</a><span class="dot">•</span><a href="/terms.html">Terms</a><span class="dot">•</span><a href="/disclaimer.html">Disclaimer</a></div>
 </body></html>
