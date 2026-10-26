@@ -177,6 +177,21 @@ jobs:
           print(' -> '.join(n for n,_ in markers))
           PY
 
+      - name: Verify CTC guide is only on Finance Calculators page
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          home = Path('index.html').read_text(encoding='utf-8')
+          finance = Path('finance-calculators.html').read_text(encoding='utf-8')
+          guide_id = 'id="ctc-inhand-guide"'
+          if guide_id in home or 'CTC to in-hand salary: how the estimate works' in home:
+              raise SystemExit('CTC salary guide is still present on the homepage')
+          if guide_id not in finance or 'CTC to in-hand salary: how the estimate works' not in finance:
+              raise SystemExit('CTC salary guide is missing from Finance Calculators')
+          print('PASS: CTC salary guide appears only on Finance Calculators.')
+          PY
+
       - name: Validate required site files and AdSense
         run: |
           test -f index.html
