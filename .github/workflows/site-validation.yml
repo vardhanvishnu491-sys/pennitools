@@ -113,6 +113,27 @@ jobs:
           print('Structured data enhancement complete.')
           PY
 
+      - name: Keep CTC salary guide off the homepage
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re, sys
+          home_path = Path('index.html')
+          home = home_path.read_text(encoding='utf-8')
+          # The guide belongs on the Finance Calculators page, never on the homepage.
+          home, removed = re.subn(r'<section\\s+id=["']ctc-inhand-guide["'][^>]*>.*?</section>\\s*', '', home, count=1, flags=re.I|re.S)
+          if removed:
+              home_path.write_text(home, encoding='utf-8')
+          finance = Path('finance-calculators.html').read_text(encoding='utf-8')
+          if 'id="ctc-inhand-guide"' not in finance:
+              raise SystemExit('CTC salary guide must remain on finance-calculators.html')
+          if 'id="ctc-inhand-guide"' in home:
+              raise SystemExit('CTC salary guide must not appear on index.html')
+          print('CTC salary guide placement passed: finance page only.')
+          PY
+
       - name: Commit automated theme, homepage and SEO changes
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         shell: bash
